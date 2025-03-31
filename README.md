@@ -1,2 +1,2 @@
-# csc6000
+# csc6000c
 Basic Programming class
