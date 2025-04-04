@@ -119,4 +119,5 @@ sum_gp(-2, -1)
 """
 Allow user to enter scalar (a) and ratio (r) as input
 Add while loops to make sure the user enters the correct item as int and not string.
+
 """
