@@ -30,22 +30,6 @@ This GP sum with 10 elements is equal to 1023
 the first elements are 1, 2, and 4
 """
 
-# def find_nth_term(a, r):
-#     """
-#     Finds the first 3 terms in a gp sequence
-#     """
-#     # List to hold the terms
-#     list = []
-
-#     # iterating through the formula and adding each term to the list
-#     for i in range(1,4):
-#         print(i)
-#         list.append(a*r **( i-1))
-    
-#     print(list)
-
-# find_nth_term(3,.5)
-
 def get_frist_three_terms(a,r):
     """
     # iterating through the formula to find the first three terms and adding each term to the list
@@ -59,9 +43,51 @@ def get_frist_three_terms(a,r):
     return three_terms_list
 
 
-def sum_gp(r, a):
+def sum_gp(a, r):
 
-    if abs(r) < 1:
+    if r == -1:
+        print(f"Minus 1")
+        print("This GP does not converge to a finite number with infinite elements")
+        user_input = input(f"Please enter the number of elements in the Geometric Progression: ")
+
+        # converting input to integer
+        nth_term = int(user_input)
+
+        negative_one_total = 0
+        for i in range(nth_term):
+
+            ans = a * (r)**i
+
+            negative_one_total += ans
+            print(ans)
+
+        # Calling function to to find the first three terms
+        frist_three_terms = get_frist_three_terms(a,r)
+
+        print(f"This GP sum with {nth_term} elements is equal to {negative_one_total}")
+        print(f"The first terms are {frist_three_terms[0]}, {frist_three_terms[1]}, and {frist_three_terms[2]}")
+
+        
+  
+
+    elif r == 1:
+        print(f"Equals 1")
+        print("This GP does not converge to a finite number with infinite elements")
+        user_input = input(f"Please enter the number of elements in the Geometric Progression: ")
+
+        # converting input to integer
+        nth_term = int(user_input)
+
+        sum = a * nth_term
+
+        # Calling function to to find the first three terms
+        frist_three_terms = get_frist_three_terms(a,r)
+
+        print(f"This GP sum with {nth_term} elements is equal to {sum}")
+        print(f"The first terms are {frist_three_terms[0]}, {frist_three_terms[1]}, and {frist_three_terms[2]}")
+        
+
+    elif r < 1:
         # Calculating the infinite sum
         infinite_sum = (a /(1-r))
 
@@ -71,7 +97,8 @@ def sum_gp(r, a):
         print(f"This GP converges with infinite elements to {infinite_sum}")
         print(f"The first terms are {frist_three_terms[0]}, {frist_three_terms[1]}, and {frist_three_terms[2]}")
     
-    elif abs(r) > 1:
+    elif r > 1:
+        print(f"Greater")
         print("This GP does not converge to a finite number with infinite elements")
         user_input = input(f"Please enter the number of elements in the Geometric Progression: ")
 
@@ -85,6 +112,7 @@ def sum_gp(r, a):
 
         print(f"This GP sum with {nth_term} elements is equal to {finite_sum}")
         print(f"The first terms are {frist_three_terms[0]}, {frist_three_terms[1]}, and {frist_three_terms[2]}")
-        
 
-sum_gp(2,10)
+sum_gp(-2, -1)
+
+# Need to add logic for if 

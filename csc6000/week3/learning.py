@@ -50,26 +50,29 @@
        
 # summationap(2,4,7)
 
-# def geometric_progression_nth_term(first_term, common_ratio, num_term):
-#     """
-#     Using the formula to find the Nth term in geometric progression
-#     R is the common ratio, similar to common difference
-#     N is the specific term you want to find in this case.
-#     First term or a sub 1 is the first term in teh sequence.
-#     formula = first_term * r ** Nth_term - 1
-#     """
-#     # Calculate exponent first
-#     exoponent = num_term - 1
+def geometric_progression_nth_term(first_term, common_ratio, num_term):
+    """
+    Using the formula to find the Nth term in geometric progression
+    R is the common ratio, similar to common difference
+    N is the specific term you want to find in this case.
+    First term or a sub 1 is the first term in teh sequence.
+    formula = first_term * r ** Nth_term - 1
+    """
+    # # Calculate exponent first
+    # exoponent = num_term - 1
     
-#     # calculating common ratio raised to exponent 
-#     ratio_raised_to_exponent = common_ratio ** exoponent
+    # # calculating common ratio raised to exponent 
+    # ratio_raised_to_exponent = common_ratio ** exoponent
 
-#     # multiply first item in GP sequence by the ruslt of the ratio raised to the exponent
-#     ans = ratio_raised_to_exponent * first_term
-#     print(ans)
+    # # multiply first item in GP sequence by the ruslt of the ratio raised to the exponent
+    # ans = ratio_raised_to_exponent * first_term
+    for i in range(num_term):
+        # i += 1
+        ans = first_term * (common_ratio)** i
+        print(ans)
 
 
-# geometric_progression_nth_term(2,3,5)
+geometric_progression_nth_term(2,-1,5)
 
 
 
@@ -95,10 +98,10 @@
 
 # sum_geometric_progression(3,5,2)
 
-def infinite_gp_sum(a,r):
-    print(round((a/(1-r)),1))
+# def infinite_gp_sum(a,r):
+#     print(round((a/(1-r)),1))
 
-infinite_gp_sum(10, -0.5)
+# infinite_gp_sum(10, -0.5)
 
 
 
