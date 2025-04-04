@@ -115,4 +115,8 @@ def sum_gp(a, r):
 
 sum_gp(-2, -1)
 
-# Need to add logic for if 
+# Need to do:
+"""
+Allow user to enter scalar (a) and ratio (r) as input
+Add while loops to make sure the user enters the correct item as int and not string.
+"""
