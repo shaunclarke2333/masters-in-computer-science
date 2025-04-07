@@ -30,6 +30,21 @@ This GP sum with 10 elements is equal to 1023
 the first elements are 1, 2, and 4
 """
 
+# This function makes sure output is and integer or float
+def check_number(number):
+    """
+    This function makes sure output is and integer or float
+    It use is_integer() to check if a float can be represented as an integer
+    without losing precision.
+    """
+    
+    final_number = ""
+    if number.is_integer():
+        final_number = int(number)
+    else:
+        final_number = number
+    return final_number
+
 # Function to get the first three elements
 def get_frist_three_terms(a,r):
     """
@@ -39,10 +54,11 @@ def get_frist_three_terms(a,r):
      # iterating through the formula to find the first three terms and adding each term to the list
     for i in range(1,4):
         # print(i)
-        three_terms_list.append(a*r **( i-1))
+        ans = check_number(a*r **( i-1))
+        three_terms_list.append(ans)
 
     return three_terms_list
-
+    
 # Function to ask for user input
 def get_input():
 
@@ -115,7 +131,7 @@ def sum_gp(a, r):
     ○ With that information, your program should print out the first 3 elements of the GP and the computed sum.
     """
     if r == -1:
-        print(f"Minus 1")
+        # print(f"Minus 1")
         print("This GP does not converge to a finite number with infinite elements")
         user_input = input(f"Please enter the number of elements in the Geometric Progression: ")
 
@@ -126,6 +142,7 @@ def sum_gp(a, r):
         for i in range(nth_term):
 
             ans = a * (r)**i
+            ans = check_number(ans)
 
             negative_one_total += ans
             print(ans)
@@ -137,7 +154,7 @@ def sum_gp(a, r):
         print(f"The first terms are {frist_three_terms[0]}, {frist_three_terms[1]}, and {frist_three_terms[2]}")
 
     elif r == 1:
-        print(f"Equals 1")
+        # print(f"Equals 1")
         print("This GP does not converge to a finite number with infinite elements")
         user_input = input(f"Please enter the number of elements in the Geometric Progression: ")
 
@@ -145,6 +162,7 @@ def sum_gp(a, r):
         nth_term = int(user_input)
 
         sum = a * nth_term
+        sum = check_number(sum)
 
         # Calling function to to find the first three terms
         frist_three_terms = get_frist_three_terms(a,r)
@@ -154,8 +172,9 @@ def sum_gp(a, r):
 
     elif r < 1:
         # Calculating the infinite sum
-        infinite_sum = round((a /(1-r)))
+        infinite_sum = (a /(1-r))
 
+        infinite_sum = check_number(infinite_sum)
         # Calling function to to find the first three terms
         frist_three_terms = get_frist_three_terms(a,r)
 
@@ -163,7 +182,7 @@ def sum_gp(a, r):
         print(f"The first terms are {frist_three_terms[0]}, {frist_three_terms[1]}, and {frist_three_terms[2]}")
     
     elif r > 1:
-        print(f"Greater")
+        # print(f"Greater")
         print("This GP does not converge to a finite number with infinite elements")
         user_input = input(f"Please enter the number of elements in the Geometric Progression: ")
 
@@ -171,6 +190,7 @@ def sum_gp(a, r):
         nth_term = int(user_input)
 
         finite_sum = a * (1 - r ** nth_term)/(1-r)
+        finite_sum = check_number(finite_sum)
 
         # Calling function to to find the first three terms
         frist_three_terms = get_frist_three_terms(a,r)
@@ -182,10 +202,3 @@ def sum_gp(a, r):
 a,r = get_input()
 
 sum_gp(a,r)
-
-# Need to do:
-
-"""
-use is_integer to handle outputs that should not be a float.
-
-"""
