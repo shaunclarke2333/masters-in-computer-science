@@ -13,10 +13,6 @@ k
 Then, it computes and prints the number of arrangements of k elements out of n, considering the subsets of size mi;
 """
 
-# Parent class with factorial method
-class arrangements:
-    def __init__(self):
-        pass
 
 # This is how we will calculate factorials:
 def factorial (num):
@@ -45,35 +41,63 @@ subsets_input_total = sum(list_of_subet_inputs)
 print(f"type: {list_of_subet_inputs}")
 
 # Asking the user for the total number of arrangements:
-num_arrangements_input = int(input(f"Total number of arrangements you must enter, no greater than {subsets_input_total} it should be:\n:> "))
+num_arrangements_input = int(input(f"Total number of the arrangement you must enter, no greater than {subsets_input_total} it should be:\n:> "))
 
-# # list to hold factorial outputs
-# factorial_of_subsets_list = []
-# # looping through the input string
-# for subset in list_of_subet_inputs:
-#     # calling the factorial function and appending the output to the list
-#     factorial_of_subsets_list.append(factorial(subset))
-
-
-# print(f"This is factorial list: {factorial_of_subsets_list}")
-# print(f"This is input integer list: {list_of_subet_inputs}")
+# list to hold factorial outputs
+factorial_of_subsets_list = []
+# looping through the input string
+for subset in list_of_subet_inputs:
+    # calling the factorial function and appending the output to the list
+    factorial_of_subsets_list.append(factorial(subset))
 
 
-# def multiset_arrangement_function (factorial_of_subsets_list, list_of_subet_inputs):
-#     # The total number of elements
-#     subsets_total = sum(list_of_subet_inputs)
-#     print(f"sum of subsets: {subsets_total}")
+print(f"This is factorial list: {factorial_of_subsets_list}")
+print(f"This is input integer list: {list_of_subet_inputs}")
 
-#     # getting factorial for total elements in subset
-#     subset_total_factorial = factorial(subsets_total)
-#     print(f"This is subset total factorial: {subset_total_factorial}")
+# list = [2, 3, 4, 2]
 
-#     # Variable to hold total for all factorials after being multiplied
-#     factorials_total = 1
+num_of_the_arrangement = num_arrangements_input
 
-#     for subset_factorial in factorial_of_subsets_list:
-#         factorials_total *= subset_factorial
+# creating a list of lists that hold the ranges of each subset
+list_of_ranges = []
+for i in range(len(list_of_subet_inputs)):
+    ranges = []
+    for x in range(0,list_of_subet_inputs[i]+1):
+        ranges.append(x)
+    list_of_ranges.append(ranges)
+# print(f"This is list of ranges: {list_of_ranges}")
 
-#     print(f"This is ans: {subset_total_factorial//factorials_total}")
+# Going through the subset ranges to get possible combinations
+final_combinations_list = [[]]
+for range in list_of_ranges:
+    new_combinations = []
+    for combination in final_combinations_list:
+        for value in range:
+            new_combination = combination + [value]
+            new_combinations.append(new_combination)
+    final_combinations_list = new_combinations
 
-# multiset_arrangement_function(factorial_of_subsets_list, list_of_subet_inputs)
+# Getting only valid combinations that are not greater than number of the arrangement
+valid_combinations = []
+for combo in final_combinations_list:
+    if sum(combo)== num_of_the_arrangement:
+        valid_combinations.append(combo)
+
+# Solving for total number of arrangements
+all_combo_factorials = 1
+for combo in valid_combinations:
+    print(f"This is combo: {combo}")
+    combo_factorial_divisor = 1
+    for value in combo:
+        if value == 0:
+            value += 1
+        combo_factorial_divisor *= value
+    print(f"This is combo factorial divisor: {combo_factorial_divisor}")
+    #calling the factorial function 
+    num_items_in_combo = len(combo)
+    print(f"This is combo length: {num_items_in_combo}")
+    print(f"This is combo length type: {type(num_items_in_combo)}")
+    # combo_facorial_numerator = factorial(num_items_in_combo)
+    # print(f"This is factorial numerator: {combo_facorial_numerator}")
+    all_combo_factorials += combo_factorial_divisor
+print(all_combo_factorials)

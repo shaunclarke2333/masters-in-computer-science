@@ -19,21 +19,45 @@ def factorial (num):
 #     for subset in list_of_subet_inputs:
 #         num_of_elements += subset
 #         subset_factorials_total *= factorial(subset)
-
 #     return factorial(num_of_elements)//subset_factorials_total
 
 # print(multiset_arrangement_function([2,1,1]))
 
-list = [2,3,4,2]
+list = [2, 3, 4, 2]
+
+k = len(list)
 
 list_of_ranges = []
 for i in range(len(list)):
-    # print(i)
     ranges = []
     for x in range(0,list[i]+1):
-        # print(f"{x}")
         ranges.append(x)
-
     list_of_ranges.append(ranges)
+# print(f"This is list of ranges: {list_of_ranges}")
 
-print(f"This is list of ranges: {list_of_ranges}")
+final_combinations_list = [[]]
+for range in list_of_ranges:
+    new_combinations = []
+    for combination in final_combinations_list:
+        for value in range:
+            new_combination = combination + [value]
+            new_combinations.append(new_combination)
+    final_combinations_list = new_combinations
+
+valid_combinations = []
+for combo in final_combinations_list:
+    if sum(combo)== k:
+        valid_combinations.append(combo)
+
+all_combo_factorials = 1
+for combo in valid_combinations:
+    print(f"This is combo: {combo}")
+    combo_factorial = 1
+    for value in combo:
+        if value == 0:
+            value += 1
+        combo_factorial *= value
+    print(f"This is combo factorial: {combo_factorial}")
+    all_combo_factorials += combo_factorial
+print(all_combo_factorials)
+
