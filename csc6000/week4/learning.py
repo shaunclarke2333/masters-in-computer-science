@@ -25,7 +25,7 @@ def factorial (num):
 
 list = [2, 3, 4, 2]
 
-k = len(list)
+num_of_the_arrangement = len(list)
 
 list_of_ranges = []
 for i in range(len(list)):
@@ -46,7 +46,7 @@ for range in list_of_ranges:
 
 valid_combinations = []
 for combo in final_combinations_list:
-    if sum(combo)== k:
+    if sum(combo)== num_of_the_arrangement:
         valid_combinations.append(combo)
 
 all_combo_factorials = 1
