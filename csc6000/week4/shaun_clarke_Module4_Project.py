@@ -23,46 +23,41 @@ def factorial_calc (num):
     return total
 
 # Asking user to enter the number of subsets that should be between 3 and 8
-num_of_subsets = int(input(f"Enter a number of subsets you must ...\nNo less than 3 and no greater than 8 they should be:\n:> "))
+j_num_of_subsets = int(input(f"Enter a number of subsets you must ...\nNo less than 3 and no greater than 8 they should be:\n:> "))
 
 # asaking user for their input
-subsets_input = input(f"{num_of_subsets} subsets you have, the size of each you must enter, comma separated.\nNo less than 1 and no greater than 5 each size should be\n:> ")
+mi_subsets_input = input(f"{j_num_of_subsets} subsets you have, the size of each you must enter, comma separated.\nNo less than 1 and no greater than 5 each size should be\n:> ")
 
 # Splitting the input string to create a list
-subsets_input = subsets_input.split(",")
+mi_subsets_input = mi_subsets_input.split(",")
 
-# print(type(subsets_input))
 # converting strings in list to integers.
-list_of_subset_inputs = list(map(int,subsets_input))
+mi_subsets_input = list(map(int,mi_subsets_input))
+
+print(f"type: {mi_subsets_input}")
 
 # sum of all the subset elements to get the total elements
-subsets_input_total = sum(list_of_subset_inputs)
+n_subsets_input_total = sum(mi_subsets_input)
 
-# print(f"type: {list_of_subset_inputs}")
+print(f"subset input total: {n_subsets_input_total}")
 
 # Asking the user for the total number of arrangements:
-num_arrangements_input = int(input(f"Total number of the arrangement you must enter, no greater than {subsets_input_total} it should be:\n:> "))
+k = int(input(f"Total number of the arrangement you must enter, no greater than {n_subsets_input_total} it should be:\n:> "))
+print(f"k number of arrangements input: {k}")
 
-# list to hold factorial outputs
-factorial_of_subsets_list = []
-# looping through the input string
-for subset in list_of_subset_inputs:
-    # calling the factorial function and appending the output to the list
-    factorial_of_subsets_list.append(factorial_calc(subset))
+# calculating numerator by calculating the factorial for the total elements
+numerator = factorial_calc(n_subsets_input_total)
+print(f"Numerator is: {numerator}")
 
-
-# print(f"This is factorial list: {factorial_of_subsets_list}")
-# print(f"This is input integer list: {list_of_subset_inputs}")
-
-# list = [2, 3, 4, 2]
-
-num_of_the_arrangement = num_arrangements_input
+# subtracting k from n number of elements
+n_minus_k = n_subsets_input_total - k
+print(f"This is n minus k: {n_minus_k}")
 
 # creating a list of lists that hold the ranges of each subset
 list_of_ranges = []
-for i in range(len(list_of_subset_inputs)):
+for i in range(len(mi_subsets_input)):
     ranges = []
-    for x in range(0,list_of_subset_inputs[i]+1):
+    for x in range(0,mi_subsets_input[i]+1):
         ranges.append(x)
     list_of_ranges.append(ranges)
 # print(f"This is list of ranges: {list_of_ranges}")
@@ -82,7 +77,7 @@ for a_range in list_of_ranges:
 # Getting only valid combinations that are not greater than number of the arrangement
 valid_combinations = []
 for combo in final_combinations_list:
-    if sum(combo) == num_of_the_arrangement:
+    if sum(combo) == k:
         # ok = True
         # for i in range(len(combo)):
         #     if combo[i] > list_of_subset_inputs[i]:
@@ -92,21 +87,28 @@ for combo in final_combinations_list:
 # print(f"Total valid combinations: {len(valid_combinations)}")
 # print(f"{valid_combinations}")
 
-# Solving for total number of arrangements
-all_combo_factorials = 0 # factorial total of all combos
+final_arrangements_total = 0
 for combo in valid_combinations:
-    # print(f"This is combo: {combo}")
+    combo.append(n_minus_k)
+    # print(f"This is combo with n minus k: {combo}")
     combo_factorial_divisor = 1
     for value in combo:
         combo_factorial_divisor *= factorial_calc(value)
+
+    ans = numerator / combo_factorial_divisor
+    final_arrangements_total += ans
+
+print(f"This is final number of arrangements: {final_arrangements_total}")
+
     
-    #calling the factorial function 
-    # print(f"This is combo length: {num_items_in_combo}")
-    # print(f"This is combo length type: {type(num_items_in_combo)}")
-    combo_facorial_numerator = factorial_calc(sum(combo))
-    print(f"This is factorial numerator: {combo_facorial_numerator}")
-    print(f"This is combo factorial divisor: {combo_factorial_divisor}")
-    factorials_total = combo_facorial_numerator/combo_factorial_divisor
-    print(f"This is total fact *******************: {factorials_total}")
-    all_combo_factorials += factorials_total
-print(all_combo_factorials)
+
+# list to hold factorial of each denominator
+# factorial_of_denominator_total = 1
+# # looping through the list of numerators
+# for item in mi_subsets_input:
+#     # calling the factorial function and appending the factorial output to the list
+#     factorial_of_denominator_total *= factorial_calc(item)
+# print(f"This is factorial list: {factorial_of_denominator_total}")
+# print(f"This is input denominator list: {mi_subsets_input}")
+
+# print(numerator/factorial_of_denominator_total)
