@@ -12,6 +12,7 @@ Asks the user the total number of the arrangement (a number smaller than the sum
 k
 Then, it computes and prints the number of arrangements of k elements out of n, considering the subsets of size mi;
 """
+
 # This is how we will calculate factorials:
 def factorial_calc (num):
     total = 1 # total starts at 1 because multiplying by 0 will zero everything
@@ -53,54 +54,15 @@ print(f"Numerator is: {numerator}")
 n_minus_k = n_subsets_input_total - k
 print(f"This is n minus k: {n_minus_k}")
 
-# creating a list of lists that hold the ranges of each subset
-list_of_ranges = []
-for i in range(len(mi_subsets_input)):
-    ranges = []
-    for x in range(0,mi_subsets_input[i]+1):
-        ranges.append(x)
-    list_of_ranges.append(ranges)
-# print(f"This is list of ranges: {list_of_ranges}")
 
-# Going through the subset ranges to get possible combinations
-final_combinations_list = [[]]
-for a_range in list_of_ranges:
-    new_combinations = []
-    for combination in final_combinations_list:
-        for value in a_range:
-            new_combination = combination + [value]
-            new_combinations.append(new_combination)
-    final_combinations_list = new_combinations
-# print(final_combinations_list)
-# print(f"Length final combo list: {len(final_combinations_list)}")
+mi_subsets_input.append(n_minus_k)
 
-# Getting only valid combinations that are not greater than number of the arrangement
-valid_combinations = []
-for combo in final_combinations_list:
-    if sum(combo) == k:
-        # ok = True
-        # for i in range(len(combo)):
-        #     if combo[i] > list_of_subset_inputs[i]:
-        #         ok = False
-        # if ok:
-        valid_combinations.append(combo)
-# print(f"Total valid combinations: {len(valid_combinations)}")
-# print(f"{valid_combinations}")
+total = 1
+for item in mi_subsets_input:
+    total *= factorial_calc(item)
 
 
-# calculating total number of arrangements
-final_arrangements_total = 0
-for combo in valid_combinations:
-    combo.append(n_minus_k) # adding n -k to list of combinations because they will all be divisors
-    # print(f"This is combo with n minus k: {combo}")
-    combo_factorial_divisor = 1
-    for value in combo:
-        combo_factorial_divisor *= factorial_calc(value)
-
-    ans = numerator / combo_factorial_divisor
-    final_arrangements_total += ans
-
-print(f"This is final number of arrangements: {final_arrangements_total}")
+print(numerator/total)
 
 # TO DO
 """
@@ -110,3 +72,4 @@ Adding error handling.
 Adding input verification to ensure user enters integers and not strings.
 Ensure user enters items comma separated and each one is an integer.
 """
+
