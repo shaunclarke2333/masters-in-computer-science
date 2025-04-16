@@ -81,20 +81,7 @@ for combo in valid_combinations:
     for value in combo:
         combo_factorial_divisor *= factorial_calc(value)
 
-    ans = numerator / combo_factorial_divisor
+    ans = numerator // combo_factorial_divisor
     final_arrangements_total += ans
 
 print(f"This is final number of arrangements: {final_arrangements_total}")
-
-    
-
-# list to hold factorial of each denominator
-# factorial_of_denominator_total = 1
-# # looping through the list of numerators
-# for item in mi_subsets_input:
-#     # calling the factorial function and appending the factorial output to the list
-#     factorial_of_denominator_total *= factorial_calc(item)
-# print(f"This is factorial list: {factorial_of_denominator_total}")
-# print(f"This is input denominator list: {mi_subsets_input}")
-
-# print(numerator/factorial_of_denominator_total)
