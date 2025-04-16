@@ -22,14 +22,17 @@ def factorial_calc (num):
     # print("The total is: {}".format(total))
     return total
 
+# Asking user to enter the number of subsets that should be between 3 and 8
 num_of_subsets = int(input(f"Enter a number of subsets you must ...\nNo less than 3 and no greater than 8 they should be:\n:> "))
 
+# asaking user for their input
 subsets_input = input(f"{num_of_subsets} subsets you have, the size of each you must enter, comma separated.\nNo less than 1 and no greater than 5 each size should be\n:> ")
 
 # Splitting the input string to create a list
 subsets_input = subsets_input.split(",")
 
 # print(type(subsets_input))
+# converting strings in list to integers.
 list_of_subset_inputs = list(map(int,subsets_input))
 
 # sum of all the subset elements to get the total elements
@@ -75,6 +78,7 @@ for a_range in list_of_ranges:
     final_combinations_list = new_combinations
 # print(final_combinations_list)
 # print(f"Length final combo list: {len(final_combinations_list)}")
+
 # Getting only valid combinations that are not greater than number of the arrangement
 valid_combinations = []
 for combo in final_combinations_list:
@@ -85,12 +89,11 @@ for combo in final_combinations_list:
         #         ok = False
         # if ok:
         valid_combinations.append(combo)
+# print(f"Total valid combinations: {len(valid_combinations)}")
+# print(f"{valid_combinations}")
 
-
-# print(f"All valid combos: {len(valid_combinations)}")
-# print(valid_combinations)
 # Solving for total number of arrangements
-all_combo_factorials = 0
+all_combo_factorials = 0 # factorial total of all combos
 for combo in valid_combinations:
     # print(f"This is combo: {combo}")
     combo_factorial_divisor = 1
@@ -103,7 +106,7 @@ for combo in valid_combinations:
     combo_facorial_numerator = factorial_calc(sum(combo))
     print(f"This is factorial numerator: {combo_facorial_numerator}")
     print(f"This is combo factorial divisor: {combo_factorial_divisor}")
-    factorials_total = combo_facorial_numerator//combo_factorial_divisor
+    factorials_total = combo_facorial_numerator/combo_factorial_divisor
     print(f"This is total fact *******************: {factorials_total}")
     all_combo_factorials += factorials_total
 print(all_combo_factorials)
