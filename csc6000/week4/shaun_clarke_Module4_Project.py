@@ -97,7 +97,16 @@ for combo in valid_combinations:
     for value in combo:
         combo_factorial_divisor *= factorial_calc(value)
 
-    ans = numerator // combo_factorial_divisor
+    ans = numerator / combo_factorial_divisor
     final_arrangements_total += ans
 
 print(f"This is final number of arrangements: {final_arrangements_total}")
+
+# TO DO
+"""
+TO DO
+Now that it works, cleanup code by grouping sections into functions.
+Adding error handling.
+Adding input verification to ensure user enters integers and not strings.
+Ensure user enters items comma separated and each one is an integer.
+"""
