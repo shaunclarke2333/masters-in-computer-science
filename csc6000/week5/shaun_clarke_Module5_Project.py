@@ -19,3 +19,27 @@ Keep in mind the triangle starts from row 0.
 
 
 """
+
+def get_user_input():
+    triangle_lines = ""
+    while triangle_lines != int:
+        try:
+            get_input = input(f"Your mission if you choose to accept it ...\nEnter a number from 4 to 8, to create Pascal's Triangle.\nEnter Number:> ")
+            print("")
+
+            if get_input == "exit":
+                exit()
+
+            get_input =int(get_input) 
+            
+            if get_input >= 4 and get_input <= 8:
+                triangle_lines = get_input
+                print(f"You've entered {triangle_lines}, Now watch the magic happen ...")
+                break
+            else:
+                raise ValueError
+        except ValueError:
+            print(f"You missunderstood the mission objective, please try again ...")
+            print("")
+
+# get_user_input()
