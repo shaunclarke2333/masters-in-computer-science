@@ -20,26 +20,103 @@ Keep in mind the triangle starts from row 0.
 
 """
 
+# this function gets the user input
 def get_user_input():
+    """
+    This function gets and validates the user input.
+    It makes sure the input meets the set criteria
+    """
+    # variale to hold the final user input that will be the numbe rof lines
     triangle_lines = ""
+    # While loop to make sure the user enters the correct input before it moves on
     while triangle_lines != int:
         try:
             get_input = input(f"Your mission if you choose to accept it ...\nEnter a number from 4 to 8, to create Pascal's Triangle.\nEnter Number:> ")
             print("")
 
+            # Allowing the user to exit the program
             if get_input == "exit":
                 exit()
-
+            
+            # Converting the input to an integer
             get_input =int(get_input) 
             
+            # Making sure it meets the set criteria
             if get_input >= 4 and get_input <= 8:
                 triangle_lines = get_input
                 print(f"You've entered {triangle_lines}, Now watch the magic happen ...")
+                print(f" ")
                 break
+                
             else:
+                # Raising a value error if the number entered does not fit the range
                 raise ValueError
         except ValueError:
             print(f"You missunderstood the mission objective, please try again ...")
             print("")
 
-# get_user_input()
+    return triangle_lines
+
+# This function calculates the binomial coefficient of a number
+def comb_calc(n,k):
+    # n!/k!(n-k)!
+    """
+    This function calculates the Binomial Coefficient of a number.
+    """
+    # This function is calculates the factorial of a number
+    def factorial_calc(num):
+        factorial = 1
+        for i in range(1,num+1):
+            factorial*=i
+        # print(f"{factorial}")
+        return factorial
+    
+    # Getting the factorial of n
+    ans = factorial_calc(n)/(factorial_calc(k) * factorial_calc(n-k))
+
+    # Making the number an int if it is or float if it is
+    if ans.is_integer():
+        return int(ans)
+    else:
+        return ans
+
+# Pritns pascals triangle
+def print_pascals_triangle():
+    """
+    This function prints pascals triangle using the following helper functions:
+    get_user_input()
+    comb_calc()
+    """
+
+    triangle_lines = get_user_input()
+    # List to hold all rows of the triangle
+    all_rows = []
+    # For loop to get the range for each line, basically getting k for each cell of each line.
+    for n in range(triangle_lines +1):
+        # Empty list to hold the individual range for each line.
+        each_range = []
+        for i in range(n + 1):
+            each_range.append(i)
+    
+        # List to hold trinagle row
+        each_row = []
+        # calculating triangle cells
+        for k in each_range:
+            each_row.append(comb_calc(n,k))
+        
+        # making the each_row a spaced string instead of separate items then appending it
+        all_rows.append(' '.join((map(str,each_row))))
+
+    # Using a generator expression to get the max width by getting the max length of each string in the list of lists.
+    max_width = max(len(row) for row in all_rows)
+
+    # printing eaxh row in the list
+    for row in all_rows:
+        # printing everything with the same max width so they will all be automatically centered.
+        print(f"{row:^{max_width}}")
+
+def main():
+    print_pascals_triangle()
+
+if __name__ == "__main__":
+    main()
