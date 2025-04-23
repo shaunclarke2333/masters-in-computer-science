@@ -16,7 +16,7 @@ So looping through 4 + 1 will give us 0,1,2,3,4. The rows of the triangle from 0
 Looking at pascals triangle while using the formula (n,k) with n at the top of the parenthesis and k at the bottom.
 You see that k in each cell of the triangle is the range of the row number plus 1. so if it is row 3, k in each of the three cells would be 0,1,2,3.
 Keep in mind the triangle starts from row 0.
-
+generator expression might help with getting max width of the printed rows
 
 """
 
@@ -63,7 +63,7 @@ def comb_calc(n,k):
     """
     This function calculates the Binomial Coefficient of a number.
     """
-    # This function is calculates the factorial of a number
+    # This function calculates the factorial of a number
     def factorial_calc(num):
         factorial = 1
         for i in range(1,num+1):
@@ -71,7 +71,7 @@ def comb_calc(n,k):
         # print(f"{factorial}")
         return factorial
     
-    # Getting the factorial of n
+    # Using the formula n!/k!(n-k)! to calculate the answer
     ans = factorial_calc(n)/(factorial_calc(k) * factorial_calc(n-k))
 
     # Making the number an int if it is or float if it is
@@ -87,7 +87,6 @@ def print_pascals_triangle():
     get_user_input()
     comb_calc()
     """
-
     triangle_lines = get_user_input()
     # List to hold all rows of the triangle
     all_rows = []
