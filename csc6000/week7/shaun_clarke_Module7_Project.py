@@ -125,7 +125,6 @@ def calc_probability():
     print(f"The probability of you hitting all {k} drawn numbers ...\nIs {only_winning_combo}/{total_possible_combos:,}", end="\n\n")
     print(f"the probability of you hitting {k_one_less} of the drawn numbers ...\nIs {total_combo_k_minus_one_in_K}*{total_combo_of_one_wrong}/{total_possible_combos:,}")
 
-
 def main():
     calc_probability()
 
