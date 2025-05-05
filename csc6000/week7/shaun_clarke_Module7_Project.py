@@ -16,15 +16,17 @@ Your program should ask the users the values of n and k;
 # This function gets the user input
 def get_user_input():
     proceed = ""
+    # While loop that runs until it is broken, exited or proceed = yes
     while proceed != "yes":
         try:
+            # Getting the user input and converting it to lowercase
             user_input = input(f"Shall we play a game? ...\nPlease enter yes or no ...\n:> ").lower()
 
             # Allowing the user to exit the program
             if user_input == "exit":
                 exit()
             
-            # Breaking the 
+            # Breaking the loop if conditions are met, if not raise a valueerror
             if user_input == "yes":
                 print(" ")
                 print(f"You have chosen to play a game ...\nYour instructions will follow ...", end="\n\n")
@@ -102,6 +104,7 @@ def comb_calc(n,k):
     else:
         return ans
 
+# This function calculates the probability of k numbers out of n
 def calc_probability():
     k,n = get_user_input()
     # Variable for 1 because there is only one combination of numbers that can win.
@@ -121,7 +124,6 @@ def calc_probability():
     
     print(f"The probability of you hitting all {k} drawn numbers ...\nIs {only_winning_combo}/{total_possible_combos:,}", end="\n\n")
     print(f"the probability of you hitting {k_one_less} of the drawn numbers ...\nIs {total_combo_k_minus_one_in_K}*{total_combo_of_one_wrong}/{total_possible_combos:,}")
-
 
 
 def main():
