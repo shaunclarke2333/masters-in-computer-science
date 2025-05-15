@@ -49,8 +49,31 @@ def check_guess(random_number, user_guess):
 
 # This function provides hints
 def give_hint(random_num):
+    # list to hold relevant hints
+    hints_list = []
 
-    pass
+    # checking if random number is a multiple of 5
+    if random_num % 5 == 0:
+        hints_list.append("The number is a multiple of 5")
+    
+    # Checking if number is even
+    if random_num % 2 == 0:
+        hints_list.append("The number is even")
+
+    # Checking if number is odd
+    if random_num % 2 != 0:
+        hints_list.append("The number is odd")
+
+    # Checking if number to exp 2 > 1000
+    if random_num ** 2 > 1000:
+        hints_list.append("The number to the power of 2 is grater than 1000")
+    
+    # Checking if number to exp 2 < 1000
+    if random_num ** 2 < 1000:
+        hints_list.append("The number to the power of 2 is less than 1000")
+
+    return hints_list
+
 
 def main():
     # While loop to present the user with a menu and process their input
@@ -75,8 +98,10 @@ def main():
     # Generating the random number the user will try to guess
     random_num = generate_random_number()
 
+    # generating hints
+    hints = give_hint(random_num)
     # Counter to keep track of guesses
-    guess_counter = 0
+    guess_counter = 1
 
     # While loop that allows user to guess until they get it right.
     while True:
@@ -100,7 +125,8 @@ def main():
                 print(f"You got lucky on your {guess_counter} attempt!")
                 break
             elif guess != "winner" and guess_counter > 2:
-                pass
+                # chose a random more detailed hint
+                raise ValueError(f"\n{random.choice(hints)}\n")
             elif guess == "high":
                 raise ValueError(f"\nTry again but lower\n")
             elif guess == "low":
