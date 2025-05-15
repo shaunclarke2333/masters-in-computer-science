@@ -25,16 +25,11 @@ def user_menu_input():
     except ValueError:
             return False
     
-x = user_menu_input()
-
-if not x:
-        print("False")
-else:
-        print(x)
 
 # This function uses the random module to generate a random number
 def generate_random_number():
     number = random.randint(1,100)
+    return number
 
 # This function gets the user guess via input and makes sure it's an int
 def get_user_guess():
@@ -44,11 +39,23 @@ def get_user_guess():
         return user_input
     except ValueError:
         return False
-    
+
+# This function checks if the user's guess is correct    
 def check_guess(random_number, user_guess):
-    #  random_win_response = ["Winner, winner chicken dinner", "You are correct"]
-     if random_number == user_guess:
-          return True
-     elif user_guess > random_number:
-        pass
-            
+    if random_number == user_guess:
+        return True
+    elif user_guess > random_number:
+        return "high"
+    elif user_guess < random_number:
+        return "low"
+         
+men = user_menu_input()
+
+if men == 1:
+    random_num = generate_random_number()
+
+    user_guess = get_user_guess()
+
+    check = check_guess(random_num, user_guess)
+
+    print(check)
