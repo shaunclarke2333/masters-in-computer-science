@@ -111,7 +111,7 @@ def main():
 
             # Validating user_guess output to make sure the user stays within range
             if user_guess < 1 or user_guess > 100:
-                raise ValueError(f"\nTry again, make sure you enter a number with the range 1-100\n")
+                raise ValueError(f"\nTry again, make sure you enter a 'number' within the range 1-100\n")
             
             # Counting each guess
             guess_counter += 1
@@ -124,13 +124,14 @@ def main():
                 print(f"\nWINNER WINNER CHICKEN DINNER!!")
                 print(f"You got lucky on your {guess_counter} attempt!")
                 break
-            elif guess != "winner" and guess_counter > 2:
-                # chose a random more detailed hint
-                raise ValueError(f"\n{random.choice(hints)}\n")
+            elif guess == "high" and guess_counter > 2:
+                raise ValueError(f"\nTry again but lower.\nHeres's a clue:{random.choice(hints)}\n")
+            elif guess == "low" and guess_counter > 2:
+                raise ValueError(f"\nTry again but higher.\nHeres's a clue:{random.choice(hints)}\n")
             elif guess == "high":
-                raise ValueError(f"\nTry again but lower\n")
+                raise ValueError(f"\nTry again but lower.\n")
             elif guess == "low":
-                raise ValueError(f"\nTry again but higher\n")
+                raise ValueError(f"\nTry again but higher.\n")
         except ValueError as err:
             print(err)
         
