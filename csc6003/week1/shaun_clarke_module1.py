@@ -1,12 +1,55 @@
-
+"""
+Title: Number Guessing Game Algorithm
+Author: Shaun Clarke
+Goal: Create a program that generates a random number and asks the user to guess until they are correct.
+Steps:
+1.	Import the random module to generate a random number.
+2.	Define a function user_menu_input():
+        a.	This function displays a user menu
+        b.	Accepts the menu input 
+        c.	If the user inputs yes proceed with the game
+        d.	If the user inputs no exit the game
+        e.	If the user inputs “you choose”, randomly select yes or no.
+3.	Define a function generate_random_number():
+        a.	This function returns a random number between 1 and 100
+4.	Define a function get_user_guess():
+        a.	This function asks the user for an input and returns it as an integer.
+5.	Define a function check_guess(random_number, user_guess):
+        a.	This function compares the user’s guess to the random number.
+        b.	After the first incorrect guess, give a hint (higher or lower).
+        c.	After two incorrect guesses, give an additional hint randomly selected between (even/odd number, multiple of 5, the number to the power of 2 is greater/less than 1,000)
+        d.	If the guess is correct, display the number of attempts and tell them they are correct.
+6.	Define a function give_hint(random_num):
+        a.	This function generates hints for the random number and return hints as a list.
+7.	Define a function main():
+        a.	This function calls the program
+        b.	Use while loop to repeat menu prompt until user makes a choice
+            i.	Call user_menu_input() 
+        c.	Call generate_random_number() 
+        d.	Call give_clue(random_num) 
+        e.	Instantiate a guess counter variable
+        f.	Use a while loop to repeat the guessing process (steps 4 and 5) until the user is correct.
+            i.	Inside the loop:
+                1.	Call get_user_guess().
+                2.	Call check_guess(random_number, user_guess) 
+                3.	Print the appropriate message based on the result (hints, clues, correct, etc)
+        g.	End the program once the user guesses the correct number.
+"""
 
 # importing depenencies
-import math
 import random
 
 
 # This function accepts the user_menu input
 def user_menu_input():
+    """
+    This function takes no parameters.<br>
+    It displays the user menu.<br>
+    It also prompts the user to make a selection.<br>
+    It processes the user input.<br>
+    returns the user input as an integer.<br>
+    If an invalid input is entered False is returned.
+    """
     # Tuple to hold the options if user wants prgram to choose
     program_chooses = (1,2)
 
@@ -26,11 +69,23 @@ def user_menu_input():
     
 # This function uses the random module to generate a random number
 def generate_random_number():
+    """
+    This function takes no parameters.<br>
+    Generates a random number between 1 and 100.<br>
+    returns the random number as an integer
+    """
     number = random.randint(1,100)
     return number
 
 # This function gets the user guess via input and makes sure it's an int
 def get_user_guess():
+    """
+    This function takes no parameters.<br>
+    It prompts the user to input their guess.<br>
+    The guess must be an integer between 1 and 100.<br>
+    The user guess is returned as an integer.<br>
+    If an invalid input is entered False will be returned.
+    """
     try:
         # Asking the user to enter their guess
         user_input = int(input(f"What number did you guess young Jedi? (1-100)\n:> "))
@@ -40,6 +95,14 @@ def get_user_guess():
 
 # This function checks if the user's guess is correct    
 def check_guess(random_number, user_guess):
+    """
+    This function takes two parameters.<br>
+    random_number and user_guess.<br>
+    It compares the two parameters to see if the user guessed correctly.<br>
+    Correct guess returns "winner".<br>
+    Guess higher than random_num returns "high".<br>
+    Guess lower than random_num returns "low"
+    """
     if random_number == user_guess:
         return "winner"
     elif user_guess > random_number:
@@ -47,35 +110,50 @@ def check_guess(random_number, user_guess):
     elif user_guess < random_number:
         return "low"
 
-# This function provides hints
-def give_hint(random_num):
-    # list to hold relevant hints
-    hints_list = []
+# This function provides clue
+def give_clue(random_num):
+    """
+    This function takes one parameter random_num.<br>
+    This fucntion calculates the following:.<br>
+        even number.<br>
+        odd number.<br>
+        multiple of 5.<br>
+        number to the power of 2 is > 1000.<br>
+        number to the power of 2 is < 1000.<br>
+    Then returns a list of calculations that apply to the random_num
+    """
+    # list to hold relevant clue
+    clue_list = []
 
     # checking if random number is a multiple of 5
     if random_num % 5 == 0:
-        hints_list.append("The number is a multiple of 5")
+        clue_list.append("The number is a multiple of 5")
     
     # Checking if number is even
     if random_num % 2 == 0:
-        hints_list.append("The number is even")
+        clue_list.append("The number is even")
 
     # Checking if number is odd
     if random_num % 2 != 0:
-        hints_list.append("The number is odd")
+        clue_list.append("The number is odd")
 
     # Checking if number to exp 2 > 1000
     if random_num ** 2 > 1000:
-        hints_list.append("The number to the power of 2 is grater than 1000")
+        clue_list.append("The number to the power of 2 is grater than 1000")
     
     # Checking if number to exp 2 < 1000
     if random_num ** 2 < 1000:
-        hints_list.append("The number to the power of 2 is less than 1000")
+        clue_list.append("The number to the power of 2 is less than 1000")
 
-    return hints_list
+    return clue_list
 
-
+# This function calls the program
 def main():
+    """
+    This function is where the magic happens.<br>
+    This is where the the overall logic is organized and ran.<br>
+    Also prevents the program from executed if the script is imported.<br>
+    """
     # While loop to present the user with a menu and process their input
     while True:
         try:
@@ -98,8 +176,8 @@ def main():
     # Generating the random number the user will try to guess
     random_num = generate_random_number()
 
-    # generating hints
-    hints = give_hint(random_num)
+    # generating clue
+    clue = give_clue(random_num)
     # Counter to keep track of guesses
     guess_counter = 1
 
@@ -109,12 +187,12 @@ def main():
             # Getting the user guess input and processing it
             user_guess = get_user_guess()
 
+            # Counting each guess
+            guess_counter += 1
+
             # Validating user_guess output to make sure the user stays within range
             if user_guess < 1 or user_guess > 100:
                 raise ValueError(f"\nTry again, make sure you enter a 'number' within the range 1-100\n")
-            
-            # Counting each guess
-            guess_counter += 1
             
             # Checking the user's guess
             guess = check_guess(random_num, user_guess)
@@ -125,17 +203,16 @@ def main():
                 print(f"You got lucky on your {guess_counter} attempt!")
                 break
             elif guess == "high" and guess_counter > 2:
-                raise ValueError(f"\nTry again but lower.\nHeres's a clue:{random.choice(hints)}\n")
+                print(f"\nTry again but lower.\nHeres's a clue:{random.choice(clue)}\n")
             elif guess == "low" and guess_counter > 2:
-                raise ValueError(f"\nTry again but higher.\nHeres's a clue:{random.choice(hints)}\n")
+                print(f"\nTry again but higher.\nHeres's a clue:{random.choice(clue)}\n")
             elif guess == "high":
-                raise ValueError(f"\nTry again but lower.\n")
+                print(f"\nTry again but lower.\n")
             elif guess == "low":
-                raise ValueError(f"\nTry again but higher.\n")
-        except ValueError as err:
-            print(err)
+                print(f"\nTry again but higher.\n")
+        except ValueError:
+            continue
         
-
 
 if __name__ == "__main__":
     main()
