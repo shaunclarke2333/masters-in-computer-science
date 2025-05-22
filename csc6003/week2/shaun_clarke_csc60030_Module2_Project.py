@@ -65,7 +65,7 @@ def add_ships():
     """
     This fucntion takes no parameters
     """
-    # Empty set to hold uniqe ship locations
+    # local variable for empty set to hold ship locations
     ship_locations = set()
     
     # While loop to get random row and column pairs until set is complete
@@ -98,7 +98,7 @@ def setupBoard(myboard, ship_locations):
         myboard[ship[0]][ship[1]] = 'S'
 
 # This function gets user selection
-def get_user_selection(location):
+def get_user_coordinates(location):
 
     """
     This function takes 1 parameter:.<br>
@@ -109,23 +109,27 @@ def get_user_selection(location):
     - None if the input is not an integer.<br>
     - "out of range" if the number is not between 0 and 9
     """
-    # Getting the user input
-    user_input = input(f"\nEnter a {location} Number between 0 and 9:\n:> ")
 
-    # Logic to prevent the user from entering anything other than an int
-    if not user_input.isdigit():
-       return None
-    else:
-        user_input = int(user_input)
+    while True:
+        # Getting the user input
+        user_input = input(f"\nEnter a {location} Number between 0 and 9:\n:> ")
 
-    if user_input == 0:
-        return user_input
+        # Logic to prevent the user from entering anything other than an int
+        if not user_input.isdigit():
+            print(f"\nInvalid {location} your input must be a number between 0 and 9\n")
+            continue
+        else:
+            user_input = int(user_input)
 
-    if user_input < 0 or user_input > 9:
-        return "out of range"
-    else:
-        # print(f"\nThe number must be between 0 and 9\n")
-        return user_input
+        if user_input == 0:
+            return user_input
+
+        if user_input < 0 or user_input > 9:
+            print(f"\nInvalid {location} your input must between 0 and 9\n")
+            continue
+        else:
+            return user_input
+        
         
 def hitOrMiss(myboard, row, col):
     # implement the hit or miss functionality here
@@ -152,39 +156,24 @@ def main(myboard):
             print(f"\n{'Shall we play a game?':^{50}}")
             drawBoard(grid)
 
-            # row and column variables
-            row = "row"
-            column = "column"
+            # Getting row and column input
+            row = get_user_coordinates("row")
+            column = get_user_coordinates("column")
 
-            get_row = get_user_selection(row)
-            if get_row == None:
-                print(f"\nInvalid {row} your input must be a number between 0 and 9\n")
-                continue
-            elif get_row == "out of range":
-                print(f"\nInvalid {row} your input must between 0 and 9\n")
-                continue
+            contact = hitOrMiss(grid, row, column)
 
-
-            print(get_row)
-
-            get_column = get_user_selection(column)
-            if get_column == None:
-                print(f"\nInvalid {column} your input must be a number between 0 and 9\n")
-                continue
-            elif get_column == "out of range":
-                print(f"\nInvalid {column} your input must between 0 and 9\n")
-                continue
-            
-            print(get_column)
-
-            contact = hitOrMiss(grid, get_row, get_column)
+            if contact and ship_sunk_counter == 4:
+                ship_sunk_counter += 1
+                print(f"You sunk all {ship_sunk_counter} of my battleships!!\nGAME OVER!!")
+                break
 
             if contact:
                 ship_sunk_counter += 1
                 print(f"You sunk my battleship! sink {num_of_ships - ship_sunk_counter} more ships and you win")
                 continue
-            else:
-                print(f"Are you even trying?")
+
+            if not contact:
+                print(f"\nAre you even trying?\n")
                 continue
 
 
