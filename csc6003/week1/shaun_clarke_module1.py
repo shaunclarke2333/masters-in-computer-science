@@ -1,40 +1,4 @@
-"""
-Title: Number Guessing Game Algorithm
-Author: Shaun Clarke
-Goal: Create a program that generates a random number and asks the user to guess until they are correct.
-Steps:
-1.	Import the random module to generate a random number.
-2.	Define a function user_menu_input():
-        a.	This function displays a user menu
-        b.	Accepts the menu input 
-        c.	If the user inputs yes proceed with the game
-        d.	If the user inputs no exit the game
-        e.	If the user inputs “you choose”, randomly select yes or no.
-3.	Define a function generate_random_number():
-        a.	This function returns a random number between 1 and 100
-4.	Define a function get_user_guess():
-        a.	This function asks the user for an input and returns it as an integer.
-5.	Define a function check_guess(random_number, user_guess):
-        a.	This function compares the user’s guess to the random number.
-        b.	After the first incorrect guess, give a hint (higher or lower).
-        c.	After two incorrect guesses, give an additional hint randomly selected between (even/odd number, multiple of 5, the number to the power of 2 is greater/less than 1,000)
-        d.	If the guess is correct, display the number of attempts and tell them they are correct.
-6.	Define a function give_hint(random_num):
-        a.	This function generates hints for the random number and return hints as a list.
-7.	Define a function main():
-        a.	This function calls the program
-        b.	Use while loop to repeat menu prompt until user makes a choice
-            i.	Call user_menu_input() 
-        c.	Call generate_random_number() 
-        d.	Call give_clue(random_num) 
-        e.	Instantiate a guess counter variable
-        f.	Use a while loop to repeat the guessing process (steps 4 and 5) until the user is correct.
-            i.	Inside the loop:
-                1.	Call get_user_guess().
-                2.	Call check_guess(random_number, user_guess) 
-                3.	Print the appropriate message based on the result (hints, clues, correct, etc)
-        g.	End the program once the user guesses the correct number.
-"""
+
 
 # importing depenencies
 import random
@@ -168,8 +132,9 @@ def main():
                 print(f"\nSeems like we won't be playing, live long and prosper *_*_* ...", end="\n\n")
                 exit()
             elif not menu_input:
-                # Raising a value error if input doesn't match criteria
-                raise ValueError(f"\nFocus young Jedi, enter 1, 2 or 3 ...\n")
+                # Using continue to start over the loop if the user's input doesnt meet criteria.
+                print(f"\nFocus young Jedi, enter 1, 2 or 3 ...\n")
+                continue
         except ValueError as err:
             print(err)
 
@@ -192,7 +157,8 @@ def main():
 
             # Validating user_guess output to make sure the user stays within range
             if user_guess < 1 or user_guess > 100:
-                raise ValueError(f"\nTry again, make sure you enter a 'number' within the range 1-100\n")
+                print(f"\nTry again, make sure you enter a 'number' within the range 1-100\n")
+                continue
             
             # Checking the user's guess
             guess = check_guess(random_num, user_guess)
@@ -210,8 +176,8 @@ def main():
                 print(f"\nTry again but lower.\n")
             elif guess == "low":
                 print(f"\nTry again but higher.\n")
-        except ValueError:
-            continue
+        except ValueError as e:
+            print(e)
         
 
 if __name__ == "__main__":
