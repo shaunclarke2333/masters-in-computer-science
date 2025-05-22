@@ -1,19 +1,7 @@
 import random
 
 """
-    -------BATTLESHIPS-------
-    Pre-reqs: Loops, Strings, Arrays, 2D Arrays, Global Variables, Methods
-    How it will work:
-    1. A 10x10 grid will have 5 ships randomly placed about
-    2. You can choose a row and column to indicate where to shoot
-    3. For every shot that hits or misses it will show up in the grid
-    4. If all ships are shot, game over
-
-    Legend:
-    1. "." = water
-    2. "S" = ship position
-    3. "O" = water that was shot with bullet, a miss because it hit no ship
-    4. "X" = ship sunk!
+    
 """
 
 # Global variable for grid size
@@ -23,9 +11,16 @@ grid = [ ['']*grid_size for i in range(grid_size) ]
 # Global variable for number of ships to place
 num_of_ships = 5
 
+# This function prints the board to the console
 def drawBoard(myboard):
     """
-    This function takes the grid as a parameter
+    This function prints the battlefield grid to the console.<br>
+    Parameters:<br>
+    - myboard:<br>
+      - This should be the 10x10 list.<br>
+
+    Returns:<br> 
+        - None
     """
     # Gettinglength of board to use as marker forprinting grid within range
     lenght_of_board = len(myboard)
@@ -60,10 +55,15 @@ def drawBoard(myboard):
     # Printing the border at the bottom of the grid.
     print(f"+{'---+' * border_length}")
 
-# Add ships
-def add_ships():
+# This function generates the ship coordinates.
+def generate_ship_coordinates():
     """
-    This fucntion takes no parameters
+    This function generates 5 random ship coordinates.<br>
+    Parameters:<br>
+    - None
+    
+    Returns:<br> 
+    - Ship coordinates as a list
     """
     # local variable for empty set to hold ship locations
     ship_locations = set()
@@ -81,7 +81,16 @@ def add_ships():
 
 def setupBoard(myboard, ship_locations):
     """
-    This function takes the grid and the output of add_ships as parameters
+    This function takes the grid and the output of generate_ship_coordinates as parameters.<br>
+
+    Parameters:<br>
+    - myboard:<br>
+      - This should be the 10x10 list.<br>
+    - ship_locations:<br>
+      - This should be the list returned from generate_ship_coordinates().<br>
+
+    Returns:<br> 
+    - None
     """
     i = j = 0
 
@@ -99,17 +108,18 @@ def setupBoard(myboard, ship_locations):
 
 # This function gets user selection
 def get_user_coordinates(location):
-
     """
-    This function takes 1 parameter:.<br>
-    row or column
     This function gets the user inputs for the grid coordinates.<br>
-    it returns:<br>
-    - The user input if it meets criteria.<br>
-    - None if the input is not an integer.<br>
-    - "out of range" if the number is not between 0 and 9
-    """
+    Parameters:<br>
+    - location:<br>
+      - should be a string "row" or "column, one or the other not both at teh same time.<br>
 
+    Returns:<br> 
+    - The user input.<br>
+      - The user input as an int if it meets criteria.<br>
+      - None if the input is not an integer.<br>
+      - "out of range" if the number is not between 0 and 9
+    """
     while True:
         # Getting the user input
         user_input = input(f"\nEnter a {location} Number between 0 and 9:\n:> ")
@@ -132,77 +142,92 @@ def get_user_coordinates(location):
         
         
 def hitOrMiss(myboard, row, col):
-    # implement the hit or miss functionality here
+    """
+    This function checks if the user input was a hit or miss.<br>
+
+    Parameters:<br>
+    - myboard:<br>
+      - This should be the 10x10 list.<br>
+    - row:<br>
+      - This should be the row input from user.<br>
+    - col:<br>
+      - This should be the column input from user.<br>
+
+    Returns:<br> 
+    - True.<br>
+      - If the user input was a hit on a ship.<br>
+    - False.<br>
+      - If the user input was not a hit on a ship.<br>
+    """
+    # Local variable for what is at the coordinates the user entered
     location = myboard[row][col]
 
+    # Logic to validate  if the entered coordinates was a hit or miss.
     if location == "S":
+        # Updating board with X to show a hit
         myboard[row][col] = "X"
         return True
     elif location != "S":
+        # Updating board with S to show a miss
         myboard[row][col] = "O"
         return False
 
-
+# Structuring the program with combined logic.
 def main(myboard):
+    """
+    This function ties everyting together and calls the progam.<br>
+
+    Parameters:<br>
+    - myboard:<br>
+      - This should be the 10x10 list.<br>
+
+    Returns:<br> 
+    - None.<br>
+    """
     try:
-        ship_locations = add_ships()
+        # Local variable to hold list of ship locations
+        ship_locations = generate_ship_coordinates()
+        # updating the board and adding the ships
         setupBoard(grid, ship_locations)
 
+        # Local variable for sunken ship counter
         ship_sunk_counter = 0
         
+        # While loop to ask for user input until they sink all the ships
         while ship_sunk_counter < 5:
 
             # Displaying the board to the user
             print(f"\n{'Shall we play a game?':^{50}}")
-            drawBoard(grid)
+            drawBoard(myboard)
 
-            # Getting row and column input
+            # Local variable to hold user row input
             row = get_user_coordinates("row")
+            # Local variable to hold user column input
             column = get_user_coordinates("column")
 
-            contact = hitOrMiss(grid, row, column)
+            # Local variable to hold if a ship was hit or missed
+            contact = hitOrMiss(myboard, row, column)
 
+            # Logic to verify if the user input hit a ship and return the appropriate user message.
             if contact and ship_sunk_counter == 4:
                 ship_sunk_counter += 1
-                print(f"You sunk all {ship_sunk_counter} of my battleships!!\nGAME OVER!!")
+
+                # Displaying board with all sunken ships
+                drawBoard(myboard)
+                print(f"\nYou sunk all {ship_sunk_counter} of my battleships!!\nGAME OVER!!")
                 break
 
             if contact:
                 ship_sunk_counter += 1
-                print(f"You sunk my battleship! sink {num_of_ships - ship_sunk_counter} more ships and you win")
+                remaining_ships = num_of_ships - ship_sunk_counter
+                print(f"You sunk my battleship! Sink {remaining_ships} more ship{'s' if remaining_ships != 1 else ''} and you win")
                 continue
 
             if not contact:
                 print(f"\nAre you even trying?\n")
                 continue
-
-
-
-
-
-        # here do everything like
-        #   set up the board
-        #   till the game is over
-        #     draw the board
-        #     ask for a row and column and check it is a hit or a miss
-        # when the game is over, print that message!
-        # print('Game over!')
     except TypeError as e:
         print(f"\nYour input must be a number\n")
-    
-# do not forget to call main!
-main(grid)
 
-
-
-
-
-
-# while True:
-
-#     pass
-
-# def isGameOver(myboard):
-#     # check if there are ships remaining on the grid.
-#     # if there are ships remaining, return false else return true
-#     return False
+if __name__ == "__main__":
+    main(grid)
