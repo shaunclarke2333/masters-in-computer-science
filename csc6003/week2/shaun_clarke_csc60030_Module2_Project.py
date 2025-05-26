@@ -79,9 +79,9 @@ def generate_ship_coordinates():
     ship_locations = list(ship_locations)
     return ship_locations
 
-def setupBoard(myboard, ship_locations):
+def setupboard(myboard, ship_locations):
     """
-    This function takes the grid and the output of generate_ship_coordinates as parameters.<br>
+    This function set's up the board with the ship icons and dots for the water.<br>
 
     Parameters:<br>
     - myboard:<br>
@@ -141,7 +141,7 @@ def get_user_coordinates(location):
             return user_input
         
         
-def hitOrMiss(myboard, row, col):
+def hitorMiss(myboard, row, col):
     """
     This function checks if the user input was a hit or miss.<br>
 
@@ -188,7 +188,7 @@ def main(myboard):
         # Local variable to hold list of ship locations
         ship_locations = generate_ship_coordinates()
         # updating the board and adding the ships
-        setupBoard(grid, ship_locations)
+        setupboard(grid, ship_locations)
 
         # Local variable for sunken ship counter
         ship_sunk_counter = 0
@@ -206,7 +206,7 @@ def main(myboard):
             column = get_user_coordinates("column")
 
             # Local variable to hold if a ship was hit or missed
-            contact = hitOrMiss(myboard, row, column)
+            contact = hitorMiss(myboard, row, column)
 
             # Logic to verify if the user input hit a ship and return the appropriate user message.
             if contact and ship_sunk_counter == 4:
