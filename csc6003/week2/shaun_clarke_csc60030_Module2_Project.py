@@ -121,24 +121,25 @@ def get_user_coordinates(location):
       - "out of range" if the number is not between 0 and 9
     """
     while True:
-        # Getting the user input
-        user_input = input(f"\nEnter a {location} Number between 0 and 9:\n:> ")
+        try:
+            # Getting the user input
+            user_input = input(f"\nEnter a {location} Number between 0 and 9:\n:> ")
 
-        # Logic to prevent the user from entering anything other than an int
-        if not user_input.isdigit():
-            print(f"\nInvalid {location} your input must be a number between 0 and 9\n")
-            continue
-        else:
-            user_input = int(user_input)
+            # Logic to prevent the user from entering anything other than an int
+            if not user_input.isdigit():
+                raise ValueError(f"\nInvalid {location} your input must be a number between 0 and 9\n")
+            else:
+                user_input = int(user_input)
 
-        if user_input == 0:
-            return user_input
+            if user_input == 0:
+                return user_input
 
-        if user_input < 0 or user_input > 9:
-            print(f"\nInvalid {location} your input must between 0 and 9\n")
-            continue
-        else:
-            return user_input
+            if user_input < 0 or user_input > 9:
+                raise ValueError(f"\nInvalid {location} your input must between 0 and 9\n")
+            else:
+                return user_input
+        except ValueError as err:
+            print(err)
         
         
 def hitorMiss(myboard, row, col):
