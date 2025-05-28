@@ -2,6 +2,7 @@ import random
 
 """
 Title: Battleship Game Algorithm
+Author Shaun Clarke
 Goal: Mimics the game battleship, where the users plays until they sink all ships.
 
 Steps:
