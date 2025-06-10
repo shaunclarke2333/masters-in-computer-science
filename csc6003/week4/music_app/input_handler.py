@@ -84,7 +84,7 @@ class UserInput:
                 continue
     
     # Gets input and pass them to music user method to update son info
-    def handle_update_song(self, user_object: MusicUser) -> Union[Dict,str]:
+    def handle_update_song(self, user_object: MusicUser) -> str:
         # Validating title input
         while True:
             try:
@@ -92,26 +92,48 @@ class UserInput:
                 title: str = self.get_input("\nEnter song title you would like to update")
                 # If song is not in library
                 if not user_object.is_song_in_library(title):
-                    raise KeyError(f"\nSong not found")
-                break
+                    raise KeyError(f"\nsong not found")
+                
+                # Validating artist input
+                artist: str = self.get_input("\nEnter new artist name")
+                # Validating genre input
+                genre: str = self.get_input("\nEnter new genre")
+                # Updating artist name in library
+                update_song = user_object.update_song_details(title, artist, genre)
+                
+                # Making sure user doesnt continue until song is updated.
+                if update_song == "details not updated":
+                    raise RuntimeError("details not updated")
+                
+                return update_song
             except KeyError as err:
                 print(err)
+            except RuntimeError as runtime:
+                print(runtime)
             
-        # Validating artist input
-        artist: str = self.get_input("\nEnter new artist name")
-        # Validating genre input
-        genre: str = self.get_input("\nEnter new genre")
-        # Updating artist name in library
-        update_song = user_object.update_song_details(title, artist, genre)
-        return update_song
-    
-    def handle_delete_song(self, user_object: MusicUser, title: str) -> str:
-        # Validating title input
-        title : str = self.get_input("\nEnter the title of the song you want to delete")
-        # Deleting song
-        deleted_song: str = user_object.deleted_song(title)
-        return deleted_song
-    
+    # 
+    def handle_delete_song(self, user_object: MusicUser) -> str:
+        while True:
+            try:
+                # Validating title input
+                title : str = self.get_input("\nEnter the title of the song you want to delete")
+                # If song is not in library
+                if not user_object.is_song_in_library(title):
+                    raise KeyError(f"\nsong not found")
+                # Deleting song
+                deleted_song: str = user_object.delete_song(title)
+                # Making sure user doesnt continue if song was not deleted.
+                if deleted_song == "song not deleted":
+                    raise RuntimeError("song not deleted")
+                
+                return deleted_song
+            except KeyError as err:
+                print(err)
+            except RuntimeError as runtime:
+                print(runtime)
+            
     def handle_display_all_songs(self, user_object: MusicUser) -> Dict:
         # Returning the dictionary with all the users songs.
         return user_object.get_music_collection()
+     
+

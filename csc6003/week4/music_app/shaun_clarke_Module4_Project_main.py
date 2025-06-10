@@ -104,13 +104,29 @@ def main():
         elif "Add a song" in menu[menu_list_item_index]:
             # Adding song to user library
             song: str = user_input_object.handle_add_song(current_user)
-            print(song)        
+            print(song.title())        
         elif "Retrieve song details" in menu[menu_list_item_index]:
             # Getting song details
             song_details: Dict = user_input_object.handle_retrieve_song_details(current_user)
             # Displaying song details
             print(f"\n>Song Details<")
-            print(f"Artist: {song_details["artist"]}\nGenre: {song_details["genre"]}")
+            print(f"Artist: {song_details["artist"].title()}\nGenre: {song_details["genre"].title()}")
+        elif "Update song details" in menu[menu_list_item_index]:
+            # Updating song in library
+            update_song: str = user_input_object.handle_update_song(current_user)
+            print(f"\n{update_song.title()}\n")
+        elif "Delete a song" in menu[menu_list_item_index]:
+            # Deleting song from library
+            deleted_song: str = user_input_object.handle_delete_song(current_user)
+            print(deleted_song.title())
+        elif "Display all songs" in menu[menu_list_item_index]:
+            # Getting all songs from library
+            get_all_songs = user_input_object.handle_display_all_songs(current_user)
+            if type(get_all_songs) == str:
+                print(f"\n{get_all_songs}\n")
+            else:
+                for title,details in get_all_songs.items():
+                    print(f"Title: {title.title()}\nArtist: {details["artist"].title()}\nGenre: {details["genre"].title()}\n")
         elif "Exit" in menu[menu_list_item_index]:
             print(f"\nI find your lack of faith disturbing.")
             print(f"You will be escorted to the edge of the galaxy.\n")

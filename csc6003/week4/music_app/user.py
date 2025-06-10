@@ -104,7 +104,7 @@ class MusicUser(User):
         if not self.is_song_in_library(title):
             return f"song deleted"
         else:
-            return f"song was not deleted"
+            return f"song not deleted"
         
     # This method displays all songs in the users collections
     def display_all_songs(self) -> Union[str,Dict]:
