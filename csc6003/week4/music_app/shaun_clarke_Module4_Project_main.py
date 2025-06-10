@@ -83,33 +83,34 @@ def main():
             # Logic to call the correct method that corresponds with the menu selection to handle user actions
             if "Add a user" in sub_menu[sub_menu_list_item_index]:
                  # Create user
-                user = user_input_object.handle_add_user()
+                user: object = user_input_object.handle_add_user()
                 # Increment counter
                 user_counter += 1
                 if not current_user:
-                    current_username = user.get_username()
-                    current_user = user
+                    current_username: str = user.get_username()
+                    current_user: object = user
             elif "Select a user" in sub_menu[sub_menu_list_item_index]:
                 # Formatting, displaying the select user menu and getting the select user menu input
                 user_select_menu_list,user_select_menu_list_index = format_menu_display(menu_header,current_user,user_menu_object.display_user_selection_menu,username_header)
-
                 # Checking which user was selected
                 for user in user_select_menu_list:
                     if user == user_select_menu_list[user_select_menu_list_index]:
-                        
-                
-            # ,
-            # "Exit"
-            sub_menu: list = user_menu_object.display_sub_menu(current_user)
-
-            max_menu_options = len(sub_menu)
-            # Format and display menu
-            format_menu_display(menu_header,sub_menu,current_user,username_header)
-            sub_menu_number_input = get_menu_number_input("Choose an option", max_menu_options)
-            sub_menu_list_item_index = sub_menu_number_input - 1
-            
-
-
+                        # stripping away leading number and returning just username
+                        username: str = user.split(") ")[1]
+                        # Updating current user with selected user
+                        current_user: object = user_input_object.handle_change_user(current_user, username)
+                        # updating current username with selected user
+                        current_username: str = current_user.get_username()
+        elif "Add a song" in menu[menu_list_item_index]:
+            # Adding song to user library
+            song: str = user_input_object.handle_add_song(current_user)
+            print(song)        
+        elif "Retrieve song details" in menu[menu_list_item_index]:
+            # Getting song details
+            song_details: Dict = user_input_object.handle_retrieve_song_details(current_user)
+            # Displaying song details
+            print(f"\n>Song Details<")
+            print(f"Artist: {song_details["artist"]}\nGenre: {song_details["genre"]}")
         elif "Exit" in menu[menu_list_item_index]:
             print(f"\nI find your lack of faith disturbing.")
             print(f"You will be escorted to the edge of the galaxy.\n")
@@ -119,13 +120,3 @@ def main():
 
 
 main()              
-
-
-    
-        
-
-
-
-    
-
-

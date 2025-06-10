@@ -115,7 +115,7 @@ class UserMenu:
             # Incremeting the counter by one so it can be used as menu number
             counter += 1
             # Adding user option to choose user menu
-            choose_user_list.append(f"{counter}) {username}")
+            choose_user_list.append(f"{username}")
         # Copying List to avoid returning original List
         copied_choose_user_list = choose_user_list.copy()
         copied_choose_user_list = self.__create_temp_menu(copied_choose_user_list)

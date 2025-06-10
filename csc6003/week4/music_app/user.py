@@ -18,7 +18,7 @@ class User:
         self.music_collection = {}
         
     # This method gets a user from the List
-    def change_user(self, username: str) -> str:
+    def change_user(self, username: str) -> object:
         try:
             return self.__class__.__users.get(username)
         except IndexError:
@@ -69,7 +69,7 @@ class MusicUser(User):
         if self.is_song_in_library(title):
             return f"{title} song added"
         else:
-            return f"{title} song not added"
+            return f"song not added"
     
     # This method retrieves the song details
     def retrieve_song_details(self, title: str) -> Union[Dict,str]:

@@ -32,31 +32,56 @@ class UserInput:
         return new_user
     
     # Seclects a different user
-    def handle_change_user(self, user_object: MusicUser) -> MusicUser:
-        username: str = self.get_input("")
+    def handle_change_user(self, user_object: MusicUser, username: str) -> MusicUser:
+        # username: str = self.get_input("")
         selected_user = user_object.change_user(username)
         return selected_user
     
     # Gets input and add a song to the library
     def handle_add_song(self, user_object: MusicUser) -> str:
-        # Validating title input
-        title: str = self.get_input("\nEnter song title")
-        # Validating artist input
-        artist: str = self.get_input("\nEnter artist name")
-        # Validating genre input
-        genre: str = self.get_input("\nEnter genre")
-               
-        # Adding song to music library
-        new_music: str = user_object.add_music_to_library(title, artist, genre)
-        return new_music
+        while True:
+            try:
+                # Validating title input
+                title: str = self.get_input("\nEnter song title")
+                # Validating artist input
+                artist: str = self.get_input("\nEnter artist name")
+                # Validating genre input
+                genre: str = self.get_input("\nEnter genre")
+                    
+                # Adding song to music library
+                new_music: str = user_object.add_music_to_library(title, artist, genre)
+                # Validate song was added
+                if new_music == "exists":
+                    raise FileExistsError(f"Song already in Library") 
+                
+                if new_music == "song not added":
+                    raise ValueError("Song could not be added to library")
+                
+                return new_music
+            except FileExistsError as fileex:
+                print(fileex)
+                continue
+            except ValueError as err:
+                print(err)
+                continue
+            
     
     # Gets input and returns song details
     def handle_retrieve_song_details(self, user_object: MusicUser) -> Dict:
         # Validating title input
-        title: str = self.get_input("\nEnter song title you would like to see")
-        # Getting song details 
-        song: Dict = user_object.retrieve_song_details(title)
-        return song
+        while True:
+            try:
+                title: str = self.get_input("\nEnter song title you would like to see.")
+                # Getting song details 
+                song: Dict = user_object.retrieve_song_details(title)
+
+                if song == "song not found":
+                    raise KeyError(song)
+                
+                return song
+            except KeyError as err:
+                print(err)
+                continue
     
     # Gets input and pass them to music user method to update son info
     def handle_update_song(self, user_object: MusicUser) -> Union[Dict,str]:
