@@ -115,7 +115,7 @@ def main():
             print(f"\nI find your lack of faith disturbing.")
             print(f"You will be escorted to the edge of the galaxy.\n")
             print(f"     <=o=>    <=o=>")
-            print(f"<=o=>    <=o=>")
+            print(f"<=o=>    <=o=>\n")
             exit()
 
 
