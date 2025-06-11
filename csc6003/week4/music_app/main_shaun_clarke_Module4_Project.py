@@ -53,7 +53,7 @@ def format_menu_display(menu_header: str, current_user: str, user_menu_object_me
 
 # This function prints a Lightsaber
 def print_lightsaber() -> None:
-    blade = "    ||"
+    blade = "    ||    "
     hilt = [
         "    ||    ",
         "   ||||   ",
@@ -144,8 +144,8 @@ def main():
                 if type(get_all_songs) != str:
                     for title,details in get_all_songs.items():
                         print(f"\nTitle: {title.title()}\nArtist: {details["artist"].title()}\nGenre: {details["genre"].title()}\n")
-                
-                print(f"\n{get_all_songs}\n")
+                else:
+                    print(f"\n{get_all_songs}\n")
             elif "Exit" in menu[menu_list_item_index]:
                 # Display easter egg
                 print(f"\nI find your lack of faith disturbing.")

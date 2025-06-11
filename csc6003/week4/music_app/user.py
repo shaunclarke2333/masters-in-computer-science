@@ -14,8 +14,31 @@ class User:
         self.first_name = first_name
         self.last_name = last_name
         self.username = (last_name+first_name[0]).lower() # Using last name and first initial for username
-        self.__class__.__users[self.username] = self  # adding username and user object to Dict 
+        self.manage_duplicate_name_range = [x  for x in range(1,100)]
         self.music_collection = {}
+        self.register_user()
+
+
+
+    # This method registers the user
+    def register_user(self) -> None:
+        
+        # Add username if it does not exist
+        if self.username not in self.__class__.__users:
+            self.__class__.__users[self.username] = self
+            return 0
+        # Checking for duplicates and modifying username
+        for i in range(len(self.manage_duplicate_name_range)):
+            duplicate_count = str(i+1)
+            # Add digit to username
+            self.username = self.username + duplicate_count
+            # Checking if updated username exists
+            if self.username not in self.__class__.__users:
+                # Adding updated username
+                self.__class__.__users[self.username] = self
+                break
+
+            
         
     # This method gets a user from the List
     def change_user(self, username: str) -> object:
