@@ -120,9 +120,9 @@ class Main:
                                 # stripping away leading number and returning just username
                                 username: str = user.split(") ")[1]
                                 # Updating current user with selected user
-                                current_user: object = self.user_input_object.handle_change_user(self.current_user, username)
+                                self.current_user: object = self.user_input_object.handle_change_user(self.current_user, username)
                                 # updating current username with selected user
-                                self.current_username: str = current_user.get_username()
+                                self.current_username: str = self.current_user.get_username()
                 elif "Add a song" in menu[menu_list_item_index]:
                     # Adding song to user library
                     song: str = self.user_input_object.handle_add_song(self.current_user)
