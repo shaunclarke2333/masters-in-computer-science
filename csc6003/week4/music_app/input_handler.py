@@ -34,7 +34,7 @@ class UserInput:
     # Seclects a different user
     def handle_change_user(self, user_object: MusicUser, username: str) -> MusicUser:
         # username: str = self.get_input("")
-        selected_user = user_object.change_user(username)
+        selected_user: object = user_object.change_user(username)
         return selected_user
     
     # Gets input and add a song to the library
@@ -132,7 +132,7 @@ class UserInput:
             except RuntimeError as runtime:
                 print(runtime)
             
-    def handle_display_all_songs(self, user_object: MusicUser) -> Dict:
+    def handle_display_all_songs(self, user_object: MusicUser) -> Union[Dict,str]:
         # Returning the dictionary with all the users songs.
         return user_object.get_music_collection()
      
