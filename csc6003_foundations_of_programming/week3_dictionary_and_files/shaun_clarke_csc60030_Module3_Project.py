@@ -8,7 +8,7 @@ file_path = "other_file.txt"
 # This function closes the file if it is open
 def close_file(file):
     """
-    This function this function closes the .txt file.<br>
+    This function closes the .txt file.<br>
     
     parameters:<br>
     - file:<br>
@@ -104,7 +104,7 @@ def remove_punctuations(file_content, split=True):
       - Default parameter that Allows user to skip split.
 
     returns:<br>
-      - Returns the file content as a lsit.<br>
+      - Returns the file content as a lsit or switch.<br>
     """
 
     # creating dictionary of punctuations to replace
@@ -121,15 +121,15 @@ def remove_punctuations(file_content, split=True):
 # This function returns the fice nmost common words
 def all_word_count(path):
     """
-    This function reads in the content of a .txt file.<br>
+    This function counts the 5 most common words in a .txt file.<br>
     
     parameters:<br>
     - path:<br>
       - This parameter is the path to the .txt file
     
-    - returns:<br>
-      - This function returns a list of tuples with the 5 most common words and the total times they appeared.<br>
-      - Returns **False** if the file was not found.
+    returns:<br>
+        - This function returns a list of tuples with the 5 most common words and the total times they appeared.<br>
+        - Returns **False** if the file was not found.
     """
     try:
         # Empty dict to hold words and their count
@@ -175,8 +175,7 @@ def single_word_count(path, word):
       
     - returns:<br>
       - This function returns an integer for the number of times the word appeared<br>
-      - if the word submitted doesn't exist, it returns false.
-      - Returns **not found** if the word or text is not in the file.
+      - if the word submitted doesn't exist, it returns 0.
       - Returns **file not found** if the file was not read.
     """
     try:
@@ -198,7 +197,7 @@ def single_word_count(path, word):
 # This function replaces a word or a line of text in the file
 def replace_item(path, item_to_replace, new_item, skip=False):
     """
-    This function replaces a word or a line of text in the file.<br>
+    This function replaces text in the file.<br>
     
     parameters:<br>
     - [string] path:<br>
@@ -240,7 +239,6 @@ def replace_item(path, item_to_replace, new_item, skip=False):
 
         # Local variable to hold new word count 
         new_word_count = single_word_count(path,item_to_replace)
-        print(f"New word count{new_word_count}")
 
         # Skipping this logic because we are deleting a word and not replacing it
         if not skip:
@@ -262,7 +260,7 @@ def replace_item(path, item_to_replace, new_item, skip=False):
 # This function adds text to a file
 def add_text(path, mode,content):
     """
-    This function finds out how many times a single word appeared in the .txt document.<br>
+    This function appends text ot the .txt document.<br>
 
     parameters:<br>
     - [string] **path**:<br>
@@ -361,7 +359,7 @@ def highlight_text(path, item_to_highlight):
 # This fucntion gets user input
 def get_user_input(input_message, path, new=False):
     """
-    This function gets the user inputs for the menu.<br>
+    This function gets the user inputs.<br>
     Parameters:<br>
     - input_message
       - A message telling the user what kind of input to enter.
@@ -408,7 +406,7 @@ def user_menu_input():
         try:
             # Asking the user to eneter their menu selection
             user_input = int(input(
-            f"""\n=+=+=+=Text Editor Menu=+=+=+=\n1: Top 5 most common words\n2: Single Word Frequency\n3: Replace a word\n4: Add Text\n5: Delete Text\n6: Highlight Text\n7: Undo all changes\n\nPlease Select a Menu Option\n:> """
+            f"""\n=+=+=+=Text Editor Menu=+=+=+=\n1: Top 5 most common words\n2: Single Word Frequency\n3: Replace a word\n4: Add Text\n5: Delete Text\n6: Highlight Text\n7: Undo all changes\n8: Exit\n\nPlease Select a Menu Option\n:> """
             ))
 
             # Logic to validate user input and proceed accordingly. 
@@ -423,91 +421,95 @@ def user_menu_input():
 # Bringing it all together
 def main(path):
 
-    # Getting file content before any changes
-    original_file_content = read_file(path, no_case=True)
+    try:
+      # Getting file content before any changes
+      original_file_content = read_file(path, no_case=True)
 
-    while True:
-        # Calling user menu
-        menu_input = user_menu_input()
+      while True:
+          # Calling user menu
+          menu_input = user_menu_input()
 
-        # Using match to trigger edit features based on user input
-        match menu_input:
-            case 1:
-                # Getting the five most common words and their counts
-                top_five_words = all_word_count(file_path)
+          # Using match to trigger edit features based on user input
+          match menu_input:
+              case 1:
+                  # Getting the five most common words and their counts
+                  top_five_words = all_word_count(file_path)
 
-                # Displaying top five words details
-                print(f"\nThe top five words are as follows:\n")
-                for i in range(len(top_five_words)):
-                    # Capitalizing the first letter of each word
-                    word = top_five_words[i][1].title()
-                    # Getting the count for each word
-                    word_count = top_five_words[i][0]
-                    print(f"*{word}* appeared {word_count} time{'s' if word_count != 1 else ''}.")
-            case 2:
-                # Getting user input for word they want to count
-                user_word_input = get_user_input("Please enter the word you would like to count", path)
-                # Removing punctuations
-                user_word_input = remove_punctuations(user_word_input,split=False)
-                # Getting the word count
-                word_count = single_word_count(path, user_word_input)
-                print(f"\nThe word '{user_word_input.capitalize()}' appears {word_count} time{'s' if word_count != 1 else ''}.\n")
-            case 3:
-                # Getting user input for words they would like to replace
-                item_to_replace = get_user_input("Please enter the word you would like to replace.", file_path)
-                # Removing punctuations
-                item_to_replace = remove_punctuations(item_to_replace,split=False)
+                  # Displaying top five words details
+                  print(f"\nThe top five words are as follows:\n")
+                  for i in range(len(top_five_words)):
+                      # Capitalizing the first letter of each word
+                      word = top_five_words[i][1].title()
+                      # Getting the count for each word
+                      word_count = top_five_words[i][0]
+                      print(f"*{word}* appeared {word_count} time{'s' if word_count != 1 else ''}.")
+              case 2:
+                  # Getting user input for word they want to count
+                  user_word_input = get_user_input("Please enter the word you would like to count", path)
+                  # Removing punctuations
+                  user_word_input = remove_punctuations(user_word_input,split=False)
+                  # Getting the word count
+                  word_count = single_word_count(path, user_word_input)
+                  print(f"\nThe word '{user_word_input.capitalize()}' appears {word_count} time{'s' if word_count != 1 else ''}.\n")
+              case 3:
+                  # Getting user input for words they would like to replace
+                  item_to_replace = get_user_input("Please enter the word you would like to replace.", file_path)
+                  # Removing punctuations
+                  item_to_replace = remove_punctuations(item_to_replace,split=False)
 
-                new_item = get_user_input("Please enter the new word.", file_path, new=True)
-                # Removing punctuations
-                new_item = remove_punctuations(new_item,split=False)
-                # Replacing word that user selected
-                updated_word_count = replace_item(file_path,item_to_replace,new_item)
-                print(f"\nThe word '{item_to_replace.capitalize()}' was replaced with '{new_item.capitalize()}' in {updated_word_count} place{'s' if updated_word_count != 1 else ''}\n")
-            case 4:
-                # Getting user input for text they would like to add
-                text_to_add = get_user_input("Please enter the text you would like to add", file_path, new =True)
+                  new_item = get_user_input("Please enter the new word.", file_path, new=True)
+                  # Removing punctuations
+                  new_item = remove_punctuations(new_item,split=False)
+                  # Replacing word that user selected
+                  updated_word_count = replace_item(file_path,item_to_replace,new_item)
+                  print(f"\nThe word '{item_to_replace.capitalize()}' was replaced with '{new_item.capitalize()}' in {updated_word_count} place{'s' if updated_word_count != 1 else ''}\n")
+              case 4:
+                  # Getting user input for text they would like to add
+                  text_to_add = get_user_input("Please enter the text you would like to add", file_path, new =True)
 
-                # Adding the text to the file
-                text_added = add_text(file_path, "a", text_to_add)
-                print(f"\n'{text_to_add}' was added to {file_path}\n")
-                print(text_added)
-            case 5:
-                # Getting user input for the item they want to delete:
-                item_to_delete = get_user_input("Please enter the text you would like to delete.", path)
-                # Removing punctuations
-                item_to_delete = remove_punctuations(item_to_delete,split=False)
+                  # Adding the text to the file
+                  text_added = add_text(file_path, "a", text_to_add)
+                  print(f"\n'{text_to_add}' was added to {file_path}\n")
+                  print(text_added)
+              case 5:
+                  # Getting user input for the item they want to delete:
+                  item_to_delete = get_user_input("Please enter the text you would like to delete.", path)
+                  # Removing punctuations
+                  item_to_delete = remove_punctuations(item_to_delete,split=False)
 
-                # Deleteing text from file
-                deleted_text = delete_text(file_path,item_to_delete)
+                  # Deleteing text from file
+                  deleted_text = delete_text(file_path,item_to_delete)
 
-                print(f"\n'{item_to_delete.capitalize()}' was deleted from {deleted_text} place{'s' if deleted_text != 1 else ''}\n")
-            case 6:
-                # Getting user input for text they would like to highlight.
-                text_to_highlight = get_user_input("Please enter the text you would like to highlight", path)
-                # Removing punctuations
-                text_to_highlight = remove_punctuations(text_to_highlight,split=False)
-                # Highlighting text
-                highlighted_text = highlight_text(file_path,text_to_highlight)
+                  print(f"\n'{item_to_delete.capitalize()}' was deleted from {deleted_text} place{'s' if deleted_text != 1 else ''}\n")
+              case 6:
+                  # Getting user input for text they would like to highlight.
+                  text_to_highlight = get_user_input("Please enter the text you would like to highlight", path)
+                  # Removing punctuations
+                  text_to_highlight = remove_punctuations(text_to_highlight,split=False)
+                  # Highlighting text
+                  highlighted_text = highlight_text(file_path,text_to_highlight)
 
-                # If text is already highlighted
-                if highlighted_text == "exists":
-                    print(f"{text_to_highlight.capitalize()} is already highlighted.")
+                  # If text is already highlighted
+                  if highlighted_text == "exists":
+                      print(f"{text_to_highlight.capitalize()} is already highlighted.")
 
-                    file_content = read_file(file_path)
-                    print(file_content)
-                    continue
-                    
-                print(read_file(file_path))
-            case 7:
-                # Writing original file content back to file before modifications
-                write_to_file(path, "w",original_file_content)
+                      file_content = read_file(file_path)
+                      print(file_content)
+                      continue
+                      
+                  print(read_file(file_path))
+              case 7:
+                  # Writing original file content back to file before modifications
+                  write_to_file(path, "w",original_file_content)
 
-                # reading and displaying updated file
-                file_content = read_file(file_path, no_case=True)
-                print(file_content)
-            case 8:
-                print(f"\nSafe travels on your journey\n")
-                exit()
+                  # reading and displaying updated file
+                  file_content = read_file(file_path, no_case=True)
+                  print(file_content)
+              case 8:
+                  print(f"\nMay the force be with you, young Skywalker\n")
+                  exit()
+    except FileNotFoundError as err:
+        print(err)
 
-print(main(file_path))
+if __name__ == "__main__":
+    main(file_path)
