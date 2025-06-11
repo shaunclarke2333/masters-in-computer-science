@@ -1,9 +1,6 @@
 # Importing dependencies
 from typing import Optional
-from typing import Tuple
-from typing import Dict
 from typing import List
-from typing import Union
 from user import User
 
 # This class displays menu items based on the user and or music in the library

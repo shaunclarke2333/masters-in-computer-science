@@ -1,10 +1,8 @@
 # Importing dependencies
-from typing import Optional
 from typing import Tuple
 from typing import Dict
 from typing import List
 from typing import Union
-from user import MusicUser
 from menu import UserMenu
 from input_handler import UserInput
 
@@ -132,7 +130,7 @@ class Main:
                     song_details: Dict = self.user_input_object.handle_retrieve_song_details(self.current_user)
                     # Displaying song details
                     print(f"\n>Song Details<")
-                    print(f"Artist: {song_details["artist"].title()}\nGenre: {song_details["genre"].title()}")
+                    print(f'Artist: {song_details["artist"].title()}\nGenre: {song_details["genre"].title()}')
                 elif "Update song details" in menu[menu_list_item_index]:
                     # Updating song in library
                     update_song: str = self.user_input_object.handle_update_song(self.current_user)
@@ -147,7 +145,7 @@ class Main:
                     # Checking is string or dict and format accordingly
                     if type(get_all_songs) != str:
                         for title,details in get_all_songs.items():
-                            print(f"\nTitle: {title.title()}\nArtist: {details["artist"].title()}\nGenre: {details["genre"].title()}\n")
+                            print(f'\nTitle: {title.title()}\nArtist: {details["artist"].title()}\nGenre: {details["genre"].title()}\n')
                     else:
                         print(f"\n{get_all_songs}\n")
                 elif "Exit" in menu[menu_list_item_index]:
