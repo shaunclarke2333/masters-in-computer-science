@@ -9,7 +9,7 @@ from user import User
 # This class displays menu items based on the user and or music in the library
 class UserMenu:
     def __init__(self):
-        self.__menu_options = [ # This List holds the main menu options
+        self.__menu_options: List = [ # This List holds the main menu options
             "Add user",
             "Change User",
             "Add a song",
@@ -19,7 +19,7 @@ class UserMenu:
             "Display all songs",
             "Exit"
         ]
-        self.__sub_menu_options = [
+        self.__sub_menu_options: List = [
             "Add a user",
             "Select a user",
             "Exit"

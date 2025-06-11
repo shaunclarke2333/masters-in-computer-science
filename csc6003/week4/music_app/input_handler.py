@@ -83,7 +83,7 @@ class UserInput:
                 print(err)
                 continue
     
-    # Gets input and pass them to music user method to update son info
+    # Gets input and pass them to music user method to update song info
     def handle_update_song(self, user_object: MusicUser) -> str:
         # Validating title input
         while True:
@@ -131,9 +131,9 @@ class UserInput:
                 print(err)
             except RuntimeError as runtime:
                 print(runtime)
-            
+    
+    # Hnadles input and uses it to get all songs in library. 
     def handle_display_all_songs(self, user_object: MusicUser) -> Union[Dict,str]:
         # Returning the dictionary with all the users songs.
         return user_object.get_music_collection()
      
-

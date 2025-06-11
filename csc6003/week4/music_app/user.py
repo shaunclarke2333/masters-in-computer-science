@@ -8,7 +8,7 @@ from typing import Union
 # This PARENT class creates a new user, and holds their music collection
 class User:
     # Making the users class variable Dict private.
-    __users = {}
+    __users: Dict = {}
     
     def __init__(self, first_name: str, last_name: str):
         self.first_name = first_name

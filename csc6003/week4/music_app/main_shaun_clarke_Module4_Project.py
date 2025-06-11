@@ -10,13 +10,15 @@ from input_handler import UserInput
 
 
 
-# Get menu number input
+# This function Gets menu number input
 def get_menu_number_input(input_message: str, num_of_menu_options: int) -> str:
     while True:
         try:
+            # Getting user input
             user_input: int = int(input(f">\n{input_message}\n:>").lower().strip())
             if not user_input:
                 raise KeyError(f"Input cannot be empty.")
+            # Using the length of the menu list to validate that menu input is within range
             if user_input >= 1 and user_input <= num_of_menu_options:
                 return user_input
             else:
