@@ -63,7 +63,7 @@ class UserMenu:
         return temp_menu
             
             
-    # Displays the menu based on user and music library state
+    # Selects the menu based on user and music library state
     def display_menu(self, user_object: Optional[User] = None) -> List[str]:
         if not self.__user_exists(user_object):
             # If no users exist return add user and exit menu options
@@ -85,6 +85,7 @@ class UserMenu:
             filtered_menu = self.__menu_options.copy()
             temp_menu = self.__create_temp_menu(filtered_menu)
             return temp_menu
+        # if one user exists and the library has songs.
         elif self.__user_exists(user_object) and self.__library_has_songs(user_object):
             filtered_menu = self.__menu_options.copy()
             filtered_menu.pop(1)

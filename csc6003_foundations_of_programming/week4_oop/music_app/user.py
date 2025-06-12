@@ -3,6 +3,7 @@ from typing import Dict
 from typing import List
 from typing import Union
 
+
 # This PARENT class creates a new user, and holds their music collection
 class User:
     # Making the users class variable Dict private.
@@ -20,6 +21,9 @@ class User:
 
     # This method registers the user
     def register_user(self) -> None:
+        """
+        This method registers a user and makes sure they are no duplicate user names.
+        """
         
         # Add username if it does not exist
         if self.username not in self.__class__.__users:
@@ -38,8 +42,11 @@ class User:
 
             
         
-    # This method gets a user from the List
-    def change_user(self, username: str) -> object:
+    # This method gets a user from the user dictionary
+    def change_user(self, username: str) -> Union[object,str]:
+        """
+        This method gets a user from the user dictionary
+        """
         try:
             return self.__class__.__users.get(username)
         except IndexError:
@@ -47,6 +54,9 @@ class User:
     
     # This method returns the username 
     def get_username(self) -> str:
+        """
+        This method returns the username 
+        """
         if not self.username:
             return 'user not found'
         return self.username
@@ -56,13 +66,13 @@ class User:
         return self.music_collection
     
      # This method gets users
-    def get_users(self) -> List:
+    def get_users(self) -> Dict:
         return self.__class__.__users
 
 
 # This CHILD CLASS inherits the parent class USER and handles user actions
 class MusicUser(User):
-    def __init__(self,first_name, last_name):
+    def __init__(self,first_name: str, last_name: str):
         super().__init__(first_name, last_name)
         
     # This method checks if library is empty and is only accessible from inside.
