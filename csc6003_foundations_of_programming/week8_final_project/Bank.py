@@ -1,24 +1,88 @@
+from typing import Union
+import Account
 
+# This class mimics some of the basic functions of a bank
 class Bank:
+#     # List to hold all bank accounts
+#     __accounts = []
+#     # Variable for total allowed bank accounts
+#     __total_accounts = 0
+    def __init__(self):
+        self.__class__.__accounts = []
+        self.__class__.__total_accounts = 0
     
-    def addAccountToBank(account):
-        
-        # implement addAccountToBank here
-        
-        return False; # be sure to change this as needed
-
-    def removeAccountFromBank(account):
-
-        # implement removeAccountFromBank here
-        
-        return False; # be sure to change this as needed
-
+    # This method checks if an account is already in accounts
+    def __does_account_exist(self, account: Account) -> bool:
+        """
+        This method checks if an account is already in accounts.
+        """
+        # Checking for duplicates
+        for acc in self.__class__.__accounts:
+            if acc == account:
+                return True
+        return False
     
-    def findAccount(accountNumber):
+    # This method adds the Account object to the bank
+    def add_account_to_bank(self, account: Account) -> Union[bool,str]:
+        """
+        This method adds an account object to the accounts list.<br>
+        It also make sure they are no duplicates and only allows 100 accounts.
+        """
+        # Checking if we reached account limit
+        if self.__class__.__total_accounts == 2:
+            print(f"No more accounts available")
+            return False
+        # Checking for duplicates
+        if self.__does_account_exist(account):
+            return f"account already exists"
+        # Adding account to bank if they are no duplicates
+        self.__class__.__accounts.append(account)
+        #updating total accounts count by adding 1 to represent a new account
+        self.__class__.__total_accounts += 1
+        print(f"total after adding account: {self.__class__.__total_accounts}")
+        return True
         
-        return  # be sure to change this as needed
+    # This method removes an account object from the accounts list
+    def remove_account_from_bank(self, account: Account) -> bool:
+        """
+        This method allows us to remnove an account from the account list
+        """
+        # checking each account in the list
+        for index,acc in enumerate(self.__class__.__accounts):
+            if acc is not None:
+                # if we have a match
+                if acc == account:
+                    # replace the account with None
+                    self.__class__.__accounts[index] = None
+                    #updating total accounts count by subtracting 1 to represent closing an account
+                    self.__class__.__total_accounts -= 1
+                    print(f"total after removing account: {self.__class__.__total_accounts}")
+                    return True
+        # return false if account doesnt exist
+        return False
     
-
-    def addMonthlyInterest(percent):
-       
-        # EXTRA CREDIT
+    # This method finds the specified account and return it
+    def find_account(self, account_number: int) -> Account:
+        # checking each account in the list
+        for acc in self.__class__.__accounts:
+            if acc is not None:
+                # If there is an account number match, return the account
+                if acc.get_account_number() == account_number:
+                    return acc
+        # Return false if the account was not found
+        return False
+    
+    # This method adds a monthly interest to all accounts using a submitted rate
+    def add_monthly_interest(self, interest_rate: float) -> bool:
+        # checking each account
+        for acc in self.__class__.__accounts:
+            if acc is not None:
+                print(f"This is {acc.get_owner_first_name()} balance: {acc.get_balance()}")
+                # getting present balance
+                balance = float(acc.get_balance())
+                # Creating interest rate amount
+                interest = balance * (interest_rate/100)
+                # depositing balance to account
+                acc.deposit(interest)
+        
+                
