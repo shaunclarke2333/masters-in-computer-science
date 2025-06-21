@@ -163,6 +163,9 @@ class Account:
         This mehtod subtracts the entered amount from the present balance.<br>
         It also returns the updated balance.
         """
+        # making sure there is enough money in account
+        if self.__balance < amount:
+            return "insufficient funds"
         # holding balance before change for comaprison
         previous_balance = self.__balance
         # Updating the account with withdrawal

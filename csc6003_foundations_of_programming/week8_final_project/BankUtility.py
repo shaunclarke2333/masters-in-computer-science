@@ -11,7 +11,7 @@ class BankUtility:
     def get_string_input(self, input_message: str) -> str:
         while True:
             try:
-                user_input: str = input(f"{input_message}\n:>").lower().strip()
+                user_input: str = input(f"\n{input_message}\n: ").lower().strip()
                 if not user_input:
                     raise ValueError(f"Input cannot be empty.")
                 return user_input
@@ -26,7 +26,7 @@ class BankUtility:
         """
         while True:
             try:
-                user_input: float = float(input(f"{input_message}\n:>"))
+                user_input: float = float(input(f"{input_message}: ").strip())
                 # If input didnt trigger value error and 
                 if user_input == int(user_input):
                     return user_input
@@ -53,7 +53,7 @@ class BankUtility:
         
     
     # This method converts dollars to cents and back
-    def convert_dollars_and_cents(self, amount: int, switch: bool = False) -> int:
+    def convert_dollars_and_cents(self, amount: int) -> int:
         """
         This method uses a switch to convert dollars to cents.<br>
         Swtich set to default False which converts dollars to cents.<br>
@@ -62,3 +62,14 @@ class BankUtility:
         # Convert dollars to cents
         cents: int = int(round(amount * 100))
         return cents
+    
+    # Checks if an input is all digits
+    @staticmethod
+    def is_numeric(numberToCheck) -> bool:
+        try:
+            if numberToCheck.isdigit():
+                return True
+            else:
+                return False
+        except ValueError:
+            return False

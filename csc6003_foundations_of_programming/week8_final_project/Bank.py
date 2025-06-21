@@ -29,8 +29,8 @@ class Bank:
         It also make sure they are no duplicates and only allows 100 accounts.
         """
         # Checking if we reached account limit
-        if self.__class__.__total_accounts == 2:
-            print(f"No more accounts available")
+        if self.__class__.__total_accounts == 100:
+            print(f"\nNo more accounts available\n")
             return False
         # Checking for duplicates
         if self.__does_account_exist(account):
@@ -39,7 +39,6 @@ class Bank:
         self.__class__.__accounts.append(account)
         #updating total accounts count by adding 1 to represent a new account
         self.__class__.__total_accounts += 1
-        print(f"total after adding account: {self.__class__.__total_accounts}")
         return True
         
     # This method removes an account object from the accounts list
@@ -56,8 +55,9 @@ class Bank:
                     self.__class__.__accounts[index] = None
                     #updating total accounts count by subtracting 1 to represent closing an account
                     self.__class__.__total_accounts -= 1
-                    print(f"total after removing account: {self.__class__.__total_accounts}")
                     return True
+                else:
+                    return False
         # return false if account doesnt exist
         return False
     
@@ -72,17 +72,21 @@ class Bank:
         # Return false if the account was not found
         return False
     
-    # This method adds a monthly interest to all accounts using a submitted rate
+    # This method adds monthly interest to all accounts using a submitted rate
     def add_monthly_interest(self, interest_rate: float) -> bool:
-        # checking each account
         for acc in self.__class__.__accounts:
             if acc is not None:
-                print(f"This is {acc.get_owner_first_name()} balance: {acc.get_balance()}")
-                # getting present balance
-                balance = float(acc.get_balance())
-                # Creating interest rate amount
-                interest = balance * (interest_rate/100)
-                # depositing balance to account
+                # Get balance in cents
+                balance = acc.get_balance()
+                # Calculate interest in cents (rounded to nearest cent)
+                interest = round(balance * (interest_rate / 100))
+                # Deposit interest (in cents)
                 acc.deposit(interest)
+                # Format interest and new balance
+                interest_dollars = interest / 100
+                new_balance_dollars = acc.get_balance() / 100
+                # Display output
+                print(f"Deposited interest:${interest_dollars:,.2f} into account number:{acc.get_account_number()}, new balance:${new_balance_dollars:,.2f}")
+
         
                 

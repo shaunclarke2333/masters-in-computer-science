@@ -36,5 +36,6 @@ class CoinCollector:
             else:
                 # counting coins
                 coin_counter += coin_values[coin]
+        coin_counter = coin_counter / 100
         return coin_counter, invalid_coins
 
