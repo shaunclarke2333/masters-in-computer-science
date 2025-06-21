@@ -312,6 +312,10 @@ class BankManager:
                                 amount_in_cents = self.bank_util_object.convert_dollars_and_cents(amount)
                                 # making widrawal
                                 make_withdraw = account.withdraw(amount_in_cents)
+                                # if not enough funds, go back to main menu
+                                if make_withdraw == "insufficient funds":
+                                    print(f"Insufficient funds in account {account.get_account_number()}")
+                                    break 
                                 # confirming withdrawal
                                 if make_withdraw:
                                     # get balance and format output
@@ -346,10 +350,14 @@ class BankManager:
                                 amount_in_cents = self.bank_util_object.convert_dollars_and_cents(amount)
                                 # making widrawal
                                 make_withdraw = account.withdraw(amount_in_cents)
+                                # if not enough funds, go back to main menu
+                                if make_withdraw == "insufficient funds":
+                                    print(f"Insufficient funds in account {account.get_account_number()}")
+                                    break 
                                 # confirming withdrawal
                                 if make_withdraw:
                                     # get balance and format output
-                                    balance = self.format_balance_output(make_withdraw)
+                                    balance = self.format_balance_output(account.get_balance())
                                     print(f"\nNew balance:{balance}\n")
                                     break
                                 else:
@@ -372,9 +380,10 @@ class BankManager:
                             # Making sure input is not zero
                             if len(coins) > 0:
                                 # counting coins
-                                parsed_change,invalid_coins = self.coin_collector.parseChange(coins)
+                                parsed_change, invalid_coins = self.coin_collector.parseChange(coins)
                                 # display invalid coins
-                                print("\nInvalid Coin:", *invalid_coins, sep=" ")
+                                if len(invalid_coins) > 0:
+                                    print("\nInvalid Coin:", *invalid_coins, sep=" ")
                                 # converting deposit to cents
                                 amount_in_cents = self.bank_util_object.convert_dollars_and_cents(parsed_change)
                                 # making deposit
