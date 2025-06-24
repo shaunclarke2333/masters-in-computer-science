@@ -12,16 +12,20 @@ class Animal:
         self.animal = animal
         self.__add_animal()
 
-    
     # Adding animal to zoo keepr dict
     def __add_animal(self):
         """
-        This method adds the user to the zoo dict
+        This method adds the animal to the zoo dict.<br>
+        Using the animal's name as the key.
         """
+        # adding animal to dict
         self.__class__.__zoo_keeper[self.name] = self
 
     # This method allows us to select an animal from the zoo dict
     def select_animal(self, animal: str) -> object:
+        """
+        This method allows us to select an animal from the zoo dict.
+        """
         for name, zoo_object in self.__class__.__zoo_keeper.items():
             if zoo_object.animal == animal:
                 return zoo_object
@@ -54,12 +58,13 @@ class Bear(Animal):
         super().__init__(name, species, animal)
         self.fur_color: str = fur_color
     
-    # This method returns the animals sound
+    # Overriding the make_sound method to include this naimals unique sound
     def make_sound(self) -> str:
         return "roar"
     
     # This method returns the animal info formatted
     def info(self) -> str:
+        # overriding info method to include new attributes
         return "".join([
             f"{self.name} is a {self.animal} ",
             f"of the {self.species} species, ",
@@ -73,12 +78,13 @@ class Elephant(Animal):
         super().__init__(name, species, animal)
         self.weight: str = weight
      
-    # This method returns the animals sound
+    # Overriding the make_sound method to include this naimals unique sound
     def make_sound(self) -> str:
         return "trumpet"
     
     # This method returns the animal info formatted
     def info(self) -> str:
+        # overriding info method to include new attributes
         return "".join([
             f"{self.name} is a {self.animal} ",
             f"of the {self.species} species ",
@@ -92,12 +98,13 @@ class Penguin(Animal):
         super().__init__(name, species,animal)
         self.height: str = height
     
-    # This method returns the animals sound       
+    # Overriding the make_sound method to include this naimals unique sound      
     def make_sound(self) -> str:
         return "squawk"
     
     # This method returns the animal info formatted
     def info(self) -> str:
+        # overriding info method to include new attributes
         return "".join([
             f"{self.name} is a {self.animal} ",
             f"of the {self.species} species ",
