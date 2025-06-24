@@ -45,7 +45,7 @@ class Animal:
             f""
         )
     
-    def get_all_animals(self):
+    def get_all_animals(self) -> Dict:
         return self.__class__.__zoo_keeper
     
     # This dunder method displays the animal info formatted
