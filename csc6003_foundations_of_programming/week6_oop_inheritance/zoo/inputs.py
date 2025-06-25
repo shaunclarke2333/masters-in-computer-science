@@ -37,7 +37,7 @@ class HandleInput:
                 print("\nPlease try again\n")
     
     # Gets input and create a bear
-    def handle_add_bear(self, bear_class: Bear) -> str:
+    def handle_add_bear(self, bear_class: Bear) -> object:
         # Validating input for name, species and fur color
         name: str = self.get_string_input("Enter the bear's name.")
         species: str = self.get_string_input("Enter the specie of bear.")
@@ -47,7 +47,7 @@ class HandleInput:
         return create_animal
             
     # Gets input and create an elephant
-    def handle_add_elephant(self, elephant_class: Elephant) -> str:
+    def handle_add_elephant(self, elephant_class: Elephant) -> object:
         # Validating input for name, species and weight
         name: str = self.get_string_input("Enter the elephant's name.")
         species: str = self.get_string_input("Enter the specie of elephant.")
@@ -57,7 +57,7 @@ class HandleInput:
         return create_animal
     
     # Gets input and create an penguin
-    def handle_add_penguin(self, penguin_class: Penguin) -> str:
+    def handle_add_penguin(self, penguin_class: Penguin) -> object:
         # Validating input for name, species and fur color
         name: str = self.get_string_input("Enter the penguin's name.")
         species: str = self.get_string_input("Enter the specie of penguin.")
@@ -77,7 +77,3 @@ class HandleInput:
         except KeyError as err:
             print(err)
 
-    
-    # This method prints the active folder
-    def handle_print_folder(self, animal_object: object) -> str:
-        print(animal_object)

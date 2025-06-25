@@ -54,6 +54,10 @@ class Animal:
     
 # Bear subclass
 class Bear(Animal):
+    """
+    This Bear class is a subclass of Animal and inherits from it.<br>
+    The info and make_sound methods are overwritten in this sub class
+    """
     def __init__(self, name: str, species: str, animal: str, fur_color: str):
         super().__init__(name, species, animal)
         self.fur_color: str = fur_color
@@ -76,7 +80,7 @@ class Bear(Animal):
 class Elephant(Animal):
     def __init__(self, name: str, species: str, animal: str, weight: float):
         super().__init__(name, species, animal)
-        self.weight: str = weight
+        self.weight = weight
      
     # Overriding the make_sound method to include this naimals unique sound
     def make_sound(self) -> str:
