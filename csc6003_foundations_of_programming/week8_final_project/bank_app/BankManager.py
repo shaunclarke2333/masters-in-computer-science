@@ -341,11 +341,6 @@ class BankManager:
                             amount: int = self.bank_util_object.prompt_user_for_positive_umber("Enter amount to withdraw in dollars (no cents) in multiples of $5 (limit $1000)")
                             # Making sure input is not zero, not less than 5, not graeater than 100 and divisible by 5
                             if amount > 0 and amount >= 5  and amount <= 1000 and amount % 5 == 0:
-                                # calculating how many 20s,10s,5s
-                                bills = self.calculate_bills(amount)
-                                # displaying breakdown of bills
-                                for bill_type, count in bills.items():
-                                    print(f"Number of {bill_type}-dollars bills: {round(count)}")
                                 # converting withdrawal to cents
                                 amount_in_cents = self.bank_util_object.convert_dollars_and_cents(amount)
                                 # making widrawal
@@ -356,6 +351,11 @@ class BankManager:
                                     break 
                                 # confirming withdrawal
                                 if make_withdraw:
+                                    # calculating how many 20s,10s,5s
+                                    bills = self.calculate_bills(amount)
+                                    # displaying breakdown of bills
+                                    for bill_type, count in bills.items():
+                                        print(f"Number of {bill_type}-dollars bills: {round(count)}")
                                     # get balance and format output
                                     balance = self.format_balance_output(account.get_balance())
                                     print(f"\nNew balance:{balance}\n")
