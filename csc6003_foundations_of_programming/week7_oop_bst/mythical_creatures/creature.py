@@ -10,6 +10,7 @@ class Creature:
         self.right = None  
 
     # Dunder method to print name when class is printed
-    def __str__(self):
+    def __str__(self) -> str:
         # returning object/creature name
         return self.name
+

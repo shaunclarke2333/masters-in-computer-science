@@ -35,6 +35,7 @@ class BankUtility:
             except ValueError:
                 print("\nPlease try again\n")
     
+    
     # Generates a uniqe 8 or 4 digit numbr that does not start with 0.
     def number_generator(self,minimum: int, maximum: int) -> int:
         """
@@ -55,9 +56,7 @@ class BankUtility:
     # This method converts dollars to cents and back
     def convert_dollars_and_cents(self, amount: int) -> int:
         """
-        This method uses a switch to convert dollars to cents.<br>
-        Swtich set to default False which converts dollars to cents.<br>
-        If switch is set to True convert cents to dollars.
+        This method convert dollars to cents.<br>
         """
         # Convert dollars to cents
         cents: int = int(round(amount * 100))

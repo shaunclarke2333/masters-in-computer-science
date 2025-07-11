@@ -13,6 +13,7 @@ def display_menu(root_exists):
         print("2) Print All")
         print("3) Print Specific")
         print("4) Exit")
+        
 
 # This is the main function that runs the program
 def main():

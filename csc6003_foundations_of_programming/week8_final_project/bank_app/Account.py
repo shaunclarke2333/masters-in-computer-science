@@ -12,6 +12,7 @@ class Account:
         self.account_number: int = None
         self.__pin: int = None
         
+
     # This method will allow us to compare an account object to a string.
     def __eq__(self, other_account_number: str) -> bool:
         if isinstance(other_account_number, Account):
@@ -80,7 +81,7 @@ class Account:
         return True
     
     # returns the balance
-    def get_balance(self) -> int:
+    def get_balance(self) -> float:
         """
         Getter method that returns balance
         """
@@ -88,7 +89,7 @@ class Account:
         return self.__balance
     
     # updates the balance
-    def set_balance(self, amount: str) -> bool:
+    def set_balance(self, amount: float) -> bool:
         """
         Setter method that updates balance
         """

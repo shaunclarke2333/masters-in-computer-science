@@ -10,6 +10,7 @@ from BankUtility import BankUtility
 from Account import Account
 from CoinCollector import CoinCollector
 
+
 class BankManager:
     def __init__(self, bank: Bank, bank_util: BankUtility, account: Account, CoinCollector: CoinCollector):
         self.bank_object: Bank = bank()

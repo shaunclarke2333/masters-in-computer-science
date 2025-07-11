@@ -33,6 +33,7 @@ class CreatureTree:
             found_right = self.find(node.right, name)
             return found_right
 
+
     # This method adds q creature to a parent node using recursion
     def add_creature(self, parent_name: str, side: str, child_name: str) -> str:
         # finding the parent node
@@ -75,8 +76,8 @@ class CreatureTree:
 
         # print level 2 the cildren nodes 1 level down from root
         # if let or  right node exists add both or either to variable
-        has_left: object = self.root.left is not None
-        has_right: object = self.root.right is not None
+        has_left: bool = self.root.left is not None
+        has_right: bool = self.root.right is not None
         
         # logic to select the left or right node if they exist
         if has_left or has_right:
@@ -94,6 +95,7 @@ class CreatureTree:
             else:
                 # if right didnt exist leave it empty
                 right = ""
+
             # if there is a left node, print the connector
             if has_left:
                 print("       /", end="")
@@ -153,7 +155,7 @@ class CreatureTree:
             print(f"{left_left:<6} {left_right:<8} {right_left:<6} {right_right}")
 
     # again... using recursion to get the acenstors of a specific creature
-    def get_ancestors(self, node, target, path):
+    def get_ancestors(self, node: Creature, target: str, path: List) -> bool:
         # If the node doesn't exist return False
         if node is None:
             return False
@@ -172,7 +174,7 @@ class CreatureTree:
         return False
 
     # This method calls get_ancestors and formats the specific ancestor lineage into a sentence
-    def print_ancestors(self, name):
+    def print_ancestors(self, name: str) -> str:
         # list to store the names of ancestors
         path: List = []
         # start searching from the root
