@@ -34,15 +34,32 @@ class MatricesProduct:
 def main():
     
     # initializing input parameters
-    n = 2
-    A = [[2, 7], [3, 5]]
-    B = [[8, -4], [6, 6]]
+    # n = 2
+    # A = [
+    #     [2, 7],
+    #     [3, 5]
+    # ]
+    # B = [
+    #     [8, -4],
+    #     [6, 6]
+    # ]
+    n = 3
+    A = [
+        [1, 0, 2],
+        [3, -2, 5],
+        [6, 2, -3]
+    ]
+    B = [
+        [0.3, 0.25, 0.1],
+        [0.4, 0.8, 0.0],
+        [-0.5, 0.75, 0.6]
+    ]
     
     # calculating the matrices product
     output = MatricesProduct.matrices_multi(n,A,B)
     
     # formatting output for printing
-    print(f" The matrices product is: {output}", end="\n\n")
+    print(f" The matrices product of matrices A:{A} and matrices B:{B} is: {output}", end="\n\n")
 
 # Running program if script is invoked directly 
 if __name__ == "__main__":
