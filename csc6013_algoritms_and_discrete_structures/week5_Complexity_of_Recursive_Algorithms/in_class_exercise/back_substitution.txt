@@ -1,0 +1,36 @@
+T(n) = 2T(n - 1) + 1
+T(0) = 1
+T(n) = 2T(n - 1) + 1 #K = 1
+T(n - 1) = 2T((n - 1) - 1) + 1 #First plug
+T(n - 1) = 2T(n - 2) + 1
+
+T(n) = 2T(2T(n 2Tn- 2) + 1) + 1 # = 2
+T(n) = 4T(n - 2) + 2 + 1
+T(n - 2) = 2T((n - 2) - 1) + 1 #Second plug
+T(n - 2) = 2T(n - 3) + 1
+
+T(n) = 4T(2T(n - 3) + 1) + 2 + 1 #К = 3
+T(n) = 8T(n - 3) + 4 + 2 + 1
+T(n - 3) = 2T((n - 3) - 1) + 1 #Third plug
+T(n - 3) = 2T(n - 4) + 1
+
+T(n) = 8T(n - 3) + 4 + 2 + 1 #k = 4
+T(n) = 8T 2Tn- 4 + 1 + 4 + 2 + 1
+T(n) = 16T(n4) + 8 + 4 + 2 + 1
+T(n - 4) = 2T((n - 4)1) + 1 #Fourth plug
+T(n - 4) = 2T(n - 5) + 1
+
+T(n) = 16T(2T(n - 5) + 1) + 8 + 4 + 2 + 1 #k = 5
+T(n) = 32T(n-5) + 16 + 8 + 4 + 2 + 1
+
+T(n) = 2*k * T(n - k) + (2^k) - 1 #Pattern formula
+T(0) = 2^k *T(0 - k) + (2^k) - 1
+T(0) = 2^0 * T(0 - 0) + (2^0) - 1 #k = 0 ...Substitute n for all ks...
+T(0) = 1* 0 + 1 - 1
+
+T(0) = (n - k) ; n = k
+T(n) = 2^n * T(n - n) + 2^n - 1
+T(n) = 2^n (1) + 2^n - 1
+T(n) = 2^(n+1) - 1
+
+O(2^n), class exponential #answerl

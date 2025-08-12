@@ -1,0 +1,118 @@
+# 1
+T(n) = 2T(n - 1) + 1
+T(0) = 1
+T(n) = 2T(n - 1) + 1 
+T(n - 1) = 2T((n - 1) - 1) + 1 
+T(n - 1) = 2T(n - 2) + 1
+
+T(n) = 2(2T(n - 2) + 1) + 1 
+T(n) = 4T(n - 2) + 2 + 1
+T(n - 2) = 2T((n - 2) - 1) + 1 
+T(n - 2) = 2T(n - 3) + 1
+
+T(n) = 4(2T(n - 3) + 1) + 2 + 1 
+T(n) = 8T(n - 3) + 4 + 2 + 1
+T(n - 3) = 2T((n - 3) - 1) + 1 
+T(n - 3) = 2T(n - 4) + 1
+
+T(n) = 8(2T(n - 4) + 1) + 4 + 2 + 1 
+T(n) = 16T(n - 4) + 8 + 4 + 2 + 1
+
+T(n) = 2^k * T(n - k) + (2^k) - 1
+
+n - k = 0 so k = n
+T(n) = 2^n * T(0) + (2^n) - 1
+T(n) = 2^n * 1 + 2^n - 1
+T(n) = 2^(n+1) - 1
+
+O(2^n), class exponential
+
+#2
+T(n) = T(n - 2) + n^2
+T(0) = 1
+T(n) = T(n - 2) + n^2 
+T(n - 2) = T((n - 2) - 2) + (n - 2)^2 
+T(n - 2) = T(n - 4) + (n - 2)^2
+
+T(n) = [T(n - 4) + (n - 2)^2] + n^2 
+T(n) = T(n - 4) + (n - 2)^2 + n^2
+T(n - 4) = T((n - 4) - 2) + (n - 4)^2 
+T(n - 4) = T(n - 6) + (n - 4)^2
+
+T(n) = [T(n - 6) + (n - 4)^2] + (n - 2)^2 + n^2 
+T(n) = T(n - 6) + (n - 4)^2 + (n - 2)^2 + n^2
+
+
+
+----------------------
+T(n) = aT(n/b) + f(n)
+T(n) = a*T(n/b) + n^d
+
+#4
+T(n) = 2T(n/4) + 1
+T(0) = 1
+
+A = 2
+B = 4
+D = 0
+
+n^logb(a) = n^log4(2) = n^0.5
+T(n) = O(n^logb(a)) = O(n^log4(2)) = O(n^0.5)
+
+O(n^0.5), class polynomial
+
+
+#5
+T(n) = 2T(n/4) + n^1/2
+T(0) = 1
+
+A = 2
+B = 4
+D = 1/2
+
+n^logb(a) = n^log4(2) = n^0.5
+T(n) = O(n^d log n) = O(n^0.5 log n)
+
+O(n^0.5 log n), class polynomial * log
+
+#6
+T(n) = 2T(n/4) + n^2
+T(0) = 1
+
+A = 2
+B = 4
+D = 2
+
+n^logb(a) = n^log4(2) = n^0.5
+T(n) = O(n^d) = O(n^2)
+
+O(n^2), class polynomial
+
+#7
+T(n) = 10T(n/3) + n^2
+T(0) = 1
+
+A = 10
+B = 3
+D = 2
+
+n^logb(a) = n^log3(10) = n^2.10
+T(n) = O(n^logb(a)) = O(n^log3(10)) = O(n^2.10)
+
+O(n^2.10), class polynomial
+
+#8
+T(n) = 2T(2n/3) + 1
+T(0) = 1
+
+T(n) = 2T(n / (3/2)) + 1
+A = 2
+B = 3/2
+D = 0
+
+n^logb(a) = n^log(3/2)(2) = n^1.71
+T(n) = O(n^logb(a)) = O(n^log(3/2)(2)) = O(n^1.71)
+
+O(n^1.71), class polynomial
+
+
