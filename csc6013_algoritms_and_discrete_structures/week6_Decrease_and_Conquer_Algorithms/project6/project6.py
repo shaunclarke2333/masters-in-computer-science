@@ -1,3 +1,11 @@
+"""
+Develop one Python program to perform the Quick Select algorithm and for an array of n elements it should find the k-th smallest element of the array).
+Inspire yourself by the video example that needs to be adapted by yourself.
+
+You must code a function QuickSelect that receives an array and the element the user wants to find (k-th smallest);
+Then the main function of your program should generate a random array of 1000 elements to be searched, ask the user the value of k, call QuickSelect, and display the searched element found.
+"""
+
 from typing import List
 import random
 

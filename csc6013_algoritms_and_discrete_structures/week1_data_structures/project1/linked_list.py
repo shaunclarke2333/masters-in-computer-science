@@ -11,6 +11,36 @@ class Linkedlist:
             self.Header = Node(d)
             self.Current = self.Header
 
+    def swap(self) -> int:
+        """
+        This method swaps the node at Current with the node next to it.
+        It returns 0 if the swapp was succesful and -1 if the input list is empty or there is nothing after current.
+        """
+        if (self.Current is None) or (self.Current.Next is None):
+            return -1
+
+        first = self.Current
+        second = self.Current.Next
+
+        if (first is self.Header):
+            
+            self.Header = second
+        else:
+            prev = self.Header
+            while (prev is not None) and (prev.Next is not first):
+                prev = prev.Next
+            if (prev is None):
+                return -1
+            prev.Next = second
+
+        first.Next = second.Next
+        second.Next = first
+
+        # Setting current to the next node
+        self.Current = second
+        return 0
+
+
     def nextCurrent(self):
         if (self.Current.Next is not None):
             self.Current = self.Current.Next
