@@ -14,4 +14,26 @@ Project Assignment:
     graph plotting the size of the random arrays (x axis) and the time taken to sort (y axis)
     your reflections on how the C Profile data relates to what you have learned about algorithmic analysis and in particular to the big oh class of your algorithm.
 """
+from typing import List
+import random
 
+# Empty list to hold range for random vectors
+vector_ranges = []
+
+# Generating range for vectors
+for r in range(1000,11000,1000):
+    # Adding each range to the vector ranges list
+    vector_ranges.append(r)
+
+print(vector_ranges)
+
+# empty list to hold generated list
+a = []
+
+# declaring start and stop variables for the random number range
+start, stop = -1000, 1000
+# looping through and generating 1000 + and - ints
+for i in range(stop):
+    a.append(random.randint(start, stop))
+
+print(a)
