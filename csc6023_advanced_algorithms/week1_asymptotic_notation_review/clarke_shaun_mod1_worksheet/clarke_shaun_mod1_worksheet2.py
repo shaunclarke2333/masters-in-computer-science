@@ -21,6 +21,10 @@ class MaxContSubSum:
         """
         This static method caclculates the maximum contiguous subsequence sum of an array.
         """
+        # empty list to hold indexes
+        index_list = []
+        # empty variable to hold list
+        final_list = ""
         # declaring variables for counter, largest sum and i.
         largest, acc, i = 0, 0, 0
         # looping the array to find the largest sub sequence
@@ -28,15 +32,17 @@ class MaxContSubSum:
             print(f"This is J: {j}")
             # Incrementing acc by the next item in the list.
             acc += self.a[j]
-            print(f"This is acc: {acc}\n")
+            index_list.append(j)
+            print(f"This is index list: {index_list[:10]}\n")
             # If the number or numbers summed so far is greater than largest, update largest with acc.
             if (acc > largest):
                 largest = acc
+                final_list = index_list.copy()
                 print(f"This is largest: {largest}\n")
             elif (acc < 0): # if acc is negative reset it to 0.
                 i = j + 1
                 acc = 0
-        return largest
+        return largest, final_list
 
 
 class RandomVector:
