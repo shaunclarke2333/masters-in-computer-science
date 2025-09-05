@@ -18,22 +18,24 @@ from typing import List
 import random
 
 # Empty list to hold range for random vectors
-vector_ranges = []
+random_vector_lists: List = []
 
 # Generating range for vectors
 for r in range(1000,11000,1000):
-    # Adding each range to the vector ranges list
-    vector_ranges.append(r)
+    # empty array to hold generated numbers
+    array = []
+    for i in range(r):
+        
+        # Starting variable where random vector range starts
+        start: int = 1
+        # Adding randomly generated numbers to list
+        array.append(random.randint(start, r))
+        
+    # adding randomly generated array to list of lists.
+    random_vector_lists.append(array)
 
-print(vector_ranges)
 
-# empty list to hold generated list
-a = []
+# for i in range(10):
+#     print(f"{len(random_vector_lists[i])}")
 
-# declaring start and stop variables for the random number range
-start, stop = -1000, 1000
-# looping through and generating 1000 + and - ints
-for i in range(stop):
-    a.append(random.randint(start, stop))
 
-print(a)
