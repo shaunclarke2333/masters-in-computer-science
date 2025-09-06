@@ -2,7 +2,7 @@
 Author: Shaun Clarke
 Class: CSC6023 Advanced Algorithms
 Module: Module 1 Asymptotic Notation Review
-Project Assignment:
+Project Assignment Part 1:
     Instructions
     Create a program that implements a sort algorithm of your choice and applies it to a random vector of 1,000 elements
     Repeat the process applying it to random vectors of 2,000, 3,000, ... up to 10,000 elements
@@ -13,7 +13,13 @@ Project Assignment:
     screenshots of the C Profiler
     graph plotting the size of the random arrays (x axis) and the time taken to sort (y axis)
     your reflections on how the C Profile data relates to what you have learned about algorithmic analysis and in particular to the big oh class of your algorithm.
+
+    Sorting algorithm:
+    bubble
+    select
+    insertion
 """
+
 from typing import List
 import random
 
@@ -37,5 +43,3 @@ for r in range(1000,11000,1000):
 
 # for i in range(10):
 #     print(f"{len(random_vector_lists[i])}")
-
-
