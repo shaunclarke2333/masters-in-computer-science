@@ -80,5 +80,5 @@ def main():
 if __name__ == "__main__":
     # Looping through each array and calling bubble sort on each with cProfile
     for array in arrays:
-        
+        # calling main with cProfile
         cProfile.run("main()")
