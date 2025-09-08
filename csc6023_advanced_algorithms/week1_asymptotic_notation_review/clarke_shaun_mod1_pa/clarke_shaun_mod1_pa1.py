@@ -1,95 +1,84 @@
-# """
-# Author: Shaun Clarke
-# Class: CSC6023 Advanced Algorithms
-# Module: Module 1 Asymptotic Notation Review
-# Project Assignment Part 1:
-#     Instructions
-#     Create a program that implements a sort algorithm of your choice and applies it to a random vector of 1,000 elements
-#     Repeat the process applying it to random vectors of 2,000, 3,000, ... up to 10,000 elements
-#     Compute the time complexity of your algorithm and verify if the time it takes to your 1,000 to 10,000 corresponds to the time complexity prediction. You should use CProfile to record how long the sorting takes for each array. 
-#     Besides the implementation of your program, write a short report describing your experiences and conclusion. Your report must include the following points:
+"""
+Author: Shaun Clarke
+Class: CSC6023 Advanced Algorithms
+Module: Module 1 Asymptotic Notation Review
+Project Assignment Part 1:
+    Instructions
+    Create a program that implements a sort algorithm of your choice and applies it to a random vector of 1,000 elements
+    Repeat the process applying it to random vectors of 2,000, 3,000, ... up to 10,000 elements
+    Compute the time complexity of your algorithm and verify if the time it takes to your 1,000 to 10,000 corresponds to the time complexity prediction. You should use CProfile to record how long the sorting takes for each array. 
+    Besides the implementation of your program, write a short report describing your experiences and conclusion. Your report must include the following points:
 
-#     big oh class of the sorting algorithm in question, with an explanation
-#     screenshots of the C Profiler
-#     graph plotting the size of the random arrays (x axis) and the time taken to sort (y axis)
-#     your reflections on how the C Profile data relates to what you have learned about algorithmic analysis and in particular to the big oh class of your algorithm.
+    big oh class of the sorting algorithm in question, with an explanation
+    screenshots of the C Profiler
+    graph plotting the size of the random arrays (x axis) and the time taken to sort (y axis)
+    your reflections on how the C Profile data relates to what you have learned about algorithmic analysis and in particular to the big oh class of your algorithm.
 
-#     Sorting algorithm:
-#     bubble
-#     select
-#     insertion
+    Sorting algorithm:
+    bubble
+    select
+    insertion
+"""
 
-# """
-# from typing import List
-# import random
-# import cProfile
+from typing import List
+import random
+import cProfile
 
-# def bubble_sort(array: List[int]) -> List:
-#     # This variable will break the loop once the list has been sorted
-#     sorted: bool = False
+def bubble_sort(array: List[int]) -> List:
+    # This variable will break the loop once the list has been sorted
+    sorted: bool = False
 
-#     # looping until list is soreted
-#     while not sorted:
-#         # setting sorted to true so it will break the loop
-#         sorted: bool = True
-#         # looping for the length of the unsorted array
-#         for i in range(0, len(array) - 1): # minus 1 because the last number of the list has nothing to compare to.
-#             # if the num to the left is greater than the num to the right update sorted to false.
-#             if array[i] > array[i+1]:
-#                 sorted: bool = False
-#                 # sort the num on the left and on the right by swapping them.
-#                 array[i], array[i+1] = array[i+1], array[i]
+    # looping until list is soreted
+    while not sorted:
+        # setting sorted to true so it will break the loop
+        sorted: bool = True
+        # looping for the length of the unsorted array
+        for i in range(0, len(array) - 1): # minus 1 because the last number of the list has nothing to compare to.
+            # if the num to the left is greater than the num to the right update sorted to false.
+            if array[i] > array[i+1]:
+                sorted: bool = False
+                # sort the num on the left and on the right by swapping them.
+                array[i], array[i+1] = array[i+1], array[i]
+    return array
 
-#     return array
 
-# # a = [4,3,5,1,3,2]
+def generate_arrays() -> List:
+    # Empty list to hold range for random vectors
+    random_vector_lists: List = []
 
-# # print(bubble_sort(a))
-
-# def generate_arrays() -> List:
-#     # Empty list to hold range for random vectors
-#     random_vector_lists: List = []
-
-#     # Generating range for vectors
-#     for r in range(1000,11000,1000):
-#         # empty array to hold generated numbers
-#         array = []
-#         for i in range(r):
+    # Generating range for vectors
+    for r in range(1000,11000,1000):
+        # empty array to hold generated numbers
+        array = []
+        for i in range(r):
             
-#             # Starting variable where random vector range starts
-#             start: int = 1
-#             # Adding randomly generated numbers to list
-#             array.append(random.randint(start, r))
+            # Starting variable where random vector range starts
+            start: int = 1
+            # Adding randomly generated numbers to list
+            array.append(random.randint(start, r))
             
-#         # adding randomly generated array to list of lists.
-#         random_vector_lists.append(array)
+        # adding randomly generated array to list of lists.
+        random_vector_lists.append(array)
     
-#     return random_vector_lists
+    return random_vector_lists
 
-# def generate_array() -> List:
-#     """
-#     This static method generates an array with 1000 positive and negative integers. 
-#     """
-#     # empty list to hold generated numbers
-#     a: List = []
-#     # declaring start and stop variables for the random number range
-#     start, stop = 1, 1000
-#     # looping through and generating 1000 + and - ints
-#     for i in range(stop):
-#         a.append(random.randint(start, stop))
+# Generating list of arrays from 1000, to 10,000
+arrays = generate_arrays()
+
+def main():
+    """
+    This function runs the program
+    """
+
+    print(f"array {len(array)} first five before sort: {array[:5]}")
     
-#     print(f"This is the first 10 of the array after sorting: {a[:10]}")
-#     return a
-
-# # print(f"{len(generate_array())}")
-
-# # if __name__ == "__main__":
-# #     cProfile.run("main()")
-
-# # print(f"{bubble_sort(generate_array()[:10])}")
-# array = generate_array()
-# # print(f"This is the first 10 of the array before sorting: {array[:10]}")
-# array[:10]
-# cProfile.run("bubble_sort(array)")
+    # sorting each array
+    sorted_array = bubble_sort(array)
+    print(f"array {len(sorted_array)} first five after sort: {sorted_array[:5]}")
 
 
+if __name__ == "__main__":
+    # Looping through each array and calling bubble sort on each with cProfile
+    for array in arrays:
+        # calling main with cProfile
+        cProfile.run("main()")
