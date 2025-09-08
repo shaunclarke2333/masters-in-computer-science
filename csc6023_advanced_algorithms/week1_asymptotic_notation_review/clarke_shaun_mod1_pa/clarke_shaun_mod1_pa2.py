@@ -22,24 +22,63 @@ Project Assignment Part 1:
 
 from typing import List
 import random
+import cProfile
 
-# Empty list to hold range for random vectors
-random_vector_lists: List = []
+def bubble_sort(array: List[int]) -> List:
+    # This variable will break the loop once the list has been sorted
+    sorted: bool = False
 
-# Generating range for vectors
-for r in range(1000,11000,1000):
-    # empty array to hold generated numbers
-    array = []
-    for i in range(r):
+    # looping until list is soreted
+    while not sorted:
+        # setting sorted to true so it will break the loop
+        sorted: bool = True
+        # looping for the length of the unsorted array
+        for i in range(0, len(array) - 1): # minus 1 because the last number of the list has nothing to compare to.
+            # if the num to the left is greater than the num to the right update sorted to false.
+            if array[i] > array[i+1]:
+                sorted: bool = False
+                # sort the num on the left and on the right by swapping them.
+                array[i], array[i+1] = array[i+1], array[i]
+    return array
+
+
+def generate_arrays() -> List:
+    # Empty list to hold range for random vectors
+    random_vector_lists: List = []
+
+    # Generating range for vectors
+    for r in range(1000,11000,1000):
+        # empty array to hold generated numbers
+        array = []
+        for i in range(r):
+            
+            # Starting variable where random vector range starts
+            start: int = 1
+            # Adding randomly generated numbers to list
+            array.append(random.randint(start, r))
+            
+        # adding randomly generated array to list of lists.
+        random_vector_lists.append(array)
+    
+    return random_vector_lists
+
+# Generating list of arrays from 1000, to 10,000
+arrays = generate_arrays()
+
+def main():
+    """
+    This function runs the program
+    """
+
+    print(f"array {len(array)} first five before sort: {array[:5]}")
+    
+    # sorting each array
+    sorted_array = bubble_sort(array)
+    print(f"array {len(sorted_array)} first five after sort: {sorted_array[:5]}")
+
+
+if __name__ == "__main__":
+    # Looping through each array and calling bubble sort on each with cProfile
+    for array in arrays:
         
-        # Starting variable where random vector range starts
-        start: int = 1
-        # Adding randomly generated numbers to list
-        array.append(random.randint(start, r))
-        
-    # adding randomly generated array to list of lists.
-    random_vector_lists.append(array)
-
-
-# for i in range(10):
-#     print(f"{len(random_vector_lists[i])}")
+        cProfile.run("main()")

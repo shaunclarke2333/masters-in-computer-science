@@ -58,6 +58,7 @@ def generate_array() -> List:
     for i in range(stop):
         a.append(random.randint(start, stop))
     
+    print(f"This is the first 10 of the array after sorting: {a[:10]}")
     return a
 
 # print(f"{len(generate_array())}")
@@ -65,8 +66,10 @@ def generate_array() -> List:
 # if __name__ == "__main__":
 #     cProfile.run("main()")
 
-print(f"{bubble_sort(generate_array()[:10])}")
+# print(f"{bubble_sort(generate_array()[:10])}")
 array = generate_array()
+# print(f"This is the first 10 of the array before sorting: {array[:10]}")
+array[:10]
 cProfile.run("bubble_sort(array)")
 
 
