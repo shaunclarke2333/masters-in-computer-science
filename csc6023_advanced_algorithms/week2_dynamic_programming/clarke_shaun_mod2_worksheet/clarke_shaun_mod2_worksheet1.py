@@ -54,7 +54,7 @@ def balanced01mat():
 
     for m in matrices:
         if m == 2:
-            print("Computing the number of balanced matrices for {2}")
+            print(f"Computing the number of balanced matrices for {m}")
             n = m
             while ((n % 2) == 1) or (n < 0):
                 n = int(input("Enter an even matrix order:"))
@@ -62,7 +62,7 @@ def balanced01mat():
             ans2 = layer(0, [], perm2, 0)# 2
             print("The number of balanced matrices is", ans2)
         elif m == 4:
-            print("Computing the number of balanced matrices")
+            print(f"Computing the number of balanced matrices for {m}")
             n = m
             while ((n % 2) == 1) or (n < 0):
                 n = int(input("Enter an even matrix order:"))
@@ -70,7 +70,7 @@ def balanced01mat():
             ans4 = layer(0, [], perm4, 0)# 90
             print("The number of balanced matrices is", ans4)
         elif m == 6:
-            print("Computing the number of balanced matrices")
+            print(f"Computing the number of balanced matrices for {m}")
             n = m
             while ((n % 2) == 1) or (n < 0):
                 n = int(input("Enter an even matrix order:"))
