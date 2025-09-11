@@ -5,11 +5,13 @@ Module: Module 2 Dynamic Programming
 Task:
     Worksheet Task 01
     
+    Run the balanced01mat.py program and compute the number of balanced matrices for matrices of order 2, 4 and 6 (run the program as it is to discover the numbers)
+    Change the program to instead of asking the user, calls it for 2, 4, and 6 sequentially
+    Include remarks in the code with the expected values for 2, 4, and 6
 """
 
 
 # balanced 0-1 matrices
-
 from itertools import combinations
 
 def permutations(n):
