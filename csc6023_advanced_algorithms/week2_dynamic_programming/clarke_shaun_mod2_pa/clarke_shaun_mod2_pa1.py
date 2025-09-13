@@ -23,3 +23,25 @@ Project Assignment:
         The program should not crash if the user enters something other than an integer (like a real number or a non-numeric value) 
         The program should end when the user enters an integer less than 1.
 """
+from typing import Dict
+
+
+def fib(n: int) -> int:
+    # Dictionary to hold already computed fibs:
+    memoi: Dict = {}
+    
+    # looping through every number from 1 to n. +1 so it is inclusive.
+    for i in range(1, n + 1):
+        # print(i)
+        # defining the base case so the first three numbers are accounted for.
+        if i <= 3:
+            result = 1
+        else:
+            # Look up previous computations
+            result = memoi[i - 1] + memoi[i - 2] + + memoi[i - 3]
+        # Save the computed fib number
+        memoi[i] = result
+    
+    return memoi[n]
+
+print(fib(6))
