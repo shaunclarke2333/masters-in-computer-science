@@ -29,6 +29,9 @@ from typing import Dict
 def fib(n: int) -> int:
     # Dictionary to hold already computed fibs:
     memoi: Dict = {}
+
+    if n < 1:
+        exit()
     
     # looping through every number from 1 to n. +1 so it is inclusive.
     for i in range(1, n + 1):
@@ -44,4 +47,21 @@ def fib(n: int) -> int:
     
     return memoi[n]
 
-print(fib(6))
+# This function prompts the user for input.
+def get_input() -> int:
+    
+        while True:
+            try:
+                user_input: int = int(input(f"\nPlease enter a number\n:"))
+
+                if not isinstance(user_input, int):
+                    raise ValueError
+                else:
+                    return user_input
+                
+            except ValueError as e:
+                print(f"\nYou must enter a number and make sure it is a whole number")
+
+user_input = get_input()
+
+print(fib(user_input))
