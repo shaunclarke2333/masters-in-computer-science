@@ -27,11 +27,11 @@ def egyptian(n: int, d: int) -> str:
         ans.append(x)           # add it to the numerator list
         n, d = x * n - d, d * x # update the remainder to n and d
     for a in ans:
-        print("\n1/{}".format(a), end=" ")
+        print("1/{}".format(a), end=" ")
 
 def main():
     # calling the Egyptian fraction greedy algorithm on 5/121
-    egyptian(5, 121) 
+    egyptian(5, 121) # 1/25 1/757 1/763309 1/873960180913 1/1527612795642093385023488
     
 
 

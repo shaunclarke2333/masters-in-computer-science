@@ -32,9 +32,13 @@ def egyptian(n: int, d: int) -> str:
 def main():
     # calling the Egyptian fraction greedy algorithm on 5/6, 7/15, 23/34, 121/321, 5/123
     egyptian(5, 6) # 1/2 1/3
+    print("")
     egyptian(7, 15) # 1/3 1/8 1/120
+    print("")
     egyptian(23, 34) # 1/2 1/6 1/102
+    print("")
     egyptian(121, 321)# 1/3 1/23 1/7383
+    print("")
     egyptian(5, 123)# 1/25 1/1538 1/4729350
 
 
