@@ -33,105 +33,162 @@ from typing import List
 from typing import Dict
 import csv
 
-def read_csv(file_name: str) -> List:
-    # List to hold file content
-    csv_data: List = []
-    # Loading csv in memeory "as a file"
-    with open(file_name, mode="r")as file:
-        # reading the data from the file as a list of list.
-        file_content = csv.reader(file)
-        # looping through list of lists and ading lines to list.
-        for line in file_content:
-            csv_data.append(line)
-        return csv_data
 
+class UserInput:
+    @staticmethod
+    def get_input() -> int:
+        """
+        - This static method prompts the user to enter a number.
+        - It also keeps asking until the user enters a positive number.
+        """
+        while True:
+            try:
+                user_input: int = int(input(f"\nPlease enter a number for the knapsack capacity\nCapacity: "))
 
-csv_data = read_csv("packs1.csv")
-# Empty lists to hold values and weight
-values: List = []
-weights: List = []
-names: List = []
+                if not isinstance(user_input, int):
+                    raise ValueError
+                else:
+                    return user_input
+                
+            except ValueError as e:
+                print(f"\nYou must enter a number and make sure it is a whole number")
 
-# Looping through csv data to create value and weight arrays
-for line in csv_data:
-    name: str = line[0]
-    cost: int = int(line[1])
-    # print(type(int(line[2])))
-    cubic_inches: int = int(line[2]) * int(line[3]) * int(line[4])
-    # adding cost to list
-    values.append(cost)
-    # adding weight to list
-    weights.append(cubic_inches)
-    # adding names to list
-    names.append(name)
+class ProcessCSV:
+    csv_data: List = [] # List to hold file content
+    def __init__(self, file_name: str):
+        self.file_name = file_name # CSV filename
 
-# print(f"names: {names}\nvalues: {values}\nweights: {weights}")
+    # This method reads a CSV and returns a list of the lines
+    def read_csv(self) -> List:
+        # Loading csv in memeory "as a file"
+        with open(self.file_name, mode="r")as file:
+            # reading the data from the file as a list of list.
+            file_content = csv.reader(file)
+            # looping through list of lists and ading lines to list.
+            for line in file_content:
+                ProcessCSV.csv_data.append(line)
+            # print(f"This is csv lines: {ProcessCSV.csv_data}")
+            
 
-# knapsack unbounded - Greedy approach
+    # This methods generates arrays for values, cubic measurements and weight
+    def generate_arrays_v_w_n(self) -> List[List]:
 
-def knapsack(v, w, cap):
-    rwv = []         # triplet ratio, weight, value, index
-    for i in range(len(v)):
-        rwv.append([v[i]/w[i],w[i],v[i],i])
-    rwv.sort(reverse=True)    # sort from high to low rate
-    ans = []                     # the list of added items
-    tw = 0                                  # total weight
-    found = True
-    while (found):        # until no fitting item is found
-        found = False
-        for t in rwv:              # search an item to add
-            if (t[1] + tw) <= cap:      # if the item fits
-                ans.append(t[3])                  # add it
-                tw += t[1]
-                found = True
-                break
-    return ans           # returns the list of added items
+        # Empty lists to hold values, weight and name
+        values: List = []
+        weights: List = []
+        names: List = []
 
-"""
-The suggested items are: 27 Veggie Burgers and 2 Hot Dogs, with a total value of $110.
-There were 2 cubic inches left unused.
-"""
-cap = 500
-output = knapsack(values, weights, cap)
-print(output)
-label_dict:Dict = {}
-for i in output:
-    if names[i] not in label_dict:
-        label_dict[names[i]] = [i, 1, values[i], weights[i]]
-        # print(label_dict[names[i]][1])
-    elif names[i] in label_dict:
-        # print(f"{i} is in label dict")
-        label_dict[names[i]][1] += 1
+        # Looping through csv data to create value and weight arrays
+        for line in ProcessCSV.csv_data:
+            name: str = line[0]
+            cost: int = int(line[1])
+            # print(type(int(line[2])))
+            cubic_inches: int = int(line[2]) * int(line[3]) * int(line[4])
+            # adding cost to list
+            values.append(cost)
+            # adding weight to list
+            weights.append(cubic_inches)
+            # adding names to list
+            names.append(name)
 
+        return values, weights, names
 
-# print(label_dict)
-# print(len(label_dict))
+class Knapsack:
+    def __init__(self, names:List[str], v:List[int], w:List[int], cap: int):
+        self.names = names
+        self.v = v
+        self.w = w
+        self.cap = cap
 
-data: List = []
-for key, value in label_dict.items():
-    value.insert(0, key)
-    # print((value))
-    data.append(value)
-    # print(data)
+    # knapsack unbounded - Greedy approach
+    def knapsack(self):
+        rwv = []         # triplet ratio, weight, value, index
+        for i in range(len(self.v)):
+            rwv.append([self.v[i]/self.w[i],self.w[i],self.v[i],i])
+        rwv.sort(reverse=True)    # sort from high to low rate
+        ans = []                     # the list of added items
+        tw = 0                                  # total weight
+        found = True
+        while (found):        # until no fitting item is found
+            found = False
+            for t in rwv:              # search an item to add
+                if (t[1] + tw) <= self.cap:      # if the item fits
+                    ans.append(t[3])                  # add it
+                    tw += t[1]
+                    found = True
+                    break
+        return ans           # returns the list of added items
     
+    def process_knapsack_output(self, output):
+        print(f"\n{output}")
+        # Dictiondary to hold data for each item selected to fill the capacity
+        label_dict:Dict = {}
+        for i in output:
+            # if the name of an item is not in the dict add it
+            if self.names[i] not in label_dict:
+                # adding the item name as a key along with index, how many times the item was added, the cost, and the cubic measurement.
+                label_dict[self.names[i]] = [i, 1, self.v[i], self.w[i]]
+                # print(label_dict[names[i]][1])
+                # If the item already exists then increment the number of times it was added tot he knapsack.
+            elif self.names[i] in label_dict:
+                # print(f"{i} is in label dict")
+                # Incrementing item count
+                label_dict[self.names[i]][1] += 1
 
-if len(data) == 1:
-    name = data[0][0]
-    num_of_items = data[0][2]
-    total = num_of_items * data[0][3]
-    used_space = num_of_items * data[0][4]
-    unused_space = cap - used_space
-    
-    print(f"The suggested items are: {num_of_items}, {name}, with a total of ${total}. There were {unused_space} cubic inches left")
+        # empty list to hold the item names an info as list of lists
+        data: List = []
+        # looping through dictinary and adding the key(name) to the beginning of the list of values.
+        for key, value in label_dict.items():
+            # adding they key as the first item in the list of values
+            value.insert(0, key)
+            # print((value))
+            # adding the updated value list to the data list
+            data.append(value)
+            # print(data)
+        
+        return data
 
-elif len(data) > 1:
-    name1 = data[0][0]
-    name2 = data[1][0]
-    num_of_items1 = data[0][2]
-    num_of_items2 = data[1][2]
-    total1 = num_of_items1 * data[0][3]
-    total2 = num_of_items2 * data[1][3]
-    overall_total = total1 + total2
-    used_space = (num_of_items1 * data[0][4]) + (num_of_items2 * data[1][4])
-    unused_space = cap - used_space
-    print(f"The suggested items are: {num_of_items1} {name1} and {num_of_items2} {name2}, with a total value of ${overall_total}. There were {unused_space} cubic inches left unused.")
+
+def main():
+
+    # Prompting user for capacity
+    cap = UserInput.get_input()
+    # Instantiating ProcessCSV class with filename
+    get_data = ProcessCSV("packs1.csv")
+    # reading data from csv
+    get_data.read_csv()
+    # Generating arrays with values, weights etc from each line of csv data
+    values, weights, names = get_data.generate_arrays_v_w_n()
+    # Instantiating knapsack class
+    knapsack = Knapsack(names, values, weights, cap)
+    # calling knapsack method
+    output = knapsack.knapsack()
+    # process output data from knapsack
+    data = knapsack.process_knapsack_output(output)
+            
+
+    if len(data) == 1:
+        name: str = data[0][0]
+        num_of_items:  int = data[0][2]
+        total: int = num_of_items * data[0][3]
+        used_space: int = num_of_items * data[0][4]
+        unused_space: int = cap - used_space
+        
+        print(f"The suggested items are: {num_of_items}, {name}, with a total of ${total}.")
+        print(f"There were {unused_space} cubic inches left") 
+
+    elif len(data) > 1:
+        name1: str = data[0][0]
+        name2: str = data[1][0]
+        num_of_items1: int = data[0][2]
+        num_of_items2: int = data[1][2]
+        total1: int = num_of_items1 * data[0][3]
+        total2: int = num_of_items2 * data[1][3]
+        overall_total: int = total1 + total2
+        used_space: int = (num_of_items1 * data[0][4]) + (num_of_items2 * data[1][4])
+        unused_space : int= cap - used_space
+        print(f"\nThe suggested items are: {num_of_items1} {name1} and {num_of_items2} {name2}, with a total value of ${overall_total}.")
+        print(f"There were {unused_space} cubic inches left unused.")
+
+if __name__ == "__main__":
+    main()
