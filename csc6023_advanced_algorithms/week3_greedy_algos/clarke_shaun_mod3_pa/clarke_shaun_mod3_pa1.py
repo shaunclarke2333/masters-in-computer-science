@@ -153,13 +153,13 @@ def main():
 
     # Prompting user for capacity
     cap = UserInput.get_input()
-    # Instantiating ProcessCSV class with filename
+    # Instantiating ProcessCSV object with filename
     get_data = ProcessCSV("packs1.csv")
     # reading data from csv
     get_data.read_csv()
     # Generating arrays with values, weights etc from each line of csv data
     values, weights, names = get_data.generate_arrays_v_w_n()
-    # Instantiating knapsack class
+    # Instantiating knapsack object
     knapsack = Knapsack(names, values, weights, cap)
     # calling knapsack method
     output = knapsack.knapsack()
