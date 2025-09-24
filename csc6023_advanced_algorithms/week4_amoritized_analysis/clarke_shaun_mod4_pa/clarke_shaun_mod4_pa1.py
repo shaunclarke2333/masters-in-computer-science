@@ -56,13 +56,12 @@ class Queue:
     def __init__(self):
         self.a_in = []
         self.a_out = []
-        # ADD: counters for amortized-cost tracking
-        self.cheap = 0    # counts cheap ops (regular pushes/pops)
-        self.costly = 0   # counts costly ops (the bulk transfer a_in -> a_out)
+        self.cheap = 0    # counting cheap operations
+        self.costly = 0   # counting costly operations
     
     def enqueue(self, data):
         self.a_in.append(data)
-        # ADD: enqueue is a single push -> cheap
+        # Incremeting by 1 on cheap enqueues.
         self.cheap += 1
         # print(self.a_in)
         # print(self.a_out)
@@ -72,16 +71,17 @@ class Queue:
         # If out stack empty but in stack has items, we must transfer (costly event).
         if (self.a_out == []):
             if len(self.a_in) > 0:
-                # ADD: count ONE costly operation for the entire transfer
+                # Incrementing by 1 on costly operation
                 self.costly += 1
                 while len(self.a_in) > 0:
                     self.a_out.append(self.a_in.pop())
             else:
-                # ADD: nothing to dequeue; raise to let caller handle safely
+                # Make sure the program does not crash if you try to do a dequeue operation on an empty double array queue
                 raise IndexError("dequeue from empty queue")
 
         # The actual pop from a_out is a cheap operation
         val = self.a_out.pop()
+        # Incremeting by 1 on cheap enqueues.
         self.cheap += 1
         # print(self.a_in)
         # print(self.a_out)
@@ -113,7 +113,7 @@ def main():
             try:
                 q.dequeue()
             except IndexError:
-                # Safe to ignore (assignment requires: do not crash on empty dequeues)
+                # We will pretend like nothing happened here, because the assignment requires the program to not crash on empty deques.
                 pass
 
     total_counted: int = q.cheap + q.costly
