@@ -56,8 +56,8 @@ class Queue:
     def __init__(self):
         self.a_in = []
         self.a_out = []
-        self.cheap = 0    # counting cheap operations
-        self.costly = 0   # counting costly operations
+        self.cheap = 0    # counter for cheap operations
+        self.costly = 0   # counter for costly operations
     
     def enqueue(self, data):
         self.a_in.append(data)
@@ -105,11 +105,11 @@ def main():
     for _ in range(TOTAL_OPS):
         # Randomizing the operations so they won't happen in blocks all at once.
         if randrange(100) < p_enq:
-            # enqueue path (cheap)
+            # enqueue path, cheeeeeeapppp$$$
             data_counter += 1
             q.enqueue(data_counter)
         else:
-            # dequeue path: protect against empty queue
+            # dequeue path and catch error if empty queue.
             try:
                 q.dequeue()
             except IndexError:
@@ -117,8 +117,15 @@ def main():
                 pass
 
     total_counted: int = q.cheap + q.costly
-    costly_pct: int = (100.0 * q.costly / total_counted) if total_counted else 0.0
-    cheap_pct: int  = (100.0 * q.cheap  / total_counted) if total_counted else 0.0
+    # costly_pct: int = (100.0 * q.costly / total_counted) if total_counted else 0.0
+    # cheap_pct: int  = (100.0 * q.cheap  / total_counted) if total_counted else 0.0
+
+    if total_counted > 0:
+        costly_pct = (100.0 * q.costly) / total_counted
+        cheap_pct = (100.0 * q.cheap) / total_counted
+    else:
+        costly_pct = 0.0
+        cheap_pct = 0.0
 
     print("\n=== Double Array Queue Simulation Results ===")
     print(f"Total operations counted: {total_counted:,}")
