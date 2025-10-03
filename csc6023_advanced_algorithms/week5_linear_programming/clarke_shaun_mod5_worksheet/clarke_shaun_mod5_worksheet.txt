@@ -1,0 +1,36 @@
+"""
+A fancy food truck makes pizzas and sandwiches:
+
+A pizza is sold for $50 and it costs $25 to make
+A sandwich is sold for $20 and it costs $5 to make
+It takes 8 minutes to prepare a pizza, and it takes 3 minutes to prepare a sandwich
+Assuming that the food truck has only one hour (sixty minutes) to prepare food, how many pizzas and sandwiches should be made to maximize the profit?
+Only ten items can ever be made in total.
+How many pizzas and sandwiches should be made to maximize the profit? You should model your solution on the pants and jackets example from this week's lecture. Be sure to include all the items found on the rubric below including:
+
+A clearly stated answer with specific numbers of pizzas and sandwiches to be produced
+An objective function
+Constraint inequalities (What should these be? For pants and jackets they were based on the amount of cotton and polyester.)
+A chart or table of the setup, similar to the one on slide 11
+A graph (like the one on slide 12) is NOT required but may be included.
+All work necessary to determine the final answer including solutions for three options (only pizzas; only sandwiches; and the balanced option)
+All necessary algebra to determine the balanced option as well as the solo options
+"""
+
+x = pizzas
+y = sammich(lol)
+
+A pizza is sold for $50 and it costs $25 to make
+pizza: 50 - 25 = 25
+
+A sandwich is sold for $20 and it costs $5 to make
+sammich: 20 - 5 = 15
+
+Objective Function:
+profit = 25x + 15y
+
+Constraints:
+Time: 8x + 3y <= 60
+total_items: x = y <= 10
+x >= 0, y >= 0
+
