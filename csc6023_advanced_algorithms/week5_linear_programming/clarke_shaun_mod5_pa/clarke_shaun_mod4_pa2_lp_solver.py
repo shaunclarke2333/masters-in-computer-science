@@ -122,7 +122,7 @@ class InputTools:
                 # Convert the list of floats to a numpy array  
                 return np.array(nums, dtype=float)           
             except ValueError as e:
-                print(str(e) + ". There is no escape. Don't make me destroy you.\nLets try again comma or space separated entries.\n")
+                print(f"There is no escape. Don't make me destroy you.\nLets try again comma or space separated entries.\n")
 
     @staticmethod
     def ask_matrix(n: int) -> np.ndarray:
@@ -248,13 +248,13 @@ class LinearProgSolver:
             x_bal: np.ndarray = self.balanced_solution()       
             val_bal: float = self.value(x_bal)
             print(f"Balanced x = {x_bal},  f(x) = {round(val_bal, 6)}")
-            balanced_ok: bool = True
+            balanced_exists: bool = True
         except np.linalg.LinAlgError:
             # mark unbalanced solution
             x_bal = None                                       
             val_bal = float('-inf')                           
             print(f"Balanced solution: matrix A is singular.")
-            balanced_ok = False
+            balanced_exists = False
 
         # Decide which outcome is best by its value
         # Label to print at the end
@@ -274,7 +274,7 @@ class LinearProgSolver:
             k += 1
 
         # Comparing balanced against the best we got so far if it exists
-        if balanced_ok and val_bal > best_val:
+        if balanced_exists and val_bal > best_val:
             best_val = val_bal
             best_x = x_bal 
             best_label = "Balanced"
@@ -287,16 +287,24 @@ def main() -> None:
     """
     This method is where the magic happensd
     """
-    # Asking user for n and all inputs
+    # Asking user for all inputs
     n: int = InputTools.ask_int("Enter number of variables/constraints (n): ")
     c: np.ndarray = InputTools.ask_vector("Enter {0} objective weights c (comma or space separated): ".format(n), n)
     A: np.ndarray = InputTools.ask_matrix(n)
     b: np.ndarray = InputTools.ask_vector("Enter b vector with {0} numbers: ".format(n), n)
 
-    # Solving and summarizing
+    # Calling LinearProgSolver to solve and asummarize.
     solver: LinearProgSolver = LinearProgSolver(c, A, b)
     solver.summary()
 
 
 if __name__ == "__main__":
     main()
+
+# How to run this program
+# Enter number of variables/constraints (n): 2
+# Enter 2 objective weights c (comma or space separated): 50 40
+# Enter matrix A as 2 rows (each row has 2 numbers).
+# A row 1: 2 3
+# A row 2: 2 1
+# Enter b vector with 2 numbers: 1500 1000
