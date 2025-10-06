@@ -159,10 +159,13 @@ class LinearProgSolver:
         self.A: np.ndarray = A  # constraints as a square matrix 
         self.b: np.ndarray = b  # limits vector
 
-        n: int = len(c) # number of variables/constraints
-        if A.shape != (n, n):  # making sure A is square nxn
+        # number of variables/constraints
+        n: int = len(c) 
+        # making sure A is square nxn
+        if A.shape != (n, n):  
             raise ValueError("A must be square nxn with n being len(c).")
-        if b.shape != (n, ): # making sure b has length n
+        # making sure b has length n
+        if b.shape != (n, ): 
             raise ValueError("b must have length n.")
 
     def single_var_solution(self, i: int) -> np.ndarray:
@@ -302,6 +305,16 @@ if __name__ == "__main__":
     main()
 
 # How to run this program
+# Checmical factory
+# Enter number of variables/constraints (n): 3
+# Enter 3 objective weights c (comma or space separated): 3 2 2
+# Enter matrix A as 3 rows (each row has 3 numbers).
+# A row 1: 2 4 5
+# A row 2: 1 2 4
+# A row 3: 8 0 3
+# Enter b vector with 3 numbers: 300 200 300
+
+# Pants and Jackets
 # Enter number of variables/constraints (n): 2
 # Enter 2 objective weights c (comma or space separated): 50 40
 # Enter matrix A as 2 rows (each row has 2 numbers).
