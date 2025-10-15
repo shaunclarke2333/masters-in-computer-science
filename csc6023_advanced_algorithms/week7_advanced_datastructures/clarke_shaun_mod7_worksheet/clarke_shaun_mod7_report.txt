@@ -1,0 +1,31 @@
+
+CSC6023 – Module 7 Short Report (AVL Interactive Insert/Delete)
+Author: Shaun Clarke
+
+Overview
+--------
+I implemented the interactive AVL program **starting from the professor’s third example** and kept
+only minor modifications, which I labeled with **CHANGE** comments. The program repeatedly asks
+for a positive integer; if it’s already in the tree, it deletes it; otherwise, it inserts it. After
+each operation it prints the tree using `printHelper`. The loop ends on a non-positive integer.
+
+What changed (and why)
+----------------------
+• CHANGE: Added `AVLTree.contains(root, data)`.
+  WHY: The assignment needs to decide between insert and delete based on membership.
+       A BST-style search keeps this O(log n) with AVL balance.
+• CHANGE: Replaced the static demo sequence with an `interactive_loop()`.
+  WHY: The assignment specifies repeated user input until a non-positive value is entered.
+• Minor comments/docstrings were added to match my OOP/documentation style.
+
+Efficiency / Big-O
+------------------
+• contains/search: O(log n) (balanced by AVL rotations)
+• insert: O(log n) + O(1) rotations (amortized constant number of rotations)
+• delete: O(log n) + O(1) rotations (amortized)
+• printHelper: O(n) in the number of nodes (tree traversal and formatting)
+
+Notes
+-----
+• The rotation and height update code are unchanged from the third example to keep the instructor’s logic intact.
+• The interactive prompts guard against non-integer input and exit cleanly on non-positive values.
