@@ -1,11 +1,14 @@
 """
 Author: Shaun Clarke
 Class: CSC6023 Advanced Algorithms
-Module: Module 7 – Graphs (Dijkstra)
-Assignment (Final Update):
-    - Use the slide's Dijkstra code verbatim.
-    - Use an adjacency MATRIX LITERAL exactly like the slide example (no builder method).
-    - Print readable journeys: Shire ➜ Rivendell, then Rivendell ➜ Mt. Doom.
+Module: Module 7 Advance Data Structures
+Assignment:
+    Create a program that implements the Dijkstra's algorithm program with the Lord of the Rings example case
+    You will need to represent the map of Middle Earth as an adjacency matrix and then feed it into the program
+    Your program should print the shortest path from the Shire to various points in Middle Earth including the paths and the distances along the way.
+    Specifically your program should tell what is the shortest path from the Shire to Rivendell, and then from Rivendell to Mt. Doom.
+    The print statement should be human readable, something like "Frodo should go first to Rivendell..." and not just be a list of indices. It should include information about the distances to be traveled and the locations along the path.
+    Since the code has already been written for you, the main challenge will be ensuring that you understand how the input works and should be written exactly.
 """
 import sys
 from typing import List, Tuple
