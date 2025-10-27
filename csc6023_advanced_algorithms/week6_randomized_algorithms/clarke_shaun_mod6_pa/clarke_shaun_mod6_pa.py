@@ -3,9 +3,31 @@
 Author: Shaun Clarke
 Class: CSC6023 Advanced Algorithms
 Module: Module 6 Randomized Algorithms
-Assignment: Week 6 Project Hill Climbing (Monte Carlo / Las Vegas)
+Assignment: 
+    Create a program that calls the function myFunction(x) from 0 to 9999 and stores the results in an array. Your program should then apply the Hill Climbing algorithm several times (you can set this up Monte Carlo or Las Vegas style) to find the value of x that delivers the largest value for the function. Each time you call the hill climbing function you will pass in the array and a random starting index, x.
+
+    On each attempt at finding the largest value, the initial search value x is chosen randomly between the values 1 to 9998.
+
+    You can use this function to test your program, but your program should work with any version of myFunction(x).
+
+    image_2022-08-17_081913370.png
 
 
+    Of course with just 10000 values in the array, we could just use the Python's max(list) to determine the element with the greatest value; for this project, however, we are trying to simulate a situation in which it would not be practical to do that. At the end of your program, whether it is applying a Las Vegas approach or a Monte Carlo approach, it should print a statement saying how many times it attempted the hill climbing algorithm and what the greatest local maximum it found was; it should also list the actual (global) maximum which you can determine with max(list).
+
+    For example: "After ten tries, the greatest local maximum discovered was 17434. The actual global maximum was 25405." or "After 100 tries, the greatest local maximum discovered was 25405 which was the global maximum." 
+
+    If you are using the Monte Carlo style approach, where finding the global maximum is not guaranteed, whether you find the global maximum will be heavily dependent on the amount of peaks and valleys created by the function and the value of k. For the myFunction function provided above, you may have to set k equal to a very high number to reliably get the global maximum, though there it is not required that the global maximum needs to be returned. 
+
+    Your program must include and use a function called "hillClimb(arr, start_index)" that does the following:
+
+    accepts two parameters, an array, arr, and a starting index, start_index). They should be named "arr" and "start_index". (You generate the array using "myFunction" above and you should generate the start_index with a pseudorandom number generator, but you should test this on small examples.)
+    returns the index of the local peak and the value in this fashion: return local_maximum_index, arr[local_maximum_index] (Please note that "local_maximum_index" can be called whatever you want but the two returned values need to be arranged in that order above. Do not put them in a list ("[ ]") or other data structure.
+    If the starting index is a local peak, the starting index and its value should be returned.
+    If the starting index ends up in a pit, with equal increases to the left and to the right, search to the right. This is an arbitrary decision I am forcing upon you based on testing requirements on my end.
+    If the starting index ends up in a pit with unequal increases to the left and right, search the higher path.
+    Make sure your searching can go all the way to the ends of the array if need be.
+    Make sure your program can traverse shoulders. If at the end of the shoulder, the values start to decrease, you should end at the last part of the shoulder. For example hillClimb([6,5,5,5,4,3,2],5) should return the index 0 and the value 6 but hillClimb([2,5,5,5,4,3,2],5) should return the index 1 and the value 5.
 
 """
 
@@ -14,7 +36,7 @@ import random
 from math import log2
 
 
-#myFunction(x) from the slide 
+# myFunction(x) from the slide 
 def myFunction(x):
     if (x == 0):
         return 0
@@ -26,7 +48,7 @@ def myFunction(x):
         return (log2(x)**2) - x
 
 
-#Generate the array 
+# Generate the array 
 def build_array(n: int = 10000) -> List[int]:
     """
     Call myFunction(x) for x = 0 to n-1 and store the results.
@@ -39,7 +61,7 @@ def build_array(n: int = 10000) -> List[int]:
     return arr
 
 
-#Hill clinbing fucntion
+# Hill clinbing fucntion
 def hillClimb(arr: List[int], start_index: int) -> Tuple[int, int]:
     """
     Move uphill until a local maximum or end of a shoulder is reached.
@@ -174,7 +196,8 @@ def main() -> None:
     
 
 
-    # seed for different runs; comment this out to make it repeatable
+    # Using seed to initialize the pseudo-random number generator for different runs.
+    # comment this out to make it repeatable
     # random.seed()
 
     # Generate the array once
@@ -188,7 +211,7 @@ def main() -> None:
     user_input: str = input("Enter 1 or 2: ").strip()
 
     if user_input == "2":
-        cap_raw: str = input("Max number of attempts (suggest 1000): ").strip()
+        cap_raw: str = input("Max number of attempts (I think you dhould try 1000): ").strip()
         try:
             cap: int = int(cap_raw)
         except ValueError:
@@ -196,11 +219,11 @@ def main() -> None:
 
         tries, best_idx, best_val = run_las_vegas(arr, cap)
         if best_val == global_max:
-            print(f"\nAfter {tries} tries, the greatest local maximum discovered was {best_val} which was the global maximum.")
+            print(f"\nAfter {tries} tries, the greatest local maximum discovered was {best_val}  at index {best_idx} which was the global maximum.")
         else:
-            print(f"\nAfter {tries} tries, the greatest local maximum discovered was {best_val}. The actual global maximum was {global_max}.")
+            print(f"\nAfter {tries} tries, the greatest local maximum discovered was {best_val} at index {best_idx}. The actual global maximum was {global_max}.")
     else:
-        k_raw: str = input("How many random starts? (suggest 100): ").strip()
+        k_raw: str = input("How many random starts? (if i were you i suggest 100): ").strip()
         try:
             k: int = int(k_raw)
         except ValueError:
@@ -208,9 +231,9 @@ def main() -> None:
 
         tries, best_idx, best_val = run_monte_carlo(arr, k)
         if best_val == global_max:
-            print(f"\nAfter {tries} tries, the greatest local maximum discovered was {best_val} which was the global maximum.")
+            print(f"\nAfter {tries} tries, the greatest local maximum discovered was {best_val} at index {best_idx} which was the global maximum.")
         else:
-            print(f"\nAfter {tries} tries, the greatest local maximum discovered was {best_val}. The actual global maximum was {global_max}.")
+            print(f"\nAfter {tries} tries, the greatest local maximum discovered was {best_val} at index {best_idx}. The actual global maximum was {global_max}.")
 
     
 if __name__ == "__main__":

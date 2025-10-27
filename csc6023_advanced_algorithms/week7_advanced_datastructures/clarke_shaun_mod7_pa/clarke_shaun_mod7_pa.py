@@ -13,7 +13,7 @@ Assignment:
 import sys
 from typing import List, Tuple
 
-# === Dijkstra code copied from slides (word-for-word) ===
+# Dijkstra code copied from link in the slides
 class Graph():
     
     def __init__(self, vertices):
@@ -68,9 +68,10 @@ def describe_path(names: List[str], matrix: List[List[int]], path: List[int]) ->
 
 
 def main():
+    # List of location names
     names = ["Shire","Bree","Rivendell","Moria","Dale","Lorien","Isengard","Edoras","Minas Tirith","Emyn Muil","Mt. Doom"]
 
-    # === ADJACENCY MATRIX LITERAL (from the map image) ===
+    # Adjacency matrix created from the map
     matrix = [
         [0, 131, 0, 0, 0, 0, 481, 0, 0, 0, 0],
         [131, 0, 306, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -85,19 +86,19 @@ def main():
         [0, 0, 0, 0, 0, 0, 0, 0, 178, 183, 0]
     ]
 
-    # Run 1: from Shire (0)
+    # First adcenture from the Shire (0)
     g1 = Graph(len(matrix))
     g1.graph = matrix
     print("Dijkstra from Shire 0")
     g1.dijkstra(0)
 
-    # Run 2: from Rivendell (2)
+    # Second adventure from Rivendell (2)
     g2 = Graph(len(matrix))
     g2.graph = matrix
     print("\nDijkstra from Rivendell 2")
     g2.dijkstra(2)
 
-    # Human readable narrative
+    # As per the rebric, human readable narrative
     shire_to_riv = g1.paths[2]
     riv_to_doom  = g2.paths[10]
 

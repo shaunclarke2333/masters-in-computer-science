@@ -8,7 +8,8 @@ Task:
     Run the Egyptian Fractions for the following examples:
 
     5/6, 7/15, 23/34, 121/321, 5/123
-
+ 
+    
     Write remarks in your new code with the solution of such cases
     
 """

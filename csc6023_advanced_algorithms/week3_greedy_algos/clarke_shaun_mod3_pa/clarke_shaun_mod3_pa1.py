@@ -94,27 +94,27 @@ class ProcessCSV:
         return values, weights, names
 
 class Knapsack:
-    def __init__(self, names:List[str], v:List[int], w:List[int], cap: int):
-        self.names = names
-        self.v = v
-        self.w = w
-        self.cap = cap
+    def __init__(self, names:List[str], v:List[int], volume:List[int], cap: int):
+        self.names = names # product names
+        self.v = v # product cost
+        self.volume = volume # cubic measurements
+        self.cap = cap # Overall capacity
 
     # knapsack unbounded - Greedy approach
     def knapsack(self):
-        rwv = []         # triplet ratio, weight, value, index
+        rvv = []         # triplet ratio, volume, value, index
         for i in range(len(self.v)):
-            rwv.append([self.v[i]/self.w[i],self.w[i],self.v[i],i])
-        rwv.sort(reverse=True)    # sort from high to low rate
+            rvv.append([self.v[i]/self.volume[i],self.volume[i],self.v[i],i])
+        rvv.sort(reverse=True)    # sort from high to low rate
         ans = []                     # the list of added items
-        tw = 0                                  # total weight
+        tvolume = 0                                  # total volume
         found = True
         while (found):        # until no fitting item is found
             found = False
-            for t in rwv:              # search an item to add
-                if (t[1] + tw) <= self.cap:      # if the item fits
+            for t in rvv:              # search an item to add
+                if (t[1] + tvolume) <= self.cap:      # if the item fits
                     ans.append(t[3])                  # add it
-                    tw += t[1]
+                    tvolume += t[1]
                     found = True
                     break
         return ans           # returns the list of added items
@@ -127,7 +127,7 @@ class Knapsack:
             # if the name of an item is not in the dict add it
             if self.names[i] not in label_dict:
                 # adding the item name as a key along with index, how many times the item was added, the cost, and the cubic measurement.
-                label_dict[self.names[i]] = [i, 1, self.v[i], self.w[i]]
+                label_dict[self.names[i]] = [i, 1, self.v[i], self.volume[i]]
                 # print(label_dict[names[i]][1])
                 # If the item already exists then increment the number of times it was added tot he knapsack.
             elif self.names[i] in label_dict:
@@ -154,10 +154,10 @@ def main():
     # Prompting user for capacity
     cap = UserInput.get_input()
     # Instantiating ProcessCSV object with filename
-    get_data = ProcessCSV("packs1.csv")
+    get_data = ProcessCSV("packs3.csv")
     # reading data from csv
     get_data.read_csv()
-    # Generating arrays with values, weights etc from each line of csv data
+    # Generating arrays with values, volume etc from each line of csv data
     values, weights, names = get_data.generate_arrays_v_w_n()
     # Instantiating knapsack object
     knapsack = Knapsack(names, values, weights, cap)

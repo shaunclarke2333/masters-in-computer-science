@@ -29,8 +29,7 @@ class ArrayTools:
     def __init__(self, array1: List[int], array2: List[int]):
         self.array1: List[int] = array1
         self.array2: List[int] = array2
-        self.joined_array: List[int] = ""
-        self.shuffled_list: list[int] = ""
+        self.joined_array: List[int] = []
 
     # This method joins two lists
     def join_lists(self) -> List[int]:
@@ -40,10 +39,10 @@ class ArrayTools:
     # This method shuffles the list.
     def shuffle_list(self) -> List[int]:
         # Shuffling joined list.
-        self.shuffled_list = random.shuffle(self.joined_array)
+        random.shuffle(self.joined_array)
     
     # This method creates a list of list with each item in the array paired with its index.
-    def pair_item_and_index(self) -> List[int]:
+    def pair_item_and_index(self) -> List[List[int]]:
         for i in range(0, len(self.joined_array)):
             # replacing item at index with a list containing the item and index.
             self.joined_array[i] = [self.joined_array[i], i]
@@ -53,7 +52,7 @@ class ArrayTools:
 class VivaLasVegas:
     # This method uses the las vegas approach to find the first 1 in a n array
     @staticmethod
-    def vegas_baby(ten_k_array: List):
+    def vegas_baby(ten_k_array: List[List[int]]):
         # keep track of attempts
         count_attempts = 0
         while True:
@@ -84,10 +83,10 @@ def main():
     array_tools = ArrayTools(ones, zeroes)
 
     # joining lists
-    joined_list = array_tools.join_lists()
+    array_tools.join_lists()
 
     # Shuffling joined list
-    shuffled_list = array_tools.shuffle_list()
+    array_tools.shuffle_list()
 
     # pairing items in list with it's index.
     shuffled_list = array_tools.pair_item_and_index()

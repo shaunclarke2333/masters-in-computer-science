@@ -69,7 +69,7 @@ class AVLTree(object):
 
         # Update node height from children
         root.height = 1 + max(self.getHeight(root.left),
-                              self.getHeight(root.right))
+        self.getHeight(root.right))
 
         # Update the balance factor and balance the tree
         balanceFactor = self.getBalance(root)
@@ -109,7 +109,7 @@ class AVLTree(object):
                 temp = root.left
                 root = None
                 return temp
-            # Node with two children: get inorder successor (smallest in right subtree)
+            # Node with two children
             temp = self.getMinValueNode(root.right)
             root.key = temp.key
             root.right = self.delete_node(root.right, temp.key)

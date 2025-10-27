@@ -3,11 +3,16 @@ Author: Shaun Clarke
 Class: CSC6023 Advanced Algorithms
 Module: Module 6 Randomized Algorithms
 Task:
-    Worksheet Task 01
+    Worksheet Task 02
     
-    Create a program that generates a random array of 10,000 elements with equal number of 0's and 1's and then implement the randomized Las Vegas algorithm that searches for an element holding a 1
-
-    Your program should output the position of the first 1 found, plus the number of tries before finding it.
+    CCreate a program that generates a random array of
+    10,000 elements with equal number of 0's and 1's
+    and then implement the randomized Monte Carlo
+    algorithm that searches for an element holding a 1
+    ○ You can set k equal to 10
+    ○ Your program should output the position of
+    the first 1 found, plus the number of tries
+    before founding it (or giving up)
 """
 
 from typing import List
@@ -28,8 +33,7 @@ class ArrayTools:
     def __init__(self, array1: List[int], array2: List[int]):
         self.array1: List[int] = array1
         self.array2: List[int] = array2
-        self.joined_array: List[int] = ""
-        self.shuffled_list: list[int] = ""
+        self.joined_array: List[int] = []
 
     # This method joins two lists
     def join_lists(self) -> List[int]:
@@ -39,10 +43,10 @@ class ArrayTools:
     # This method shuffles the list.
     def shuffle_list(self) -> List[int]:
         # Shuffling joined list.
-        self.shuffled_list = random.shuffle(self.joined_array)
+        random.shuffle(self.joined_array)
     
     # This method creates a list of list with each item in the array paired with its index.
-    def pair_item_and_index(self) -> List[int]:
+    def pair_item_and_index(self) -> List[List[int]]:
         for i in range(0, len(self.joined_array)):
             # replacing item at index with a list containing the item and index.
             self.joined_array[i] = [self.joined_array[i], i]
@@ -52,7 +56,7 @@ class ArrayTools:
 class Monaco:
     # This method uses the las vegas approach to find the first 1 in a n array
     @staticmethod
-    def monte_carlo(ten_k_array: List[int], k: int = 1):
+    def monte_carlo(ten_k_array: List[List[int]], k: int = 10):
         # keep track of attempts
         count_attempts = 0
 
@@ -87,10 +91,10 @@ def main():
     array_tools = ArrayTools(ones, zeroes)
 
     # joining lists
-    joined_list = array_tools.join_lists()
+    array_tools.join_lists()
 
     # Shuffling joined list
-    shuffled_list = array_tools.shuffle_list()
+    array_tools.shuffle_list()
 
     # pairing items in list with it's index.
     shuffled_list = array_tools.pair_item_and_index()
@@ -99,7 +103,7 @@ def main():
 
 
     # Lets roll the dice and try our luck in Monaco
-    item, item_index, count_attempts = Monaco.monte_carlo(shuffled_list)
+    item, item_index, count_attempts = Monaco.monte_carlo(shuffled_list, k = 100)
     # print(item)
     # Logic to handle if there was  no item found.
     if item and item_index != None:
