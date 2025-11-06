@@ -1,4 +1,8 @@
 /*
+Author: Shaun Clarke
+Class: CSC6302 Database Principles
+Module 01: Databases and DBMS
+
 Instructions
 Project One: Database Creation and Setup
 

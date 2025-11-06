@@ -1,4 +1,8 @@
-/* STARTER CODE WEEK 2 
+/*
+Author: Shaun Clarke
+Class: CSC6302 Database Principles
+Module 02: Normalization and Queries
+
 Instructions
 After setting up the MRC database, you realize it would be much better if you split up the bookings table into three separate tables that you can join together later. This also gives you the opportunity to alter some of the datatypes to be more useful for aggregation.
 
