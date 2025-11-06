@@ -81,117 +81,24 @@ INSERT INTO Reservations
 ('2025-03-15','11:30','3.5','Sea Breeze','Sarah','Johnson','321 Elm St','Townsville','MA','45678','978-555-4321','4',350.00),
 ('2025-03-16','8:00','2','Ocean Voyager','William','Hall','789 Cedar St','Hilltop','MA','67890','978-555-9999','7',400.00);
 
-SELECT * FROM Reservations ORDER BY Date, Departure_Time ASC LIMIT 5;
+SELECT * FROM Reservations ORDER BY Date, Departure_Time ASC;
 
 /* YOUR CODE BELOW HERE */
+
 -- Creating the vessels table
 CREATE TABLE vessels (
-    vessel_id INT AUTO_INCREMENT PRIMARY KEY,
+    vessel_id INT,
     vessel_name VARCHAR(50),
-    cost_Per_Hour DECIMAL(6,2)
+    Cost_Per_Hour DECIMAL(6,2)
 );
 
 -- Creating the Passengers table
 CREATE TABLE passengers (
-    passenger_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    street VARCHAR(50),
-    city VARCHAR(50),
-    state CHAR(2),
-    zip CHAR(5),
-    phone CHAR(12)
+    passenger_id INT,
+    first_name VARCHAR(50)
 );
 
 -- Creating the Trips table
--- a) Total number of superkeys: 4
--- b) The Candidate keys are: (date, vessel_id, departure_time, passenger_id), (date, vessel_id, departure_time, total_passengers)
--- c) The Primary (composite key) i selected: (date, vessel_id, departure_time, passenger_id) because this combination uniquely identifies each trip and ties passengers to a specific vessel and time.
 CREATE TABLE trips (
-date DATE,
-departure_time TIME,
-length_in_hours DECIMAL(4,2),
-vessel_id INT,
-passenger_id INT,
-total_passengers INT,
-PRIMARY KEY (date, vessel_id, departure_time, passenger_id),
-FOREIGN KEY (vessel_id) REFERENCES vessels(vessel_id),
-FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id)
-);
 
--- Transfer the appropriate information to each respective table using only SQL built-in functions and commands
--- Populating passengers table
-INSERT INTO
-	passengers (first_name, last_name, street, city, state, zip, phone)
-SELECT DISTINCT
-	first_name, last_name, street, city, state, zip, phone
-FROM
-	Reservations;
-    
--- Include the following three queries: select * from passengers; select * from vessels; select * from trips;
-SELECT * FROM passengers;
-    
--- Populating vessels table
-INSERT INTO
-	vessels (vessel_name, cost_per_hour)
-SELECT DISTINCT
-	vessel, total_cost / length_in_hours
-FROM
-	Reservations;
-
--- Include the following three queries: select * from passengers; select * from vessels; select * from trips;
-SELECT * FROM vessels;
-
--- Populating trips table
-INSERT INTO
-	trips (date, departure_time, length_in_hours, vessel_id, passenger_id, total_passengers)
-SELECT DISTINCT
-	reservations.Date,
-	reservations.Departure_Time,
-    reservations.Length_in_Hours,
-    vessels.vessel_id,
-    passengers.passenger_id,
-    reservations.Total_Passengers
-FROM
-	reservations
-JOIN
-	passengers
-ON passengers.first_name = reservations.First_Name
-AND passengers.last_name = reservations.Last_Name
-AND passengers.street = reservations.Street
-AND passengers.city = reservations.City
-AND passengers.State = reservations.State
-AND passengers.zip = reservations.ZIP
-AND passengers.phone = reservations.Phone
-
-JOIN vessels
-ON vessels.vessel_name = reservations.Vessel;
-
--- Include the following three queries: select * from passengers; select * from vessels; select * from trips;
-select * from trips;
-
--- Construct a query that joins your new tables together so the results exactly match the results from running "SELECT * FROM Reservations ORDER BY Date, Departure_Time ASC"
-SELECT
-	trips.date, trips.departure_time, trips.length_in_hours,
-    vessels.vessel_name AS vessel,
-    passengers.first_name, passengers.last_name, passengers.street, passengers.city, passengers.state, passengers.zip, passengers.phone,
-    trips.total_passengers, ROUND((trips.length_in_hours  * vessels.cost_per_hour), 2) AS total_cost
-FROM
-	trips
-JOIN
-	passengers
-ON
-	passengers.passenger_id = trips.passenger_id
-JOIN
-	vessels
-ON
-	vessels.vessel_id = trips.vessel_id
-ORDER BY
-	trips.date,
-    trips.departure_time
-    ASC;
-	
-	
-	
-
-
+)

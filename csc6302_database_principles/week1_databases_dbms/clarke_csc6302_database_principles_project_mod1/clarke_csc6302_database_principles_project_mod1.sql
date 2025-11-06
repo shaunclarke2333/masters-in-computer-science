@@ -37,19 +37,19 @@ Create a relation called "Reservations" with an attribute for each column in the
 Choose the most correct datatype for each attribute. If you choose a VARCHAR, use VARCHAR(50).
 */
 CREATE TABLE reservations(
-    Date VARCHAR(50),
-    Departure_Time VARCHAR(50),
-    Length_in_Hours VARCHAR(50),
-    Vessel TEXT,
-    First_Name TEXT,
-    Last_Name TEXT,
+    Date DATE,
+    Departure_Time TIME,
+    Length_in_Hours DECIMAL(4, 2),
+    Vessel CHAR(20),
+    First_Name CHAR(20),
+    Last_Name CHAR(20),
     Street VARCHAR(50),
-    City VARCHAR(50),
-    State VARCHAR(50),
-    ZIP VARCHAR(50),
+    City CHAR(20),
+    State CHAR(6),
+    ZIP VARCHAR(10),
     Phone VARCHAR(50),
     Total_Passengers INT,
-    Total_Cost VARCHAR(50)
+    Total_Cost DECIMAL(19, 2)
 );
 
 -- Add the first six rows of data from the .csv using Insert statement(s).
@@ -57,19 +57,19 @@ INSERT INTO reservations(
     Date, Departure_Time, Length_in_Hours, Vessel, First_Name, Last_Name, Street, City, State, ZIP, Phone, Total_Passengers, Total_Cost
 )
 VALUES
-    ('3/1/25', '8:00', '2', 'Sea Breeze', 'John', 'Smith', '123 Oak St', 'Cityville', 'MA', '1234', '413-555-1234', 5, '$200.00'),
-    ('3/1/25',' 9:00', '3', 'Ocean Voyager', 'Emily', 'Clark', '456 Pine St', 'Rivertown',' MA', '23456',	'978-555-5678', 3, '$600.00'),
-    ('3/2/25', '8:30', '1.5', 'The Warrior', 'John', 'Smith', '123 Oak St', 'Cityville', 'MA', '1234', '413-555-1234', 5, '$225.00'),
-    ('3/2/25', '10:00', '2', 'Ocean Voyager', 'Emily', 'Clark', '456 Pine St', 'Rivertown', 'MA', '23456', '978-555-5678', 3, '$400.00'),
-    ('3/3/25', '11:00', '4', 'Ocean Voyager', 'Michael', 'Lee', '789 Maple Ave', 'Beachside', 'MA', '34567', '978-555-8765', 6, '$800.00'),
-    ('3/3/25', '12:30', '2.5', 'Sea Breeze', 'Sarah', 'Johnson', '321 Elm St', 'Townsville', 'MA', '45678', '978-555-4321', 4, '$250.00');
+    ('2025-03-01', '08:00:00', 2, 'Sea Breeze', 'John', 'Smith', '123 Oak St', 'Cityville', 'MA', '01234', '413-555-1234', 5, 200),
+    ('2025-03-01', '09:00:00', 3, 'Ocean Voyager', 'Emily', 'Clark', '456 Pine St', 'Rivertown',' MA', '23456',	'978-555-5678', 3, 600),
+    ('2025-03-02', '08:30:00', 1.5, 'The Warrior', 'John', 'Smith', '123 Oak St', 'Cityville', 'MA', '01234', '413-555-1234', 5, 225),
+    ('2025-03-02', '10:00:00', 2, 'Ocean Voyager', 'Emily', 'Clark', '456 Pine St', 'Rivertown', 'MA', '23456', '978-555-5678', 3, 400),
+    ('2025-03-03', '11:00:00', 4, 'Ocean Voyager', 'Michael', 'Lee', '789 Maple Ave', 'Beachside', 'MA', '34567', '978-555-8765', 6, 800),
+    ('2025-03-03', '12:30:00', 2.5, 'Sea Breeze', 'Sarah', 'Johnson', '321 Elm St', 'Townsville', 'MA', '45678', '978-555-4321', 4, 250);
 
 -- Add a query "SELECT * FROM Reservations" and take a full window screenshot of the results.
 SELECT *
 FROM reservations;
 
 -- Add three other SELECT queries with WHERE clauses. These must name specific attributes and should not use *.
-SELECT First_Name, Last_Name
+SELECTFirst_Name, Last_Name
 FROM reservations
 WHERE First_Name = 'John';
 
