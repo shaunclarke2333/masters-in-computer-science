@@ -22,7 +22,7 @@ class ManageDbConnection:
         self.db_closed_status = None
 
     # This method connects to the database
-    def connect_to_db(self) -> bool:
+    def connect_to_db(self) -> tuple[object,object,bool]:
 
         try:
             # Establishing DB connection with params
@@ -43,11 +43,16 @@ class ManageDbConnection:
             # returning the db object and conection status
             return self.db_object, self.db_cursor, self.db_connection_status
 
-        except:
+        except Exception as err:
+            print(f"DB connection error occured:\n{err}")
             # Providing connections status
             self.db_connection_status = False
 
-            return self.db_connection_status
+            self.db_object = None
+
+            self.db_cursor = None
+
+            return self.db_object, self.db_cursor, self.db_connection_status
 
     # This method closes the db connection
     def close_db_connection(self) -> bool:
@@ -57,7 +62,11 @@ class ManageDbConnection:
                 self.db_object.close()
                 self.db_closed_status = True
                 return self.db_closed_status
-        except:
+            elif self.db_object is None:
+                self.db_closed_status = True
+                return self.db_closed_status
+        except Exception as err:
+            print(f"Close DB connection error occured:\n{err}")
             # If the connection was not closed return false.
             self.db_closed_status = False
             return self.db_closed_status
@@ -74,6 +83,7 @@ connection = ManageDbConnection(
 
 db, cursor, conn_status = connection.connect_to_db()
 
+
 print(conn_status)
 print(type(cursor))
 cursor.execute(
@@ -88,6 +98,11 @@ FROM
 
 for data in cursor:
     print(data)
+
+cursor.execute("SHOW TABLES")
+for data in cursor:
+    print(data)
+
 connection.close_db_connection()
 
 
