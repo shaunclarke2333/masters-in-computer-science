@@ -16,17 +16,20 @@ class ManageDbConnection:
         self.__port = port
         self.__database = database
         self.__password = password
-        self.db_object = None  # Placeholder variable that will be used for the connector object
-        self.db_cursor = None  # Placeholder variable that will be used for the cursor
-        self.db_connection_status = None  # Placeholder for db connection status
-        self.db_closed_status = None
+        self.__db_object = None
+        self.__cursor = None
+        self.__is_connected: bool = False
+        self.__has_cursor: bool = False
 
     # This method connects to the database
-    def connect_to_db(self) -> tuple[object,object,bool]:
+    def __connect_to_db(self):
+        """
+        - This method conects to the specified DB.
+        """
 
         try:
             # Establishing DB connection with params
-            self.db_object = mysql.connector.connect(
+            self.__db_object = mysql.connector.connect(
                 host=self.__host,
                 user=self.__user,
                 port=self.__port,
@@ -34,110 +37,160 @@ class ManageDbConnection:
                 password=self.__password
             )
 
-            # Creating db cursor
-            self.db_cursor = self.db_object.cursor()
+            # Creating Cursor
+            self.__cursor = self.__db_object.cursor()
+            # Setting cursor and connection status
+            self.__has_cursor = True
+            self.__is_connected = True
+        except mysql.connector.Error as err:
+            raise mysql.connector.Error(err)
+        
+    # This method gets the DB connection
+    def get_connection(self) -> object:
+        # if database is not connected, connect it and return the DB object
+        if self.__is_connected:
+            return self.__db_object
+        else:
+            # Connecting DB
+            self.__connect_to_db()
+            return self.__db_object
+        
+    # This method gets the cursor
+    def get_cursor(self) -> object:
+        # If the there is no cursor create one
+        if self.__has_cursor and self.__is_connected:
+            return self.__cursor
+        elif not self.__has_cursor and self.__is_connected:
+            self.__cursor = self.__db_object.cursor()
+            self.__has_cursor = True
+            return self.__cursor
+        elif not self.__has_cursor and not self.__is_connected:
+            # Connect to DB
+            self.__connect_to_db()
+            # Create cursor
+            self.__cursor = self.__db_object.cursor()
+            # update cursor status
+            self.__has_cursor = True
+            
+            return self.__cursor
+    
+    # This method gets cursor status
+    def get_cursor_status(self):
+        return self.__has_cursor
 
-            # Providinf connections status
-            self.db_connection_status = True
+    # This method gets connections status
+    def get_connection_status(self):
+        return self.__is_connected
 
-            # returning the db object and conection status
-            return self.db_object, self.db_cursor, self.db_connection_status
-
-        except Exception as err:
-            print(f"DB connection error occured:\n{err}")
-            # Providing connections status
-            self.db_connection_status = False
-
-            self.db_object = None
-
-            self.db_cursor = None
-
-            return self.db_object, self.db_cursor, self.db_connection_status
+    # This method closes the cursor
+    def close_cursor(self):
+        """
+        - This method closes the cursor.
+        - returns nothing.
+        """
+        if self.__cursor is not None:
+            self.__cursor.close()
+            # Setting cursor object to None to cleanup cursor connection
+            self.__cursor = None
+            # Updating cursor status
+            self.__has_cursor = False
 
     # This method closes the db connection
-    def close_db_connection(self) -> bool:
-        try:
-            # if the DB object is present close it
-            if self.db_object is not None:
-                self.db_object.close()
-                self.db_closed_status = True
-                return self.db_closed_status
-            elif self.db_object is None:
-                self.db_closed_status = True
-                return self.db_closed_status
-        except Exception as err:
-            print(f"Close DB connection error occured:\n{err}")
-            # If the connection was not closed return false.
-            self.db_closed_status = False
-            return self.db_closed_status
+    def close_db_connection(self):
+        """
+        - This method closes the DB connection.
+        - returns nothing.
+        """
+        # if the DB object is present close it
+        if self.__db_object is not None:
+            self.__db_object.close()
+            # Setting database object to None to cleanup closed connection
+            self.__db_object = None
+            # Updating DB connection status
+            self.__is_connected = False
+
+# This class manages the database crud actions
+class DatabaseActions:
+    def __init__(self, connection: ManageDbConnection):
+        self.__connection = connection  # The database connection instance
+
+    # Select Query
+    def select_query(self, query: str, params: tuple | None = None) -> List[Tuple]:
+        db = self.__connection.get_connection()
+        cursor = self.__connection.get_cursor()
+        cursor.execute(query, params)
+        output = cursor.fetchall()
+
+        cursor.callproc("getPassengerList")
+        for results in cursor.stored_results():
+            print(results.fetchall())
+
+        self.__connection.close_cursor()
+        if not self.__connection.get_cursor_status():
+            print(f"DB cursor closed")
+
+        self.__connection.close_db_connection()
+        if not self.__connection.get_connection_status():
+            print(f"DB connection closed")
+        
+        return output
 
 
-connection = ManageDbConnection(
-    host="localhost",
-    user="root",
-    port=3306,
-    database="mrc",
-    password="N@thin23"
-
-)
-
-db, cursor, conn_status = connection.connect_to_db()
 
 
-print(conn_status)
-print(type(cursor))
-cursor.execute(
-    """
-SELECT
-    *
-FROM
-    passengers
 
-"""
-)
+if __name__ == "__main__":
 
-for data in cursor:
-    print(data)
+    try:
+        # Below this line is for testing as i build
+        connection = ManageDbConnection(
+            host="localhost",
+            user="root",
+            port=3306,
+            database="mrc",
+            password="N@thin23"
 
-cursor.execute("SHOW TABLES")
-for data in cursor:
-    print(data)
+        )
 
-connection.close_db_connection()
+        db_actions = DatabaseActions(connection)
 
+        output = db_actions.select_query("SELECT * FROM vessels")
+        for data in output:
+            print(data)
 
-# try:
-#     # This class manages the
-#     db: List = mysql.connector.connect(
-#         host="localhost",
-#         user="root",
-#         port=3306,
-#         database="mrc",
-#         password="N@thin23"
-#     )
+        # db = connection.get_connection()
+        # cursor = connection.get_cursor()
 
+        # print(type(db))
+        # print(type(cursor))
 
-# except:
-#     print(f"Database was not connected")
+        # print(f"DB connected successfully\n")
 
+    except mysql.connector.Error as err:
+        print(err)
+        exit(1)
 
-# db_cursor: object = db.cursor()
+    # cursor.execute(
+    #     """
+    # SELECT
+    #     *
+    # FROM
+    #     passengers
 
-# db_cursor.execute(
-#     """
-# SELECT
-#     *
-# FROM
-#     passengers
+    # """
+    # )
 
-# """
-# )
+    # for data in cursor:
+    #     print(data)
 
-# for dbase in db_cursor:
-#     print(dbase)
+    # cursor.execute("SHOW TABLES")
+    # for data in cursor:
+    #     print(data)
 
-# if "db" in locals() and db_cursor is not None:
-#     db.close()
-#     print(f"MSQL connection closed")
-# else:
-#     print(f"Connection was already closed")
+    # connection.close_cursor()
+    # if not connection.get_cursor_status():
+    #     print(f"DB cursor closed")
+
+    # connection.close_db_connection()
+    # if not connection.get_connection_status():
+    #     print(f"DB connection closed")
