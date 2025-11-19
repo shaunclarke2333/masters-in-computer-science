@@ -5,82 +5,74 @@ Module 04: Application Layer
 """
 
 import mysql.connector
-from typing import List, Dict, Tuple
+import pandas as pd
+from typing import List, Tuple
 
 
 # This class manages the database connection
 class ManageDbConnection:
     def __init__(self, host: str, user: str, port: int, database: str, password: str):
-        self.__host = host
-        self.__user = user
-        self.__port = port
-        self.__database = database
-        self.__password = password
-        self.__db_object = None
-        self.__cursor = None
-        self.__is_connected: bool = False
-        self.__has_cursor: bool = False
+        self._host = host
+        self._user = user
+        self._port = port
+        self._database = database
+        self._password = password
+        self._db_object = None
+        self._cursor = None
+        self._is_connected: bool = False
+        self._has_cursor: bool = False
 
     # This method connects to the database
-    def __connect_to_db(self):
+    def connect_to_db(self):
         """
         - This method conects to the specified DB.
         """
 
         try:
-            # Establishing DB connection with params
-            self.__db_object = mysql.connector.connect(
-                host=self.__host,
-                user=self.__user,
-                port=self.__port,
-                database=self.__database,
-                password=self.__password
-            )
+            # Logic to only connect to the DB if it is not connected.
+            if not self._is_connected:
+                # Establishing DB connection with params
+                self._db_object = mysql.connector.connect(
+                    host=self._host,
+                    user=self._user,
+                    port=self._port,
+                    database=self._database,
+                    password=self._password
+                )
 
-            # Creating Cursor
-            self.__cursor = self.__db_object.cursor()
-            # Setting cursor and connection status
-            self.__has_cursor = True
-            self.__is_connected = True
-        except mysql.connector.Error as err:
-            raise mysql.connector.Error(err)
-        
+                # Creating Cursor
+                self._cursor = self._db_object.cursor()
+                # Setting cursor and connection status
+                self._has_cursor = True
+                self._is_connected = True
+
+        except mysql.connector.Error:
+            # Updating cursor and connection status
+            self._has_cursor = False
+            self._is_connected = False
+            raise
+
     # This method gets the DB connection
     def get_connection(self) -> object:
-        # if database is not connected, connect it and return the DB object
-        if self.__is_connected:
-            return self.__db_object
-        else:
-            # Connecting DB
-            self.__connect_to_db()
-            return self.__db_object
-        
+        if not self._is_connected or self._db_object is None:
+            raise mysql.connector.Error(
+                f"Database is not connected. Connect DB first.")
+        return self._db_object
+
     # This method gets the cursor
     def get_cursor(self) -> object:
-        # If the there is no cursor create one
-        if self.__has_cursor and self.__is_connected:
-            return self.__cursor
-        elif not self.__has_cursor and self.__is_connected:
-            self.__cursor = self.__db_object.cursor()
-            self.__has_cursor = True
-            return self.__cursor
-        elif not self.__has_cursor and not self.__is_connected:
-            # Connect to DB
-            self.__connect_to_db()
-            # Create cursor
-            self.__cursor = self.__db_object.cursor()
-            # update cursor status
-            self.__has_cursor = True
-            
-            return self.__cursor
-    
+        if not self._has_cursor or self._cursor is None:
+            raise mysql.connector.Error(
+                f"Cursor doesn't exist. Make sure DB is connected and cursor was created.")
+        return self._cursor
+
     # This method gets cursor status
     def get_cursor_status(self):
-        return self.__has_cursor
+        return self._has_cursor
 
     # This method gets connections status
     def get_connection_status(self):
-        return self.__is_connected
+        return self._is_connected
 
     # This method closes the cursor
     def close_cursor(self):
@@ -88,12 +80,12 @@ class ManageDbConnection:
         - This method closes the cursor.
         - returns nothing.
         """
-        if self.__cursor is not None:
-            self.__cursor.close()
+        if self._cursor is not None:
+            self._cursor.close()
             # Setting cursor object to None to cleanup cursor connection
-            self.__cursor = None
+            self._cursor = None
             # Updating cursor status
-            self.__has_cursor = False
+            self._has_cursor: bool = False
 
     # This method closes the db connection
     def close_db_connection(self):
@@ -102,95 +94,131 @@ class ManageDbConnection:
         - returns nothing.
         """
         # if the DB object is present close it
-        if self.__db_object is not None:
-            self.__db_object.close()
+        if self._db_object is not None:
+            self._db_object.close()
             # Setting database object to None to cleanup closed connection
-            self.__db_object = None
+            self._db_object = None
             # Updating DB connection status
-            self.__is_connected = False
+            self._is_connected: bool = False
+
 
 # This class manages the database crud actions
 class DatabaseActions:
     def __init__(self, connection: ManageDbConnection):
-        self.__connection = connection  # The database connection instance
+        if not connection.get_connection_status():
+            raise mysql.connector.Error(
+                "DatabaseActions requires an active connection")
+        self._db: object = connection.get_connection()  # Getting the DB object
+        self._cursor: object = connection.get_cursor()  # Creating cursor object
 
-    # Select Query
-    def select_query(self, query: str, params: tuple | None = None) -> List[Tuple]:
-        db = self.__connection.get_connection()
-        cursor = self.__connection.get_cursor()
-        cursor.execute(query, params)
-        output = cursor.fetchall()
+    # This method handles converting the SQL output to a dataframe
+    def make_dataframe(self, rows: List, column_names: List) -> str:
+        """
+        - Converts query output to a dataframe.
+        - returns a str.
+        """
+        # Using pandas to convert data to dataframe, also using to string method to remove index.
+        df = pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center')
 
-        cursor.callproc("getPassengerList")
-        for results in cursor.stored_results():
-            print(results.fetchall())
+        return df
 
-        self.__connection.close_cursor()
-        if not self.__connection.get_cursor_status():
-            print(f"DB cursor closed")
+    # This method performs a select query
+    def select_query(self, query: str, params: tuple | None = None) -> str:
+        """
+        - This method runs select queries(Select, functions, views etc).
+        - returns a str.
+        """
+        # Executing query
+        self._cursor.execute(query, params)
+        # Getting rows and column headers from output
+        column_names: List = self._cursor.column_names
+        rows: List = self._cursor.fetchall()
 
-        self.__connection.close_db_connection()
-        if not self.__connection.get_connection_status():
-            print(f"DB connection closed")
-        
-        return output
+        return rows, column_names
+
+    # This method handles procedure calls
+    def procedure_calls(self, proc_name: str, params: Tuple | None = None) -> str:
+        self._cursor.callproc(proc_name, params)
+
+        # Lists for rows and columns data
+        rows = []
+        column_names = []
+
+        # parsing output to get rows and columns headers
+        for results in self._cursor.stored_results():
+            column_names: List = results.column_names
+            rows: List = results.fetchall()
+
+        # Converting output to readable format
+        output = self.make_dataframe(rows, column_names)
+        return rows, column_names
+
+    def commit(self):
+        self._db.commit()
 
 
+# This class handles interaction with the vessels table
+class VesselsTable:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from vessles table
+    def get_all_rows(self) -> str:
+        # getting all rows from the vessel table
+        query_output = self._db_actions.select_query("SELECT * FROM vessels")
+        return query_output
+
+    # This method calls the get vesssel ID function
+    def get_vessel_id(self, vessel_name: str) -> str:
+        func_params = (vessel_name,)
+        # Calling the vessel ID function
+        rows, column_names = self._db_actions.select_query(
+            "SELECT getVesselID(%s)", func_params)
+        return rows, column_names
+
+    # This procedure adds a vessel to the vessels table
+    def add_vessel(self, vessel_name: str, cost_per_hr: int) -> str:
+        proc_params = (vessel_name, cost_per_hr)
+        # calling the add vessel procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "addVessel", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
 
 
+# This class handles interaction with the passengers table
+
+
+# This class handles interaction with the trips table
 
 if __name__ == "__main__":
-
     try:
-        # Below this line is for testing as i build
         connection = ManageDbConnection(
             host="localhost",
             user="root",
             port=3306,
             database="mrc",
             password="N@thin23"
-
         )
 
+        connection.connect_to_db()
         db_actions = DatabaseActions(connection)
 
-        output = db_actions.select_query("SELECT * FROM vessels")
-        for data in output:
-            print(data)
+        vessels = VesselsTable(db_actions)
 
-        # db = connection.get_connection()
-        # cursor = connection.get_cursor()
+        rows, cols = vessels.get_vessel_id("Ocean Voyager")
+        print(pd.DataFrame(rows, columns=cols).to_string(
+            index=False, justify='center'))
 
-        # print(type(db))
-        # print(type(cursor))
+        rows, cols = vessels.add_vessel("Sea Breeze", 100)
+        print(pd.DataFrame(rows, columns=cols).to_string(
+            index=False, justify='center'))
 
-        # print(f"DB connected successfully\n")
+        rows, cols = vessels.get_all_rows()
+        print(pd.DataFrame(rows, columns=cols).to_string(
+            index=False, justify='center'))
 
     except mysql.connector.Error as err:
-        print(err)
-        exit(1)
-
-    # cursor.execute(
-    #     """
-    # SELECT
-    #     *
-    # FROM
-    #     passengers
-
-    # """
-    # )
-
-    # for data in cursor:
-    #     print(data)
-
-    # cursor.execute("SHOW TABLES")
-    # for data in cursor:
-    #     print(data)
-
-    # connection.close_cursor()
-    # if not connection.get_cursor_status():
-    #     print(f"DB cursor closed")
-
-    # connection.close_db_connection()
-    # if not connection.get_connection_status():
-    #     print(f"DB connection closed")
+        print("Database error:", err)
