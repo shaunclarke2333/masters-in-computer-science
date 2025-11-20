@@ -111,23 +111,11 @@ class DatabaseActions:
         self._db: object = connection.get_connection()  # Getting the DB object
         self._cursor: object = connection.get_cursor()  # Creating cursor object
 
-    # This method handles converting the SQL output to a dataframe
-    def make_dataframe(self, rows: List, column_names: List) -> str:
-        """
-        - Converts query output to a dataframe.
-        - returns a str.
-        """
-        # Using pandas to convert data to dataframe, also using to string method to remove index.
-        df = pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center')
-
-        return df
-
     # This method performs a select query
-    def select_query(self, query: str, params: tuple | None = None) -> str:
+    def select_query(self, query: str, params: tuple | None = None) -> Tuple[list[tuple], List[str]]:
         """
         - This method runs select queries(Select, functions, views etc).
-        - returns a str.
+        - Returns raw data, rows and column names.
         """
         # Executing query
         self._cursor.execute(query, params)
@@ -138,7 +126,11 @@ class DatabaseActions:
         return rows, column_names
 
     # This method handles procedure calls
-    def procedure_calls(self, proc_name: str, params: Tuple | None = None) -> str:
+    def procedure_calls(self, proc_name: str, params: Tuple | None = None) -> Tuple[list[tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
         self._cursor.callproc(proc_name, params)
 
         # Lists for rows and columns data
@@ -149,9 +141,6 @@ class DatabaseActions:
         for results in self._cursor.stored_results():
             column_names: List = results.column_names
             rows: List = results.fetchall()
-
-        # Converting output to readable format
-        output = self.make_dataframe(rows, column_names)
         return rows, column_names
 
     def commit(self):
@@ -159,26 +148,38 @@ class DatabaseActions:
 
 
 # This class handles interaction with the vessels table
-class VesselsTable:
+class VesselsDal:
     def __init__(self, database_action_object: DatabaseActions):
         self._db_actions = database_action_object
 
     # This method returns all rows from vessles table
-    def get_all_rows(self) -> str:
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
         # getting all rows from the vessel table
         query_output = self._db_actions.select_query("SELECT * FROM vessels")
         return query_output
 
     # This method calls the get vesssel ID function
-    def get_vessel_id(self, vessel_name: str) -> str:
+    def get_vessel_id(self, vessel_name: str) -> Tuple[List[Tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
         func_params = (vessel_name,)
         # Calling the vessel ID function
         rows, column_names = self._db_actions.select_query(
             "SELECT getVesselID(%s)", func_params)
         return rows, column_names
 
-    # This procedure adds a vessel to the vessels table
-    def add_vessel(self, vessel_name: str, cost_per_hr: int) -> str:
+    # This method adds a vessel to the vessels table
+    def add_vessel_proc(self, vessel_name: str, cost_per_hr: int) -> Tuple[List[Tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
         proc_params = (vessel_name, cost_per_hr)
         # calling the add vessel procedure
         rows, column_names = self._db_actions.procedure_calls(
@@ -187,12 +188,106 @@ class VesselsTable:
         self._db_actions.commit()
         return rows, column_names
 
-
-# This class handles interaction with the passengers table
-
+    # This method calls the total revenue By vessel view
+    def get_total_rev_view(self) -> Tuple[List[Tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
+        query = ("SELECT * FROM `total revenue By vessel`")
+        # getting all rows from the vessel table
+        query_output = self._db_actions.select_query(query)
+        return query_output
 
 # This class handles interaction with the trips table
 
+
+class TripsDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from trips table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
+        # getting all rows from the trip table
+        query_output = self._db_actions.select_query("SELECT * FROM trips")
+        return query_output
+
+    # This method adds a trip to the trips table
+    def add_trip_proc(self, vessel_name: str, first_name: str, last_name: str, date: str, time: str,
+                      trip_length: int, total_passengers: int) -> Tuple[List[Tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
+        proc_params = (vessel_name, first_name, last_name, date,
+                       time, trip_length, total_passengers)
+        # calling the add trip procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "addTrip", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+
+    # This method gets all the rows from the all trips view
+    def get_all_trips_view(self) -> Tuple[List[Tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
+        query = ("SELECT * FROM `all trips`")
+        # getting all rows from the all trips view
+        query_output = self._db_actions.select_query(query)
+        return query_output
+
+
+# This class handles interaction with the passengers table
+class PassengersDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from passengers table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
+        # getting all rows from the passenger table
+        query_output = self._db_actions.select_query(
+            "SELECT * FROM passengers")
+        return query_output
+
+    # This method calls the get passenger ID function
+    def get_passenger_id(self, first_name: str, last_name: str) -> Tuple[List[Tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
+        func_params = (first_name, last_name,)
+        # Calling the passenger ID function
+        rows, column_names = self._db_actions.select_query(
+            "SELECT getPassengerID(%s, %s)", func_params)
+        return rows, column_names
+
+    # This method adds a passenger to the passengers table
+    def add_passenger_proc(self, first_name: str, last_name: str, phone: str) -> Tuple[List[Tuple], List[str]]:
+        """
+        
+        - Returns raw data, rows and column names.
+        """
+        proc_params = (first_name, last_name, phone)
+        # calling the add passenger procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "addPassenger", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+
+
+############ Testing below ###################
 if __name__ == "__main__":
     try:
         connection = ManageDbConnection(
@@ -206,19 +301,75 @@ if __name__ == "__main__":
         connection.connect_to_db()
         db_actions = DatabaseActions(connection)
 
-        vessels = VesselsTable(db_actions)
+        vessels = VesselsDal(db_actions)
+        trips = TripsDal(db_actions)
+        passengers = PassengersDal(db_actions)
 
-        rows, cols = vessels.get_vessel_id("Ocean Voyager")
-        print(pd.DataFrame(rows, columns=cols).to_string(
+        # rows, column_names = vessels.get_vessel_id("Ocean Voyager")
+        # print(pd.DataFrame(rows, columns=column_names).to_string(
+        #     index=False, justify='center'))
+
+        # print("")
+        # rows, column_names = vessels.add_vessel_proc("Sea Breeze", 100)
+        # print(pd.DataFrame(rows, columns=column_names).to_string(
+        #     index=False, justify='center'))
+
+        # print("")
+        # rows, column_names = vessels.get_all_rows()
+        # print(pd.DataFrame(rows, columns=column_names).to_string(
+        #     index=False, justify='center'))
+
+        # print("")
+        # rows, column_names = vessels.get_total_rev_view()
+        # print(pd.DataFrame(rows, columns=column_names).to_string(
+        #     index=False, justify='center'))
+
+        print("")
+        rows, column_names = trips.get_all_rows()
+        print(F"All Rows from Trips Table\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
             index=False, justify='center'))
 
-        rows, cols = vessels.add_vessel("Sea Breeze", 100)
-        print(pd.DataFrame(rows, columns=cols).to_string(
+        ##################################
+        print("View all trips workflow\n")
+
+        print(f"Adding new vessel info ...")
+        rows, column_names = vessels.add_vessel_proc("Wave Rider", 350)
+        print(F"New vessel added\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
             index=False, justify='center'))
 
-        rows, cols = vessels.get_all_rows()
-        print(pd.DataFrame(rows, columns=cols).to_string(
+        print(f"Adding new passenger info ...")
+        rows, column_names = passengers.add_passenger_proc(
+            "Barry", "Allen", "201-350-6789")
+        print(F"New passenger added\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
             index=False, justify='center'))
+
+        print("")
+        rows, column_names = trips.add_trip_proc(
+            "Wave Rider", "Barry", "Allen", "2025-06-30", "12:00:00", 3, 5)
+        print(F"Info added to trip\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
+
+        print("")
+        rows, column_names = trips.get_all_trips_view()
+        print(F"All Trips View\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
+
+        print("")
+        connection.close_cursor()
+        print(f"closinng cursor")
+        if not connection.get_cursor_status():
+            print(f"Cursor closed")
+
+        print("")
+        connection.close_db_connection()
+        print(f"closinng connection")
+        if not connection.get_connection_status():
+            print(f"Connection closed")
 
     except mysql.connector.Error as err:
         print("Database error:", err)
