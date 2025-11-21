@@ -191,7 +191,7 @@ class VesselsDal:
     # This method calls the total revenue By vessel view
     def get_total_rev_view(self) -> Tuple[List[Tuple], List[str]]:
         """
-        
+        #
         - Returns raw data, rows and column names.
         """
         query = ("SELECT * FROM `total revenue By vessel`")
@@ -200,8 +200,6 @@ class VesselsDal:
         return query_output
 
 # This class handles interaction with the trips table
-
-
 class TripsDal:
     def __init__(self, database_action_object: DatabaseActions):
         self._db_actions = database_action_object
