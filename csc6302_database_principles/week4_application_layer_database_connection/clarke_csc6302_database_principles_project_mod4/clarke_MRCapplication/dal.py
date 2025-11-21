@@ -343,6 +343,7 @@ if __name__ == "__main__":
         rows, column_names = passengers.add_passenger_proc(
             "Barry", "Allen", "201-350-6789")
         print(F"New passenger added\n")
+        print(len(rows), column_names)
         print(pd.DataFrame(rows, columns=column_names).to_string(
             index=False, justify='center'))
 
@@ -373,3 +374,8 @@ if __name__ == "__main__":
 
     except mysql.connector.Error as err:
         print("Database error:", err)
+
+test = [("apple", 1.50), ("banana", 0.75), ("orange", 1.25)]
+
+
+print(len(test[0]))
