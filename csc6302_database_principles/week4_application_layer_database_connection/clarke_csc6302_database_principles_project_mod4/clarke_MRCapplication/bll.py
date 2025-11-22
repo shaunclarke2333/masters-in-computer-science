@@ -7,8 +7,6 @@ Module 04: Application Layer
 from typing import List, Tuple
 import dal
 
-
-# Creating database Object
 connection = dal.ManageDbConnection(
     host="localhost",
     user="root",
@@ -27,7 +25,6 @@ db_actions = dal.DatabaseActions(connection)
 vessels_table_actions = dal.VesselsDal(db_actions)
 trips_table_actions = dal.TripsDal(db_actions)
 passengers_table_actions = dal.PassengersDal(db_actions)
-
 
 # This class manages VesselDal interactions
 class VesselService:
@@ -221,7 +218,39 @@ class PassengerService:
         return rows, column_names
 
 
+vessel_service = VesselService(vessels_table_actions)
+trip_service = TripService(trips_table_actions)
+passenger_service = PassengerService(passengers_table_actions)
+
+
 # This class manages the interaction between the view and Dal
-class ServiceManager:
-    def __init__(self):
-        pass
+class MRCAppService:
+    """
+    This class acts as an entry point for the front end calls.
+    it also acts as and interface to the data access layer for DB calls.
+    """
+    def __init__(self, vessel_service: VesselService, trip_service: TripService, passenger_service: PassengerService):
+        self.vessel_service = vessel_service
+        self.trip_service = trip_service
+        self.passenger_service = passenger_service
+
+    
+    # Fetching total revenue by vessel to display on the frontend
+    def view_total_rev_by_vessel(self) -> Tuple[List[Tuple], List[str]]:
+        # getting all rows from total rev view
+        rows, column_names = self.vessel_service.get_total_rev_view()
+        return rows, column_names
+    
+    # Fetching the vessel ID with match to display on the frontend
+    def view_vessel_id(self, vessel_name_match) -> Tuple[List[Tuple], List[str]]:
+        # Getting vessel id with match
+        rows, column_names = self.vessel_service.get_vessel_id(vessel_name_match)
+        return rows, column_names
+    
+    # Fetching the vessel ID with NO match to display on the frontend
+    def view_vessel_id(self, vessel_name_no_match) -> Tuple[List[Tuple], List[str]]:
+        # Getting vessel id NO match
+        rows, column_names = self.vessel_service.get_vessel_id(vessel_name_no_match)
+        return rows, column_names
+    
+
