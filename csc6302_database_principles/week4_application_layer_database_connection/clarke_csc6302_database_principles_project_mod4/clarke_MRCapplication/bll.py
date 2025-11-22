@@ -162,7 +162,64 @@ class PassengerService:
     def __init__(self, passengers_table_actions: dal.PassengersDal):
         self.passengers_table_actions = passengers_table_actions
 
-        
+    # This method gets all passengers from the passenger db table
+    def get_all_passengers(self) -> Tuple[List[Tuple], List[str]]:
+        # Getting all rows from passenger table
+        rows, column_names = self.passengers_table_actions.get_all_rows()
+        return rows, column_names
+
+    # This method gets the passenger id from the passenger db table
+    def get_passenger_id(self, first_name: str, last_name: str) -> Tuple[List[Tuple], List[str]]:
+        # Removing any leading or trailing white space
+        first_name.strip()
+        last_name.strip()
+
+        # Validating inputs
+        if not first_name or not first_name.strip():
+            raise ValueError(f"Passenger's first name cannot be empty")
+        if not last_name or not last_name.strip():
+            raise ValueError(f"Passenger's last name cannot be empty")
+
+        # Getting row id from passenger table
+        rows, column_names = self.passengers_table_actions.get_passenger_id(
+            first_name, last_name)
+        # Getting row value from list of tuple
+        passenger_id = rows[0][0]
+
+        # If we found a passenger ID
+        if passenger_id != -1:
+            return rows, column_names
+
+        # If no passenger ID found -1 will be the row value
+        return rows, column_names
+
+    # This method adds a passenger to the passenger table
+    def add_passenger(self, first_name: str, last_name: str, phone: str) -> Tuple[List[Tuple], List[str]]:
+        # Removing any leading or trailing white space
+        first_name = first_name.strip()
+        last_name = last_name.strip()
+        phone.strip()
+
+        # validating inputs
+        if not first_name or not first_name.strip():
+            raise ValueError(f"Passenger's first name cannot be empty")
+        if not last_name or not last_name.strip():
+            raise ValueError(f"Passenger's last name cannot be empty")
+        if not phone or not phone.strip():
+            raise ValueError(f"Passenger's phone number cannot be empty")
+
+        # adding passenger to passenger table
+        rows, column_names = self.passengers_table_actions.add_passenger_proc(
+            first_name, last_name, phone)
+        # Getting the passenger id for the newly added passenger
+        passenger_id = rows[0][0]
+
+        # If the newly created passenger exists
+        if passenger_id is not None:
+            return rows, column_names
+
+        return rows, column_names
+
 
 # This class manages the interaction between the view and Dal
 class ServiceManager:

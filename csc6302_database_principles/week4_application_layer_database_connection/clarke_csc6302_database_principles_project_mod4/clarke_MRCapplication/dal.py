@@ -285,94 +285,94 @@ class PassengersDal:
         return rows, column_names
 
 ############ Testing below ###################
-# if __name__ == "__main__":
-#     try:
-#         connection = ManageDbConnection(
-#             host="localhost",
-#             user="root",
-#             port=3306,
-#             database="mrc",
-#             password="N@thin23"
-#         )
+if __name__ == "__main__":
+    try:
+        connection = ManageDbConnection(
+            host="localhost",
+            user="root",
+            port=3306,
+            database="mrc",
+            password="N@thin23"
+        )
 
-#         connection.connect_to_db()
-#         db_actions = DatabaseActions(connection)
+        connection.connect_to_db()
+        db_actions = DatabaseActions(connection)
 
-#         vessels = VesselsDal(db_actions)
-#         trips = TripsDal(db_actions)
-#         passengers = PassengersDal(db_actions)
+        vessels = VesselsDal(db_actions)
+        trips = TripsDal(db_actions)
+        passengers = PassengersDal(db_actions)
 
-#         # rows, column_names = vessels.get_vessel_id("Ocean Voyager")
-#         # print(pd.DataFrame(rows, columns=column_names).to_string(
-#         #     index=False, justify='center'))
+        rows, column_names = vessels.get_vessel_id("Ocean Voyager")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         # print("")
-#         # rows, column_names = vessels.add_vessel_proc("Sea Breeze", 100)
-#         # print(pd.DataFrame(rows, columns=column_names).to_string(
-#         #     index=False, justify='center'))
+        print("")
+        rows, column_names = vessels.add_vessel_proc("Sea Breeze", 100)
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         # print("")
-#         # rows, column_names = vessels.get_all_rows()
-#         # print(pd.DataFrame(rows, columns=column_names).to_string(
-#         #     index=False, justify='center'))
+        print("")
+        rows, column_names = vessels.get_all_rows()
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         # print("")
-#         # rows, column_names = vessels.get_total_rev_view()
-#         # print(pd.DataFrame(rows, columns=column_names).to_string(
-#         #     index=False, justify='center'))
+        print("")
+        rows, column_names = vessels.get_total_rev_view()
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         print("")
-#         rows, column_names = trips.get_all_rows()
-#         print(F"All Rows from Trips Table\n")
-#         print(pd.DataFrame(rows, columns=column_names).to_string(
-#             index=False, justify='center'))
+        print("")
+        rows, column_names = trips.get_all_rows()
+        print(F"All Rows from Trips Table\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         ##################################
-#         print("View all trips workflow\n")
+        ##################################
+        print("View all trips workflow\n")
 
-#         print(f"Adding new vessel info ...")
-#         rows, column_names = vessels.add_vessel_proc("Wave Rider", 350)
-#         print(F"New vessel added\n")
-#         print(pd.DataFrame(rows, columns=column_names).to_string(
-#             index=False, justify='center'))
+        print(f"Adding new vessel info ...")
+        rows, column_names = vessels.add_vessel_proc("Wave Rider", 350)
+        print(F"New vessel added\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         print(f"Adding new passenger info ...")
-#         rows, column_names = passengers.add_passenger_proc(
-#             "Barry", "Allen", "201-350-6789")
-#         print(F"New passenger added\n")
-#         print(len(rows), column_names)
-#         print(pd.DataFrame(rows, columns=column_names).to_string(
-#             index=False, justify='center'))
+        print(f"Adding new passenger info ...")
+        rows, column_names = passengers.add_passenger_proc(
+            "Barry", "Allen", "201-350-6789")
+        print(F"New passenger added\n")
+        print(len(rows), column_names)
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         print("")
-#         rows, column_names = trips.add_trip_proc(
-#             "Wave Rider", "Barry", "Allen", "2025-06-30", "12:00:00", 3, 5)
-#         print(F"Info added to trip\n")
-#         print(pd.DataFrame(rows, columns=column_names).to_string(
-#             index=False, justify='center'))
+        print("")
+        rows, column_names = trips.add_trip_proc(
+            "Wave Rider", "Barry", "Allen", "2025-06-30", "12:00:00", 3, 5)
+        print(F"Info added to trip\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         print("")
-#         rows, column_names = trips.get_all_trips_view()
-#         print(F"All Trips View\n")
-#         print(pd.DataFrame(rows, columns=column_names).to_string(
-#             index=False, justify='center'))
+        print("")
+        rows, column_names = trips.get_all_trips_view()
+        print(F"All Trips View\n")
+        print(pd.DataFrame(rows, columns=column_names).to_string(
+            index=False, justify='center'))
 
-#         print("")
-#         connection.close_cursor()
-#         print(f"closinng cursor")
-#         if not connection.get_cursor_status():
-#             print(f"Cursor closed")
+        print("")
+        connection.close_cursor()
+        print(f"closinng cursor")
+        if not connection.get_cursor_status():
+            print(f"Cursor closed")
 
-#         print("")
-#         connection.close_db_connection()
-#         print(f"closinng connection")
-#         if not connection.get_connection_status():
-#             print(f"Connection closed")
+        print("")
+        connection.close_db_connection()
+        print(f"closinng connection")
+        if not connection.get_connection_status():
+            print(f"Connection closed")
 
-#     except mysql.connector.Error as err:
-#         print("Database error:", err)
+    except mysql.connector.Error as err:
+        print("Database error:", err)
 
-# test = [("apple", 1.50), ("banana", 0.75), ("orange", 1.25)]
+test = [("apple", 1.50), ("banana", 0.75), ("orange", 1.25)]
 
 
-# print(len(test[0]))
+print(len(test[0]))
