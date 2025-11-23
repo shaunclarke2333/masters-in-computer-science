@@ -1,5 +1,3 @@
-
-
 # importing depenencies
 import random
 
