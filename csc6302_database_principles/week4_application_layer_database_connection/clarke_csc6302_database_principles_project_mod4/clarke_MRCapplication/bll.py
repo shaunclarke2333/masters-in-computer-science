@@ -9,8 +9,6 @@ import dal
 
 
 # This class manages VesselDal interactions
-
-
 class VesselService:
     def __init__(self, vessels_table_actions: dal.VesselsDal):
         self.vessels_table_actions = vessels_table_actions
@@ -24,7 +22,7 @@ class VesselService:
     # This method gets the vessel id from the vessel db table
     def get_vessel_id(self, vessel_name: str) -> Tuple[List[Tuple], List[str]]:
         # Removing any leading or trailing white space
-        vessel_name.strip()
+        vessel_name = vessel_name.strip()
         # Validating inputs
         if not vessel_name or not vessel_name.strip():
             raise ValueError(f"Vessel name cannot be empty")
@@ -122,13 +120,26 @@ class TripService:
         # adding trip to trip table
         rows, column_names = self.trips_table_actions.add_trip_proc(
             vessel_name, first_name, last_name, date, time, trip_length, total_passengers)
-       
 
-        # If the newly created trip exists
-        if rows[0][0] is not None:
+        
+        if len(rows) == 0: # Means trip details were added.
+            rows = True
+            column_names = True
             return rows, column_names
-
-        return rows, column_names
+        
+        # If the newly created trip exists
+        if rows[0][0] == -3: # vessel and passenger not found
+            rows = -3
+            return rows, column_names
+        elif rows[0][0] == -2: # passenger not found
+            rows = -2
+            return rows, column_names
+        elif rows[0][0] == -1: # vessel not found
+            rows = -1
+            return rows, column_names
+        elif rows[0][0] == 0: # duplicate user or vessel
+            rows = 0
+            return rows, column_names
 
     # This method displays all rows from the trips view.
     def get_view_all_trips(self) -> Tuple[List[Tuple], List[str]]:
@@ -151,8 +162,8 @@ class PassengerService:
     # This method gets the passenger id from the passenger db table
     def get_passenger_id(self, first_name: str, last_name: str) -> Tuple[List[Tuple], List[str]]:
         # Removing any leading or trailing white space
-        first_name.strip()
-        last_name.strip()
+        first_name = first_name.strip()
+        last_name = last_name.strip()
 
         # Validating inputs
         if not first_name or not first_name.strip():
@@ -178,7 +189,7 @@ class PassengerService:
         # Removing any leading or trailing white space
         first_name = first_name.strip()
         last_name = last_name.strip()
-        phone.strip()
+        phone = phone.strip()
 
         # validating inputs
         if not first_name or not first_name.strip():
@@ -199,6 +210,7 @@ class PassengerService:
             return rows, column_names
 
         return rows, column_names
+
 
 # This class manages the interaction between the view and Dal
 class MRCAppService:
@@ -232,15 +244,17 @@ class MRCAppService:
         rows, column_names = self.vessel_service.get_vessel_id(
             vessel_name_no_match)
         return rows, column_names
-    
+
     # Adds a passenger to the passsenger table
-    def add_passenger(self, first_name: str, last_name: str, phone: str)  -> Tuple[List[Tuple], List[str]]:
-        rows, column_names = self.passenger_service.add_passenger(first_name, last_name, phone)
+    def add_passenger(self, first_name: str, last_name: str, phone: str) -> Tuple[List[Tuple], List[str]]:
+        rows, column_names = self.passenger_service.add_passenger(
+            first_name, last_name, phone)
         return rows, column_names
-    
+
     # adds a vessel to vessel table
     def add_vessel(self, vessel_name: str, cost_per_hr: int) -> Tuple[List[Tuple], List[str]]:
-        rows, column_names = self.vessel_service.add_vessel(vessel_name, cost_per_hr)
+        rows, column_names = self.vessel_service.add_vessel(
+            vessel_name, cost_per_hr)
         return rows, column_names
 
     # adding trip details with new passenger and new vessel to trips table
@@ -248,14 +262,14 @@ class MRCAppService:
                              trip_length: int, total_passengers: int) -> Tuple[List[Tuple], List[str]]:
         """
         """
-        # Adding new trip 
-        rows, column_names = self.trip_service.add_trip(vessel_name, first_name, last_name, date, time,trip_length, total_passengers)
+        # Adding new trip
+        rows, column_names = self.trip_service.add_trip(
+            vessel_name, first_name, last_name, date, time, trip_length, total_passengers)
         return rows, column_names
-    
+
     # Fetiching all rows from the all trips view
     def view_get_all_trips(self) -> Tuple[List[Tuple], List[str]]:
 
         # getting all rows from All Trips view
         rows, column_names = self.trip_service.get_view_all_trips()
         return rows, column_names
-    
