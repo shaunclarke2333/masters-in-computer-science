@@ -114,7 +114,7 @@ RETURNS INT DETERMINISTIC
 BEGIN
 	DECLARE foundVesselID INT;
     SELECT ID INTO foundVesselID 
-    FROM Vessels
+    FROM vessels
     WHERE Vessel = myVesselName;
 	
     IF foundVesselID is null
@@ -135,7 +135,7 @@ RETURNS INT DETERMINISTIC
 BEGIN
 	DECLARE foundPassengerID INT;
     SELECT ID INTO foundPassengerID 
-    FROM Passengers
+    FROM passengers
     WHERE First_Name = myPassengerFName
     AND Last_Name = myPassengerLName;
 	
@@ -200,7 +200,7 @@ BEGIN
 	SELECT getPassengerID(passFName, passLName) INTO foundPassengerID;
     
     IF foundPassengerID = -1
-    THEN INSERT INTO Passengers (First_Name, Last_name, phone)
+    THEN INSERT INTO passengers (First_Name, Last_name, phone)
     VALUES (passFName, passLName, passPhone);
     END IF;
     
@@ -223,7 +223,7 @@ BEGIN
 	SELECT getVesselID(myVesselName) INTO foundVesselID;
     
     IF foundVesselID = -1
-    THEN INSERT INTO Vessels (vessel, Cost_Per_Hour)
+    THEN INSERT INTO vessels (vessel, Cost_Per_Hour)
     VALUES (myVesselName, myVesselCPH);
     END IF;
     
@@ -298,7 +298,7 @@ CREATE PROCEDURE deletePassenger(IN passID INT)
 BEGIN
 	DECLARE foundPassengerID INT;
     
-    SELECT count(ID) FROM Passengers WHERE ID = passID INTO foundPassengerID;
+    SELECT count(ID) FROM passengers WHERE ID = passID INTO foundPassengerID;
     
     IF foundPassengerID > 0
     THEN DELETE FROM Passengers WHERE ID = passID;
@@ -326,7 +326,7 @@ BEGIN
     SELECT count(ID) FROM Vessels WHERE ID = vesselID INTO foundVesselID;
     
     IF foundVesselID > 0
-    THEN DELETE FROM Vessels WHERE ID = vesselID;
+    THEN DELETE FROM vessels WHERE ID = vesselID;
     ELSE SELECT -1 AS NotFound;
     END IF;
     

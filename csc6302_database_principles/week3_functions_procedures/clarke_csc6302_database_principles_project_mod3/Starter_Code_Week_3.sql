@@ -180,7 +180,7 @@ DELIMITER $$
 	END$$
 DELIMITER ;
 
--- SELECT getVesselId('Ocean Voyager') AS Vessel_ID
+SELECT getVesselId('Ocean Voyager') AS Vessel_ID;
 
 
 /*
@@ -202,7 +202,7 @@ BEGIN
 END$$
 DELIMITER ;
 
--- SELECT getPassengerId('Emily Clark') AS Passenger_ID;
+SELECT getPassengerId('Emily Clark') AS Passenger_ID;
 
 /*
 Create a procedure called "addPassenger" that adds a new Passenger to the Passenger table.
@@ -240,7 +240,9 @@ END$$
 DELIMITER ;
 
 CALL addPassenger(6,'Barry', 'Allen','234 star St', 'Central City', 'MA', '23456','978-555-5678',NULL);
-select * from passengers;
+SELECT
+	*
+FROM passengers;
 
 /*
 Create a procedure called "addVessel" that adds a new Vessel to the Vessel table. 

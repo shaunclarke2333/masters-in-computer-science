@@ -198,6 +198,48 @@ class VesselsDal:
         # getting all rows from the vessel table
         query_output = self._db_actions.select_query(query)
         return query_output
+    
+# This class handles interaction with the passengers table
+class PassengersDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from passengers table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+
+        - Returns raw data, rows and column names.
+        """
+        # getting all rows from the passenger table
+        query_output = self._db_actions.select_query(
+            "SELECT * FROM passengers")
+        return query_output
+
+    # This method calls the get passenger ID function
+    def get_passenger_id(self, first_name: str, last_name: str) -> Tuple[List[Tuple], List[str]]:
+        """
+
+        - Returns raw data, rows and column names.
+        """
+        func_params = (first_name, last_name,)
+        # Calling the passenger ID function
+        rows, column_names = self._db_actions.select_query(
+            "SELECT getPassengerID(%s, %s)", func_params)
+        return rows, column_names
+
+    # This method adds a passenger to the passengers table
+    def add_passenger_proc(self, first_name: str, last_name: str, phone: str) -> Tuple[List[Tuple], List[str]]:
+        """
+
+        - Returns raw data, rows and column names.
+        """
+        proc_params = (first_name, last_name, phone)
+        # calling the add passenger procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "addPassenger", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
 
 # This class handles interaction with the trips table
 class TripsDal:
@@ -242,137 +284,97 @@ class TripsDal:
         return query_output
 
 
-# This class handles interaction with the passengers table
-class PassengersDal:
-    def __init__(self, database_action_object: DatabaseActions):
-        self._db_actions = database_action_object
-
-    # This method returns all rows from passengers table
-    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
-        """
-
-        - Returns raw data, rows and column names.
-        """
-        # getting all rows from the passenger table
-        query_output = self._db_actions.select_query(
-            "SELECT * FROM passengers")
-        return query_output
-
-    # This method calls the get passenger ID function
-    def get_passenger_id(self, first_name: str, last_name: str) -> Tuple[List[Tuple], List[str]]:
-        """
-
-        - Returns raw data, rows and column names.
-        """
-        func_params = (first_name, last_name,)
-        # Calling the passenger ID function
-        rows, column_names = self._db_actions.select_query(
-            "SELECT getPassengerID(%s, %s)", func_params)
-        return rows, column_names
-
-    # This method adds a passenger to the passengers table
-    def add_passenger_proc(self, first_name: str, last_name: str, phone: str) -> Tuple[List[Tuple], List[str]]:
-        """
-
-        - Returns raw data, rows and column names.
-        """
-        proc_params = (first_name, last_name, phone)
-        # calling the add passenger procedure
-        rows, column_names = self._db_actions.procedure_calls(
-            "addPassenger", proc_params)
-        # Commiting chnages to DB
-        self._db_actions.commit()
-        return rows, column_names
-
-############ Testing below ###################
-if __name__ == "__main__":
-    try:
-        connection = ManageDbConnection(
-            host="localhost",
-            user="root",
-            port=3306,
-            database="mrc",
-            password="N@thin23"
-        )
-
-        connection.connect_to_db()
-        db_actions = DatabaseActions(connection)
-
-        vessels = VesselsDal(db_actions)
-        trips = TripsDal(db_actions)
-        passengers = PassengersDal(db_actions)
-
-        rows, column_names = vessels.get_vessel_id("Ocean Voyager")
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        print("")
-        rows, column_names = vessels.add_vessel_proc("Sea Breeze", 100)
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        print("")
-        rows, column_names = vessels.get_all_rows()
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        print("")
-        rows, column_names = vessels.get_total_rev_view()
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        print("")
-        rows, column_names = trips.get_all_rows()
-        print(F"All Rows from Trips Table\n")
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        ##################################
-        print("View all trips workflow\n")
-
-        print(f"Adding new vessel info ...")
-        rows, column_names = vessels.add_vessel_proc("Wave Rider", 350)
-        print(F"New vessel added\n")
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        print(f"Adding new passenger info ...")
-        rows, column_names = passengers.add_passenger_proc(
-            "Barry", "Allen", "201-350-6789")
-        print(F"New passenger added\n")
-        print(len(rows), column_names)
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        print("")
-        rows, column_names = trips.add_trip_proc(
-            "Wave Rider", "Barry", "Allen", "2025-06-30", "12:00:00", 3, 5)
-        print(F"Info added to trip\n")
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        print("")
-        rows, column_names = trips.get_all_trips_view()
-        print(F"All Trips View\n")
-        print(pd.DataFrame(rows, columns=column_names).to_string(
-            index=False, justify='center'))
-
-        print("")
-        connection.close_cursor()
-        print(f"closinng cursor")
-        if not connection.get_cursor_status():
-            print(f"Cursor closed")
-
-        print("")
-        connection.close_db_connection()
-        print(f"closinng connection")
-        if not connection.get_connection_status():
-            print(f"Connection closed")
-
-    except mysql.connector.Error as err:
-        print("Database error:", err)
-
-test = [("apple", 1.50), ("banana", 0.75), ("orange", 1.25)]
 
 
-print(len(test[0]))
+# ############ Testing below ###################
+# if __name__ == "__main__":
+#     try:
+#         connection = ManageDbConnection(
+#             host="localhost",
+#             user="root",
+#             port=3306,
+#             database="mrc",
+#             password="N@thin23"
+#         )
+
+#         connection.connect_to_db()
+#         db_actions = DatabaseActions(connection)
+
+#         vessels = VesselsDal(db_actions)
+#         trips = TripsDal(db_actions)
+#         passengers = PassengersDal(db_actions)
+
+#         rows, column_names = vessels.get_vessel_id("Ocean Voyager")
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         print("")
+#         rows, column_names = vessels.add_vessel_proc("Sea Breeze", 100)
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         print("")
+#         rows, column_names = vessels.get_all_rows()
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         print("")
+#         rows, column_names = vessels.get_total_rev_view()
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         print("")
+#         rows, column_names = trips.get_all_rows()
+#         print(F"All Rows from Trips Table\n")
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         ##################################
+#         print("View all trips workflow\n")
+
+#         print(f"Adding new vessel info ...")
+#         rows, column_names = vessels.add_vessel_proc("Waves Rider", 350)
+#         print(F"New vessel added\n")
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         print(f"Adding new passenger info ...")
+#         rows, column_names = passengers.add_passenger_proc(
+#             "Barrys", "Allen", "201-350-6789")
+#         print(F"New passenger added\n")
+#         print(len(rows), column_names)
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         print("")
+#         rows, column_names = trips.add_trip_proc(
+#             "Waves Rider", "Barrys", "Allen", "2025-06-30", "12:00:00", 3, 5)
+#         print(F"Info added to trip\n")
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         print("")
+#         rows, column_names = trips.get_all_trips_view()
+#         print(F"All Trips View\n")
+#         print(pd.DataFrame(rows, columns=column_names).to_string(
+#             index=False, justify='center'))
+
+#         print("")
+#         connection.close_cursor()
+#         print(f"closinng cursor")
+#         if not connection.get_cursor_status():
+#             print(f"Cursor closed")
+
+#         print("")
+#         connection.close_db_connection()
+#         print(f"closinng connection")
+#         if not connection.get_connection_status():
+#             print(f"Connection closed")
+
+#     except mysql.connector.Error as err:
+#         print("Database error:", err)
+
+# test = [("apple", 1.50), ("banana", 0.75), ("orange", 1.25)]
+
+
+# print(len(test[0]))

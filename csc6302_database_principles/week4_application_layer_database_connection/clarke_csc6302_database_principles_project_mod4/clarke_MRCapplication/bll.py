@@ -7,26 +7,10 @@ Module 04: Application Layer
 from typing import List, Tuple
 import dal
 
-connection = dal.ManageDbConnection(
-    host="localhost",
-    user="root",
-    port=3306,
-    database="mrc",
-    password="N@thin23"
-)
-
-# Connecting database
-connection.connect_to_db()
-
-# Instantiating database actions object
-db_actions = dal.DatabaseActions(connection)
-
-# Instantiating Dal table instances
-vessels_table_actions = dal.VesselsDal(db_actions)
-trips_table_actions = dal.TripsDal(db_actions)
-passengers_table_actions = dal.PassengersDal(db_actions)
 
 # This class manages VesselDal interactions
+
+
 class VesselService:
     def __init__(self, vessels_table_actions: dal.VesselsDal):
         self.vessels_table_actions = vessels_table_actions
@@ -138,11 +122,10 @@ class TripService:
         # adding trip to trip table
         rows, column_names = self.trips_table_actions.add_trip_proc(
             vessel_name, first_name, last_name, date, time, trip_length, total_passengers)
-        # Getting the trip id for the newly added trip
-        trip_id = rows[0][0]
+       
 
         # If the newly created trip exists
-        if trip_id is not None:
+        if rows[0][0] is not None:
             return rows, column_names
 
         return rows, column_names
@@ -217,40 +200,62 @@ class PassengerService:
 
         return rows, column_names
 
-
-vessel_service = VesselService(vessels_table_actions)
-trip_service = TripService(trips_table_actions)
-passenger_service = PassengerService(passengers_table_actions)
-
-
 # This class manages the interaction between the view and Dal
 class MRCAppService:
     """
     This class acts as an entry point for the front end calls.
     it also acts as and interface to the data access layer for DB calls.
     """
+
     def __init__(self, vessel_service: VesselService, trip_service: TripService, passenger_service: PassengerService):
         self.vessel_service = vessel_service
         self.trip_service = trip_service
         self.passenger_service = passenger_service
 
-    
     # Fetching total revenue by vessel to display on the frontend
+
     def view_total_rev_by_vessel(self) -> Tuple[List[Tuple], List[str]]:
         # getting all rows from total rev view
         rows, column_names = self.vessel_service.get_total_rev_view()
         return rows, column_names
-    
-    # Fetching the vessel ID with match to display on the frontend
-    def view_vessel_id(self, vessel_name_match) -> Tuple[List[Tuple], List[str]]:
-        # Getting vessel id with match
-        rows, column_names = self.vessel_service.get_vessel_id(vessel_name_match)
-        return rows, column_names
-    
-    # Fetching the vessel ID with NO match to display on the frontend
-    def view_vessel_id(self, vessel_name_no_match) -> Tuple[List[Tuple], List[str]]:
-        # Getting vessel id NO match
-        rows, column_names = self.vessel_service.get_vessel_id(vessel_name_no_match)
-        return rows, column_names
-    
 
+    # Fetching the vessel ID with match to display on the frontend
+    def view_vessel_id_match(self, vessel_name_match) -> Tuple[List[Tuple], List[str]]:
+        # Getting vessel id with match
+        rows, column_names = self.vessel_service.get_vessel_id(
+            vessel_name_match)
+        return rows, column_names
+
+    # Fetching the vessel ID with NO match to display on the frontend
+    def view_vessel_id_no_match(self, vessel_name_no_match: str) -> Tuple[List[Tuple], List[str]]:
+        # Getting vessel id NO match
+        rows, column_names = self.vessel_service.get_vessel_id(
+            vessel_name_no_match)
+        return rows, column_names
+    
+    # Adds a passenger to the passsenger table
+    def add_passenger(self, first_name: str, last_name: str, phone: str)  -> Tuple[List[Tuple], List[str]]:
+        rows, column_names = self.passenger_service.add_passenger(first_name, last_name, phone)
+        return rows, column_names
+    
+    # adds a vessel to vessel table
+    def add_vessel(self, vessel_name: str, cost_per_hr: int) -> Tuple[List[Tuple], List[str]]:
+        rows, column_names = self.vessel_service.add_vessel(vessel_name, cost_per_hr)
+        return rows, column_names
+
+    # adding trip details with new passenger and new vessel to trips table
+    def add_new_trip_details(self, vessel_name: str, first_name: str, last_name: str, date: str, time: str,
+                             trip_length: int, total_passengers: int) -> Tuple[List[Tuple], List[str]]:
+        """
+        """
+        # Adding new trip 
+        rows, column_names = self.trip_service.add_trip(vessel_name, first_name, last_name, date, time,trip_length, total_passengers)
+        return rows, column_names
+    
+    # Fetiching all rows from the all trips view
+    def view_get_all_trips(self) -> Tuple[List[Tuple], List[str]]:
+
+        # getting all rows from All Trips view
+        rows, column_names = self.trip_service.get_view_all_trips()
+        return rows, column_names
+    

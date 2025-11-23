@@ -81,24 +81,7 @@ INSERT INTO Reservations
 ('2025-03-15','11:30','3.5','Sea Breeze','Sarah','Johnson','321 Elm St','Townsville','MA','45678','978-555-4321','4',350.00),
 ('2025-03-16','8:00','2','Ocean Voyager','William','Hall','789 Cedar St','Hilltop','MA','67890','978-555-9999','7',400.00);
 
-SELECT * FROM Reservations ORDER BY Date, Departure_Time ASC;
+-- SELECT * FROM Reservations ORDER BY Date, Departure_Time ASC LIMIT 5; 
 
-/* YOUR CODE BELOW HERE */
 
--- Creating the vessels table
-CREATE TABLE vessels (
-    vessel_id INT,
-    vessel_name VARCHAR(50),
-    Cost_Per_Hour DECIMAL(6,2)
-);
 
--- Creating the Passengers table
-CREATE TABLE passengers (
-    passenger_id INT,
-    first_name VARCHAR(50)
-);
-
--- Creating the Trips table
-CREATE TABLE trips (
-
-)

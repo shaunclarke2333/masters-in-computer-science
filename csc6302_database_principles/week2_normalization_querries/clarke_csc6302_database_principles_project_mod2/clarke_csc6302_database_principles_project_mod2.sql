@@ -133,7 +133,10 @@ FROM
 	Reservations;
     
 -- Include the following three queries: select * from passengers; select * from vessels; select * from trips;
-SELECT * FROM passengers;
+SELECT
+	*
+FROM
+	passengers;
     
 -- Populating vessels table
 INSERT INTO
@@ -144,7 +147,10 @@ FROM
 	Reservations;
 
 -- Include the following three queries: select * from passengers; select * from vessels; select * from trips;
-SELECT * FROM vessels;
+SELECT
+    * 
+FROM
+    vessels;
 
 -- Populating trips table
 INSERT INTO
@@ -172,7 +178,10 @@ JOIN vessels
 ON vessels.vessel_name = reservations.Vessel;
 
 -- Include the following three queries: select * from passengers; select * from vessels; select * from trips;
-select * from trips;
+select
+	*
+from
+	trips;
 
 -- Construct a query that joins your new tables together so the results exactly match the results from running "SELECT * FROM Reservations ORDER BY Date, Departure_Time ASC"
 SELECT
