@@ -47,7 +47,8 @@ app.secret_key = "just-a-dummy-key"
 # Creating homepage route
 @app.route("/")
 def home():
-    return render_template("index.html")
+    username = session.get("username")  # None if not logged in
+    return render_template("index.html", username=username)
 
 
 # Creating login page route
