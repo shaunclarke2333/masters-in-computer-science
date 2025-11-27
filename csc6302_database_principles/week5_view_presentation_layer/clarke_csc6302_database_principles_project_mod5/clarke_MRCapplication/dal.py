@@ -283,3 +283,39 @@ class TripsDal:
         # getting all rows from the all trips view
         query_output = self._db_actions.select_query(query)
         return query_output
+    
+     # This method checks if a vessel is already booked for the given date and time
+    def check_vessel_conflict(self, vessel_name: str, date: str, time: str) -> int:
+        """
+        - Returns the number of trips found for the given vessel, date, and time.
+        - Uses the GETVESSELID function so we do not need to know the underlying table structure.
+        """
+        sql = """
+            SELECT COUNT(*) AS total
+            FROM trips
+            WHERE Vessel_ID = GETVESSELID(%s)
+              AND Date = %s
+              AND Departure_Time = %s
+        """
+        rows, column_names = self._db_actions.select_query(sql, (vessel_name, date, time))
+        # rows[0][0] will be the count
+        return rows[0][0]
+
+    # This method checks if a passenger is already booked for the given date and time
+    def check_passenger_conflict(self, first_name: str, last_name: str,
+                                 date: str, time: str) -> int:
+        """
+        - Returns the number of trips found for the given passenger, date, and time.
+        - Uses the GETPASSENGERID function so we do not need to know the underlying table structure.
+        """
+        sql = """
+            SELECT COUNT(*) AS total
+            FROM trips
+            WHERE Passenger_ID = GETPASSENGERID(%s, %s)
+              AND Date = %s
+              AND Departure_Time = %s
+        """
+        rows, column_names = self._db_actions.select_query(
+            sql, (first_name, last_name, date, time)
+        )
+        return rows[0][0]

@@ -84,13 +84,12 @@ class TripService:
         return rows, column_names
 
     # This method adds a trip to the trip table
-    def add_trip(self, vessel_name: str, first_name: str, last_name: str, date: str, time: str,
-                 trip_length: int, total_passengers: int) -> Tuple[List[Tuple], List[str]]:
+    def add_trip(self, vessel_name: str, first_name: str, last_name: str,
+                 date: str, time: str, trip_length: int,
+                 total_passengers: int) -> Tuple[List[Tuple], List[str]]:
 
         # Removing any leading or trailing white space
-        parameters_to_strip = [vessel_name, first_name,
-                               last_name, date, time]
-        # List of stripped parameters
+        parameters_to_strip = [vessel_name, first_name, last_name, date, time]
         stripped_parameters = [p.strip() for p in parameters_to_strip]
 
         vessel_name = stripped_parameters[0]
@@ -99,47 +98,70 @@ class TripService:
         date = stripped_parameters[3]
         time = stripped_parameters[4]
 
-        # validating inputs
+        # validating numeric inputs
         if not isinstance(trip_length, int):
-            raise ValueError(
-                f"Trip_length must be a whole number e.g.2 ")
+            raise ValueError("Trip_length must be a whole number e.g. 2")
         if not isinstance(total_passengers, int):
-            raise ValueError(
-                f"Total_passengers must be a whole number e.g. 3")
+            raise ValueError("Total_passengers must be a whole number e.g. 3")
+
+        # validating required text inputs
         if not vessel_name:
-            raise ValueError(f"Vessel name cannot be empty")
+            raise ValueError("Vessel name cannot be empty")
         if not first_name:
-            raise ValueError(f"First name cannot be empty")
+            raise ValueError("First name cannot be empty")
         if not last_name:
-            raise ValueError(f"Last name cannot be empty")
+            raise ValueError("Last name cannot be empty")
         if not date:
-            raise ValueError(f"Date name cannot be empty")
+            raise ValueError("Date cannot be empty")
         if not time:
-            raise ValueError(f"Time name cannot be empty")
+            raise ValueError("Time cannot be empty")
 
-        # adding trip to trip table
+        # Checking if vessel is already booked at this date and time
+        vessel_conflicts: int = self.trips_table_actions.check_vessel_conflict(
+            vessel_name, date, time
+        )
+        if vessel_conflicts > 0:
+            raise ValueError(
+                f"The vessel '{vessel_name}' is already booked on {date} at {time}."
+            )
+
+        # Checking if passenger is already booked at this date and time
+        passenger_conflicts: int = self.trips_table_actions.check_passenger_conflict(
+            first_name, last_name, date, time
+        )
+        if passenger_conflicts > 0:
+            raise ValueError(
+                f"Passenger {first_name} {last_name} is already booked on {date} at {time}."
+            )
+
+        # If no conflicts, call the stored procedure
         rows, column_names = self.trips_table_actions.add_trip_proc(
-            vessel_name, first_name, last_name, date, time, trip_length, total_passengers)
+            vessel_name, first_name, last_name, date, time,
+            trip_length, total_passengers
+        )
 
-        
-        if len(rows) == 0: # Means trip details were added.
+        # If len(rows) == 0  the procedure inserted the row successfully
+        if len(rows) == 0:
             rows = True
             column_names = True
             return rows, column_names
-        
-        # If the newly created trip exists
-        if rows[0][0] == -3: # vessel and passenger not found
+
+        # Handling the special codes returned by the stored procedure
+        if rows[0][0] == -3:   # vessel and passenger not found
             rows = -3
             return rows, column_names
-        elif rows[0][0] == -2: # passenger not found
+        elif rows[0][0] == -2:  # passenger not found
             rows = -2
             return rows, column_names
-        elif rows[0][0] == -1: # vessel not found
+        elif rows[0][0] == -1:  # vessel not found
             rows = -1
             return rows, column_names
-        elif rows[0][0] == 0: # duplicate user or vessel
+        elif rows[0][0] == 0:   # duplicate user or vessel (per your proc)
             rows = 0
             return rows, column_names
+
+        # If none of the above, just return the raw rows and column names
+        return rows, column_names
 
     # This method displays all rows from the trips view.
     def get_view_all_trips(self) -> Tuple[List[Tuple], List[str]]:

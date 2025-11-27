@@ -1,33 +1,12 @@
 from flask import Flask
 from flask import render_template, request, redirect, url_for, flash, session
 from typing import List, Tuple
+import time
 import pandas as pd
 import mysql.connector
 import configparser
 import dal
 import bll
-
-
-# This method formats output
-def output_separator(input_text: str) -> str:
-    """
-    - This method formats text and outputs it with separators.
-    - Returns a string.
-    """
-    print("\n" + "="*50)
-    print(f" {input_text} ")
-    print("="*50)
-
-
-# This function handles converting the SQL output to a dataframe
-def make_dataframe(rows: List, column_names: List) -> str:
-    """
-    - Converts query output to a dataframe.
-    - returns a str.
-    """
-    # Using pandas to convert data to dataframe, also using to string method to remove index.
-    df = pd.DataFrame(rows, columns=column_names)
-    print(df.to_string(index=False, justify='center'))
 
 
 # Creating config parser object to access database configurations.
@@ -86,21 +65,29 @@ def login():
         else:
             # validate the users credentials
             if username == "admin" and password == "secret":
+                # Confimring login to user and starting session with flasj
+                flash("Logged in successfully!", "success")
                 # Saving authenticated username in session to use throught the session
                 session["username"] = username
                 
                 username = session.get("username")
-                # Confimring login to user and starting session with flasj
-                flash("Logged in successfully!")
                 # Converting first letter in name to uppercase
                 username = username.capitalize()
                 # redirecting logged in user to their dashboard
-                return redirect(url_for("dashboard", username=username))
+                return redirect(url_for("dashboard"))
             else:
                 error = "Invalid username or password."
 
     # GET or failed POST: re-render form
     return render_template("login.html", error=error)
+
+# Creating logout route
+@app.route("/logout")
+def logout():
+    # Closing session which will logout the user
+    session.clear()   
+    flash("You have been logged out.", "success")
+    return redirect(url_for("login"))
 
 
 # Creating dashboard route
@@ -110,7 +97,9 @@ def dashboard():
         flash("Please log in first.")
         return redirect(url_for("login"))
     
-    return render_template("dashboard.html")
+    username = session.get("username")
+    
+    return render_template("dashboard.html", username=username)
 
 
 # Creating add passenger route with variables needed to add passenger to DB
@@ -127,7 +116,7 @@ def add_passenger():
         """  
         first_name: str = request.form.get("first_name", "").strip()
         last_name: str = request.form.get("last_name", "").strip()
-        phone: str = request.fomr.get("phone", "").strip()
+        phone: str = request.form.get("phone", "").strip()
 
         if not first_name or not last_name or not phone:
             error = "First name, Last name and Phone are required"
@@ -138,7 +127,7 @@ def add_passenger():
                     added_user_id: int = rows[0][0]
                     if isinstance(added_user_id, int):
                         # Confimring Passenger was added and starting session with flasj
-                        flash("Passenger added successfully!")
+                        flash("Passenger added successfully!", "success")
                         #redirecting user back to their dashboard with their username to display
                         username = session.get("username")
                         return redirect(url_for("dashboard", username=username))
@@ -149,9 +138,8 @@ def add_passenger():
                     
             except Exception as err:
                 error = err
-                return render_template("add_passenger.html", error=error)
-
-    
+    # return user to add passenger page if passenger was not added
+    return render_template("add_passenger.html", error=error)
 
  
 # Creating add vessel route
@@ -168,84 +156,118 @@ def add_vessel():
         using empty quotes to ensure app does not crash
         """  
         vessel_name: str = request.form.get("vessel_name", "").strip()
-        cost_per_hr: int = request.form.get("cost_per_hr", "").strip()
+        cost_per_hr_raw: str = request.form.get("cost_per_hr", "").strip()
 
-        if not vessel_name or not cost_per_hr:
+        if not vessel_name or not cost_per_hr_raw:
             error = "Vessel name and cost per hr are required"
         else:
+             # Make sure cost_per_hr is an integer
             try:
-                rows, column_names = vessel_service.add_vessel(vessel_name, cost_per_hr)
-                if rows is not None:
-                    added_vessel_id: int = rows[0][0]
-                    if isinstance(added_vessel_id, int):
-                        # Confimring vessel was added and starting session with flash
-                        flash("Vessel added successfully!")
-                        #redirecting user back to their dashboard with their username to display
-                        username = session.get("username")
-                        return redirect(url_for("dashboard", username=username))
-                    
-                    raise ValueError(f"Vessel was not added")
+                cost_per_hr: int = int(cost_per_hr_raw)
+            except ValueError:
+                error = "Cost per hour must be a whole number."
+            else:
+                try:
+                    rows, column_names = vessel_service.add_vessel(
+                        vessel_name, cost_per_hr
+                    )
+
+                    if rows is not None:
+                        added_vessel_id: int = rows[0][0]
+                        if isinstance(added_vessel_id, int):
+                            flash("Vessel added successfully!", "success")
+                            username = session.get("username")
+                            return redirect(url_for("dashboard", username=username))
+
+                        raise ValueError("Vessel was not added")
+                    else:
+                        raise ValueError("Vessel was not added")
+
+                except Exception as err:
+                    # Convert exception to string so template can show it
+                    error = str(err)
+
+    # GET requests and POST requests with any errors handled here
+    return render_template("add_vessel.html", error=error)
+            
+
+@app.route("/add-trip", methods=["GET", "POST"])
+def add_trip():
+    error = None
+
+    # Load dropdown data for both GET and POST
+    vessels_rows, _ = vessel_service.get_all_vessels()
+    passengers_rows, _ = passenger_service.get_all_passengers()
+
+    if request.method == "POST":
+        # Read form data
+        departure_datetime: str = request.form.get("departure_datetime", "").strip()
+        vessel_name: str = request.form.get("vessel_name", "").strip()
+        trip_length_raw: str = request.form.get("trip_length", "").strip()
+        total_passengers_raw: str = request.form.get("total_passengers", "").strip()
+        passenger_value: str = request.form.get("passenger_name", "").strip()
+
+        # Getting passenger first and last name from "first|last"
+        first_name = ""
+        last_name = ""
+        if passenger_value and "|" in passenger_value:
+            first_name, last_name = passenger_value.split("|", 1)
+            first_name = first_name.strip()
+            last_name = last_name.strip()
+
+        # Validating input
+        if not (departure_datetime and vessel_name and first_name and last_name and
+                trip_length_raw and total_passengers_raw):
+            error = "All fields are required."
+        else:
+            # Split datetime-local into date and time
+            try:
+                date_part, time_part = departure_datetime.split("T", 1)
+            except ValueError:
+                error = "Invalid date/time format."
+            else:
+                # Convert numeric fields
+                try:
+                    trip_length: int = int(trip_length_raw)
+                    total_passengers: int = int(total_passengers_raw)
+                except ValueError:
+                    error = "Trip length and total passengers must be whole numbers."
                 else:
-                    raise ValueError(f"Vessel was not added")
-                    
-            except Exception as err:
-                error = err
-                return render_template("add_vessel.html", error=error)
+                    # Call BLL to add the trip
+                    try:
+                        rows, column_names = trip_service.add_trip(
+                            vessel_name,
+                            first_name,
+                            last_name,
+                            date_part,
+                            time_part,
+                            trip_length,
+                            total_passengers
+                        )
 
-# # Creating add trip route
-# @app.route("/add-trip", ["GET", "POST"])
-# # Creating view all trips route
-# def add_trip():
+                        if rows:
+                            flash("Trip added successfully!", "success")
+                            username = session.get("username")
+                            return redirect(url_for("dashboard", username=username))
+                        else:
+                            error = "Trip was not added."
+                    except Exception as err:
+                        error = str(err)
 
-#     # Setting validation error place holder if anything form related fails
-#     error = None
+    # GET requests and POST with errors land here
+    return render_template(
+        "add_trip.html",
+        error=error,
+        vessels=vessels_rows,
+        passengers=passengers_rows,
+    )
 
-#     # Logic to run if the users submits the form
-#     if request.method == "POST":
-#         """
-#         Stripping whitespace from input.
-#         using empty quotes to ensure app does not crash
-#         """  
-#         vessel_name: str = request.form.get("vessel_name", "").strip()
-#         first_name: str = request.form.get("first_name", "").strip()
-#         last_name: str = request.form.get("last_name", "").strip()
-#         date: str = request.form.get("date", "").strip()
-#         time: str = request.form.get("time", "").strip()
-#         trip_length: str = request.form.get("trip_length", "").strip()
-#         total_passengers: str = request.form.get("total_passengers", "").strip()
-
-#         if not vessel_name or not cost_per_hr:
-#             error = "Vessel name and cost per hr are required"
-#         else:
-#             try:
-#                 rows, column_names = vessel_service.add_vessel(vessel_name, cost_per_hr)
-#                 if rows is not None:
-#                     added_vessel_id: int = rows[0][0]
-#                     if isinstance(added_vessel_id, int):
-#                         # Confimring vessel was added and starting session with flash
-#                         flash("Vessel added successfully!")
-#                         #redirecting user back to their dashboard with their username to display
-#                         username = session.get("username")
-#                         return redirect(url_for("dashboard", username=username))
-                    
-#                     raise ValueError(f"Vessel was not added")
-#                 else:
-#                     raise ValueError(f"Vessel was not added")
-                    
-#             except Exception as err:
-#                 error = err
-#                 return render_template("add_vessel.html", error=error)
 
 
 @app.route("/all-trips-view")
 def all_trips_view():
     rows, column_names = trip_service.get_view_all_trips()
     return render_template("view_all_trips.html", rows=rows, column_names=column_names)
-
-
-@app.route("/test/<name>")
-def test(name):
-    return render_template("test.html", name=name)
 
 
 if __name__ == "__main__":

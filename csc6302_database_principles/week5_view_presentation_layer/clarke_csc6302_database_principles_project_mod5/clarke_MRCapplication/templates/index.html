@@ -3,8 +3,13 @@
 {% block title %}home{% endblock %}
 
 {% block content %}
-    <h3 class="mb-4">Welcome to MRC</h3>
+    <h2 class="mb-4">Please login to continue.</h2>
 
+    <img 
+        src="{{ url_for('static', filename='images/mrc_homepage_image.png') }}" 
+        alt="MRC Cruise Ship" 
+        class="img-fluid rounded mb-4"
+    >
 
 
 {% endblock %}
