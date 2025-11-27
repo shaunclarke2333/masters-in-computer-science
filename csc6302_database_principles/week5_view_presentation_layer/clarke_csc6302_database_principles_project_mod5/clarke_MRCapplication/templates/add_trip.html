@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Add Trip</h2>
+
+  <form method="post">
+    <!-- Trip date & time -->
+    <div class="mb-3">
+      <label for="departure_datetime" class="form-label">Departure Date & Time</label>
+      <input
+        type="datetime-local"
+        class="form-control"
+        id="departure_datetime"
+        name="departure_datetime"
+        required
+      >
+      <div class="form-text">
+        Pick the scheduled departure so users don’t have to type it.
+      </div>
+    </div>
+
+    <!-- Vessel dropdown -->
+    <div class="mb-3">
+      <label for="vessel_id" class="form-label">Vessel</label>
+      <select
+        class="form-select"
+        id="vessel_id"
+        name="vessel_id"
+        required
+      >
+        <option value="">-- Select a vessel --</option>
+        {% for v in vessels %}
+          <!-- adjust v[0], v[1] based on your tuple structure (id, name, ...) -->
+          <option value="{{ v[0] }}">{{ v[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- User dropdown (who is creating / owning the trip) -->
+    <div class="mb-3">
+      <label for="user_id" class="form-label">Created By (User)</label>
+      <select
+        class="form-select"
+        id="user_id"
+        name="user_id"
+        required
+      >
+        <option value="">-- Select a user --</option>
+        {% for u in users %}
+          <!-- again, adjust indices based on your columns -->
+          <option value="{{ u[0] }}">{{ u[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Trip</button>
+  </form>
+</div>
+{% endblock %}
