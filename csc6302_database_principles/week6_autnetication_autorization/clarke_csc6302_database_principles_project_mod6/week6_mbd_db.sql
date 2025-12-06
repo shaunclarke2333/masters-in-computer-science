@@ -192,14 +192,14 @@ VALUES
 INSERT INTO goals
   (user_id, goal_type, target_value, unit, description, start_date, end_date, status)
 VALUES
-  (1, 'weight_loss',       5.00,  'kg',     'Lose 5kg before the end of the year',     '2025-10-01','2025-12-31','active'),
+  (1, 'weight_loss',       5.00,  'lbs',     'Lose 5lbs before the end of the year',     '2025-10-01','2025-12-31','active'),
   (1, 'steps_per_day',    10000,  'steps',  'Average 10k steps per day',               '2025-10-01','2025-11-30','active'),
-  (2, 'strength_squat',    90.00, 'kg',     'Back squat bodyweight for 5 reps',        '2025-10-05','2026-01-15','active'),
+  (2, 'strength_squat',    90.00, 'lbs',     'Back squat bodyweight for 5 reps',        '2025-10-05','2026-01-15','active'),
   (3, 'sleep_hours',        8.00, 'hours',  'Maintain 8 hours of sleep per night',     '2025-09-20','2025-12-31','active'),
   (4, 'weekly_yoga',        3.00, 'sessions','Do yoga 3x per week',                    '2025-10-03','2025-12-31','active'),
   (5, 'meditation',        10.00, 'minutes','Meditate 10 minutes every morning',       '2025-10-01','2025-11-30','completed'),
   (6, '5k_time',           28.00, 'minutes','Run 5k under 28 minutes',                 '2025-08-01','2025-10-31','abandoned'),
-  (7, 'body_weight',       82.00, 'kg',     'Reach a stable weight of 82kg',           '2025-09-01','2026-02-01','active'),
+  (7, 'body_weight',       82.00, 'lbs',     'Reach a stable weight of 82lbs',           '2025-09-01','2026-02-01','active'),
   (8, 'protein_intake',   100.00, 'grams',  'Hit 100g protein daily',                  '2025-10-10','2025-12-10','active'),
   (9, 'screen_time',        2.00, 'hours',  'Limit daily leisure screen time to 2h',   '2025-09-15','2025-11-15','completed');
 
