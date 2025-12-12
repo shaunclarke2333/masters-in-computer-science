@@ -156,6 +156,7 @@ Delimiter ;
 
 /* Procedures */
 	
+  
     /* Gets */
 
 DROP PROCEDURE IF EXISTS getPassengerList;

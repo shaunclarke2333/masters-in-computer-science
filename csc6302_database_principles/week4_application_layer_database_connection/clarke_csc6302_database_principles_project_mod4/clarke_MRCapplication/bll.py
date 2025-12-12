@@ -8,6 +8,7 @@ from typing import List, Tuple
 import dal
 
 
+
 # This class manages VesselDal interactions
 class VesselService:
     def __init__(self, vessels_table_actions: dal.VesselsDal):

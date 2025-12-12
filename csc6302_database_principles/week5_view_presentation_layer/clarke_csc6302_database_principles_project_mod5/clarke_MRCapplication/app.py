@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, request, redirect, url_for, flash, session
 from typing import List, Tuple
-import time
+# import time
 import pandas as pd
 import mysql.connector
 import configparser
@@ -27,7 +27,7 @@ connection = dal.ManageDbConnection(
 connection.connect_to_db()
 
 # Passing connection to DatabaseActions
-db_actions = dal.DatabaseActions(connection)
+db_actions: dal.DatabaseActions = dal.DatabaseActions(connection)
 
 # Passing DAL to BLL services
 vessel_service = bll.VesselService(dal.VesselsDal(db_actions))
@@ -57,12 +57,16 @@ def login():
     error = None
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "").strip()
+        """
+        Stripping whitespace from input.
+        using empty quotes to ensure app does not crash
+        """
+        username: str = request.form.get("username", "").strip()
+        password: str = request.form.get("password", "").strip()
 
-        # --- Basic server-side validation ---
+        # Doing server side validation to speed things up.
         if not username or not password:
-            error = "Username and password are required."
+            error: str = "Username and password are required."
         else:
             # validate the users credentials
             if username == "admin" and password == "secret":
@@ -262,7 +266,6 @@ def add_trip():
         vessels=vessels_rows,
         passengers=passengers_rows,
     )
-
 
 
 @app.route("/all-trips-view")
