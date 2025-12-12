@@ -14,11 +14,12 @@ DROP TABLE IF EXISTS `users`;
 -- creating users table
 CREATE TABLE `users` (
   `user_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(100),
+  `first_name` VARCHAR(50),
+  `last_name` VARCHAR(50),
   `email` VARCHAR(150) UNIQUE,
   `password_hash` VARCHAR(255),
   `created_at` DATETIME,
-  `display_name` VARCHAR(100),
+  `display_name` VARCHAR(100) UNIQUE,
   `date_of_birth` DATE,
   `gender` ENUM('male','female','nonbinary','other'),
   `height` DECIMAL(5,2),
@@ -130,18 +131,18 @@ CREATE TABLE `workout_sessions` (
 
 /* ---------- USERS (10 rows) ---------- */
 INSERT INTO users
-  (name, email, password_hash, created_at, display_name, date_of_birth, gender, height, weight)
+  (first_name, last_name, email, password_hash, created_at, display_name, date_of_birth, gender, height, weight)
 VALUES
-  ('Shaun Clarke',      'shaun@example.com',    'hash_shaun_123', '2025-10-01 07:30:00', 'ShaunC',     '1983-04-12', 'male',      185.42, 107.50),
-  ('Alicia Brown',      'alicia.b@example.com','hash_alicia_456','2025-10-02 08:15:00', 'AliciaB',    '1990-09-05', 'female',    168.20,  68.30),
-  ('Marcus Lee',        'marcus.lee@example.com','hash_marcus_789','2025-10-02 19:45:00','MarcusL',   '1988-01-23', 'male',      178.90,  82.10),
-  ('Priya Singh',       'priya.s@example.com', 'hash_priya_321', '2025-10-03 06:50:00', 'PriyaS',     '1993-07-18', 'female',    162.00,  59.80),
-  ('Jordan Taylor',     'jordan.t@example.com','hash_jordan_654','2025-10-03 21:10:00', 'JordT',      '1995-11-30', 'nonbinary', 175.30,  75.40),
-  ('Elena Martinez',    'elena.m@example.com', 'hash_elena_987', '2025-10-04 09:05:00', 'ElenaM',     '1986-02-10', 'female',    160.55,  62.20),
-  ('David Chen',        'david.c@example.com', 'hash_david_147', '2025-10-04 18:35:00', 'DaveC',      '1991-06-02', 'male',      181.00,  88.70),
-  ('Samantha Johnson',  'sam.j@example.com',   'hash_sam_258',   '2025-10-05 07:40:00', 'SamJ',       '1998-03-27', 'female',    170.10,  71.90),
-  ('Omar Ali',          'omar.ali@example.com','hash_omar_369',  '2025-10-05 20:20:00', 'OmarA',      '1989-08-09', 'male',      179.60,  84.30),
-  ('Taylor Brooks',     'taylor.b@example.com','hash_taylor_951','2025-10-06 10:25:00', 'TBrooks',    '1994-12-15', 'other',     172.75,  78.40);
+  ('Shaun', 'Clarke',      'shaun@example.com',    'hash_shaun_123', '2025-10-01 07:30:00', 'ShaunC',     '1983-04-12', 'male',      185.42, 107.50),
+  ('Alicia', 'Brown',      'alicia.b@example.com','hash_alicia_456','2025-10-02 08:15:00', 'AliciaB',    '1990-09-05', 'female',    168.20,  68.30),
+  ('Marcus', 'Lee',        'marcus.lee@example.com','hash_marcus_789','2025-10-02 19:45:00','MarcusL',   '1988-01-23', 'male',      178.90,  82.10),
+  ('Priya', 'Singh',       'priya.s@example.com', 'hash_priya_321', '2025-10-03 06:50:00', 'PriyaS',     '1993-07-18', 'female',    162.00,  59.80),
+  ('Jordan', 'Taylor',     'jordan.t@example.com','hash_jordan_654','2025-10-03 21:10:00', 'JordT',      '1995-11-30', 'nonbinary', 175.30,  75.40),
+  ('Elena', 'Martinez',    'elena.m@example.com', 'hash_elena_987', '2025-10-04 09:05:00', 'ElenaM',     '1986-02-10', 'female',    160.55,  62.20),
+  ('David', 'Chen',        'david.c@example.com', 'hash_david_147', '2025-10-04 18:35:00', 'DaveC',      '1991-06-02', 'male',      181.00,  88.70),
+  ('Samantha', 'Johnson',  'sam.j@example.com',   'hash_sam_258',   '2025-10-05 07:40:00', 'SamJ',       '1998-03-27', 'female',    170.10,  71.90),
+  ('Omar', 'Ali',          'omar.ali@example.com','hash_omar_369',  '2025-10-05 20:20:00', 'OmarA',      '1989-08-09', 'male',      179.60,  84.30),
+  ('Taylor', 'Brooks',     'taylor.b@example.com','hash_taylor_951','2025-10-06 10:25:00', 'TBrooks',    '1994-12-15', 'other',     172.75,  78.40);
 
 
 /* ---------- EXERCISES (10 rows) ---------- */
@@ -358,7 +359,7 @@ DROP FUNCTION IF EXISTS getUserID;
 DELIMITER $$
 
 -- This function gets the user ID if it exists
-CREATE FUNCTION getUserID(myName VARCHAR(150), myEmail VARCHAR(100), myDOB DATE)
+CREATE FUNCTION getUserID(fName VARCHAR(50), lName VARCHAR(50), myEmail VARCHAR(100), myDOB DATE)
 RETURNS INT DETERMINISTIC
 BEGIN
 	-- Declaring the variable that will hold the output to be returned
@@ -366,7 +367,7 @@ BEGIN
 		-- Checking if users exists and loading output into  declard variable
 		SELECT user_id INTO foundUserID
         FROM users
-        WHERE myName = name AND myEmail = email AND myDOB = date_of_birth;
+        WHERE fName = first_name AND lName = last_name AND myEmail = email AND myDOB = date_of_birth;
         
         -- Logic to determine output if user exists or not
         IF foundUserID is NULL
@@ -428,8 +429,8 @@ CREATE VIEW caloriesPerDaySummaries AS
 		m.user_id, m.meal_id, date;
 
 			
-/*View dailWeightSummary: summary of the user's weight each day. This feeds the users weight trend chart */
-CREATE VIEW dailWeightSummary AS
+/*View dailyWeightSummary: summary of the user's weight each day. This feeds the users weight trend chart */
+CREATE VIEW dailyWeightSummary AS
 	SELECT
 		user_id,
         DATE(weight_datetime) as date,
@@ -443,6 +444,55 @@ CREATE VIEW dailWeightSummary AS
 -- Procedures to be created
 
 -- createUser
+DROP PROCEDURE IF EXISTS createUser;
+
+-- Changing delimiter to $$ so it runs everthing within the delimiter block as one.
+DELIMITER $$
+
+CREATE PROCEDURE createUser(
+	IN ufirst_name VARCHAR(50), ulast_name VARCHAR(50), uemail VARCHAR(150),
+    upassword_hash VARCHAR(255), ucreated_at DATETIME, udisplay_name VARCHAR(100),
+    udate_of_birth DATE, ugender ENUM('male','female','nonbinary','other'),
+    uheight DECIMAL(5,2), uweight DECIMAL(5,2)
+)
+
+BEGIN
+	-- declaring return variable for the getuserID function
+	DECLARE foundUserID INT;
+    -- calling get user id function to verify user does not exist
+    SELECT getUserID(ufirst_name, ulast_name, uemail, udate_of_birth) INTO foundUserID;
+    
+    IF
+		foundUserID = -1 
+    THEN
+		-- if the user does not exist create it
+		INSERT INTO users (
+			first_name, last_name, email,
+            password_hash, created_at, display_name,
+            date_of_birth, gender, height, weight
+        )
+        VALUES (
+			ufirst_name, ulast_name, uemail,
+            upassword_hash, ucreated_at, udisplay_name,
+            udate_of_birth, ugender, uheight, uweight
+        );
+	END IF;
+    
+    -- return the user ID of the user that was just created, thi sshould return the ID or 0
+    SELECT getUserID(ufirst_name, ulast_name, uemail, udate_of_birth) AS userID;
+    
+-- signaling where the code block ends
+END$$
+    
+-- setting the delimiter back to what it was
+DELIMITER ;
+    
+CALL createUser('Michael', 'Jordan', 'michael@example.com', 'hash_shaun_123', '2025-10-01 07:30:00',	'Michaelj', '1983-04-12',	'male',	185.42,	107.50);
+    
+/*Notes for me
+Need to make sure display name and email don't already exist they cannot be duplicated
+*/
+
 -- logMood
 -- logWorkout
 -- createMeal
@@ -450,6 +500,8 @@ CREATE VIEW dailWeightSummary AS
 -- logWeight
 
 USE `mbd`;
+
+select *  FROM users;
 
 SELECT *
 FROM mood_entries;
@@ -478,7 +530,7 @@ select * from workoutSummaries;
 
 select * from caloriesPerDaySummaries;
 
-select * from dailWeightSummary;
+select * from dailyWeightSummary;
 
 
 
