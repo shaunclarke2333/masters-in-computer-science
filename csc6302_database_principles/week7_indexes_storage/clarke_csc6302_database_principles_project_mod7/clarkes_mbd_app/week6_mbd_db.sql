@@ -625,8 +625,8 @@ BEGIN
 			myStressLevel, myNote
         );
         
-	-- returning 0 if mood logged successfully
-    SELECT 0 AS success;
+		-- returning 0 if mood logged successfully
+		SELECT 0 AS moodLogged;
 	END IF;
     
 END$$
@@ -682,8 +682,8 @@ BEGIN
 			myReps, myWeight
         );
         
-	-- returning 0 if workout session logged successfully
-    SELECT 0 AS success;
+		-- returning 0 if workout session logged successfully
+		SELECT 0 AS workoutSessionLogged;
 	END IF;
     
 END$$
@@ -723,8 +723,11 @@ BEGIN
 			foundUserID, mymealDatetime, myMealTypes, myNotes
         );
         
-	-- Getting the ID for the meal that was just created
-    SET myMealID = LAST_INSERT_ID();
+		-- Getting the ID for the meal that was just created
+		SET myMealID = LAST_INSERT_ID();
+        
+        -- returning 0 if item logged successfully
+		SELECT 0 AS mealItemLogged;
 
 	END IF;
     
@@ -763,7 +766,7 @@ BEGIN
         );
         
 		-- returning 0 if meal item logged successfully
-		SELECT 0 AS success;
+		SELECT 0 AS mealLogged;
 	END IF;
     
 END$$
@@ -781,6 +784,105 @@ select @meal_id as mealID;
 -- Calling addMealItem procedure
 
 CALL addMealItem(@meal_id, 'Firm Tofu', 4);
+
+
+/*-----------This procedure log's the users's weight-----------*/
+DROP PROCEDURE IF EXISTS logWeight;
+
+DELIMITER $$
+
+-- The add meal item procedure will be used inside this add meal prcedure
+CREATE PROCEDURE logWeight(
+	myUserName VARCHAR(100),
+	myWeight DECIMAL(5,2),
+	myWeightDatetime DATETIME
+)
+
+BEGIN
+	-- Declaring variable to hold returned user ID
+	DECLARE foundUserID INT;
+    
+    -- Getting the food ID if it exists and storing in variable
+    SELECT getUserID(myUserName) INTO foundUserID;
+  
+    -- If the user ID does not exist then return not found
+    IF foundUserID = -1 
+    THEN SELECT -1 AS foundUserID;
+    ELSE
+		INSERT INTO weight_logs (
+			user_id, weight, weight_datetime
+        )
+		VALUES(
+			foundUserID, myWeight, myWeightDatetime
+        );
+        
+        -- returning 0 if item logged successfully
+		SELECT 0 AS weightLogged;
+
+	END IF;
+    
+END$$
+
+DELIMITER ;
+
+CALL logWeight('MichaelJ', 107.20, '2025-10-11 07:00:00');
+
+
+/*-----------This procedure update's the users's password-----------*/
+DROP PROCEDURE IF EXISTS resetPassword;
+
+DELIMITER $$
+
+-- The add meal item procedure will be used inside this add meal prcedure
+CREATE PROCEDURE resetPassword(
+	myNewPassowrd VARCHAR(255),
+	myUserName VARCHAR(100),
+	myEmail VARCHAR(150)
+)
+
+BEGIN
+	-- Declaring variable to hold returned user ID and Email ID
+	DECLARE foundUserID INT;
+    DECLARE foundEmail VARCHAR(150);
+    DECLARE emailLookUp VARCHAR(150);
+    
+    
+    -- Getting the food ID if it exists and storing in variable
+    SELECT getUserID(myUserName) INTO foundUserID;
+    SELECT getUserEmail(myEmail) INTO foundEmail;
+    
+    -- Making sure username and email match
+    SELECT email
+		FROM users
+		WHERE user_id = foundUserID
+        INTO emailLookUp;
+        
+
+    
+    
+  
+    -- If the user ID does not exist then return -1 not found
+    IF emailLookUp != foundEmail
+    THEN SELECT -3 AS emailNotound;
+    -- ELSEIF foundUserID = -1 AND foundEmail = -1
+   -- THEN SELECT -2 AS userEmailIDnotFound;
+   -- ELSEIF foundUserID = -1
+   -- THEN SELECT -1 AS userNotFound;
+    ELSE
+		UPDATE users
+        SET password_hash = myNewPassowrd
+        WHERE user_id = foundUserID AND email = foundEmail;
+		
+        -- returning 0 if item updated successfully
+		SELECT 0 AS passwordUpdated;
+
+	END IF;
+    
+END$$
+
+DELIMITER ;
+
+CALL resetPassword('hash_michael_2333', 'MichaelJ', 'michael@example.com');
     
 /*Notes for me
 
@@ -791,8 +893,8 @@ CALL addMealItem(@meal_id, 'Firm Tofu', 4);
 -- logWorkout********Done
 -- createMeal*******Done
 -- addMealItem*******Done
--- logWeight
--- update mood
+-- logWeight*******Done
+-- update password *** Done
 -- delete weight
 
 USE `mbd`;
