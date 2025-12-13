@@ -48,19 +48,6 @@ Flow 1: Sign Up → users
 
 --------------------------------------------------------
 
-Flow 2: Set a Wellness Goal → goals
------------------------------------
-- User selects a goal, target value, date range.
-- Insert a row into goals with:
-  - user_id (FK → users)
-  - goal_type, target_value, start_date, end_date
-
-Parent: users  
-Child: goals  
-You must insert the user first.
-
---------------------------------------------------------
-
 Flow 3: Track Mood → mood_entries
 ---------------------------------
 - User selects mood score (1–10), energy, stress, notes.
@@ -79,6 +66,7 @@ Flow 4: Log a Workout → workout_sessions (uses exercises)
 Admin first populates exercises:
 - exercise_id = 1 → “Squat”
 - exercise_id = 2 → “Walking”, etc.
+
 
 User logs a session:
 - Selects exercise from dropdown.
@@ -128,27 +116,6 @@ Order matters:
 
 --------------------------------------------------------
 
-Flow 6: Create a Habit → habits, then Track It → habit_logs
------------------------------------------------------------
-
-Creating a habit:
-- User enters habit name, category, frequency.
-- Insert one row into habits:
-  - user_id (FK)
-  - habit details.
-
-Logging completion:
-- For each day completed:
-  - Insert a row into habit_logs:
-    - habit_id (FK)
-    - log_date
-    - completed flag
-    - optional value (e.g., minutes)
-
-Parent first: habits  
-Child afterward: habit_logs
-
-
 ========================================================
 3. BIG PICTURE: INSERTION ORDER / DEPENDENCIES
 ========================================================
@@ -188,4 +155,5 @@ workout_sessions also needs:
 GENERAL RULE:
 -------------
 Insert parent rows → then insert child rows → then insert grandchild rows.
+
 

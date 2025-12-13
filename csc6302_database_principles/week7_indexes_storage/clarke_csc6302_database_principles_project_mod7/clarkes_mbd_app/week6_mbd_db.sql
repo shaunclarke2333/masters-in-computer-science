@@ -19,7 +19,7 @@ CREATE TABLE `users` (
   `email` VARCHAR(150) UNIQUE,
   `password_hash` VARCHAR(255),
   `created_at` DATETIME,
-  `display_name` VARCHAR(100) UNIQUE,
+  `username` VARCHAR(100) UNIQUE,
   `date_of_birth` DATE,
   `gender` ENUM('male','female','nonbinary','other'),
   `height` DECIMAL(5,2),
@@ -131,33 +131,33 @@ CREATE TABLE `workout_sessions` (
 
 /* ---------- USERS (10 rows) ---------- */
 INSERT INTO users
-  (first_name, last_name, email, password_hash, created_at, display_name, date_of_birth, gender, height, weight)
+  (first_name, last_name, email, password_hash, created_at, username, date_of_birth, gender, height, weight)
 VALUES
-  ('Shaun', 'Clarke',      'shaun@example.com',    'hash_shaun_123', '2025-10-01 07:30:00', 'ShaunC',     '1983-04-12', 'male',      185.42, 107.50),
-  ('Alicia', 'Brown',      'alicia.b@example.com','hash_alicia_456','2025-10-02 08:15:00', 'AliciaB',    '1990-09-05', 'female',    168.20,  68.30),
-  ('Marcus', 'Lee',        'marcus.lee@example.com','hash_marcus_789','2025-10-02 19:45:00','MarcusL',   '1988-01-23', 'male',      178.90,  82.10),
-  ('Priya', 'Singh',       'priya.s@example.com', 'hash_priya_321', '2025-10-03 06:50:00', 'PriyaS',     '1993-07-18', 'female',    162.00,  59.80),
-  ('Jordan', 'Taylor',     'jordan.t@example.com','hash_jordan_654','2025-10-03 21:10:00', 'JordT',      '1995-11-30', 'nonbinary', 175.30,  75.40),
-  ('Elena', 'Martinez',    'elena.m@example.com', 'hash_elena_987', '2025-10-04 09:05:00', 'ElenaM',     '1986-02-10', 'female',    160.55,  62.20),
-  ('David', 'Chen',        'david.c@example.com', 'hash_david_147', '2025-10-04 18:35:00', 'DaveC',      '1991-06-02', 'male',      181.00,  88.70),
-  ('Samantha', 'Johnson',  'sam.j@example.com',   'hash_sam_258',   '2025-10-05 07:40:00', 'SamJ',       '1998-03-27', 'female',    170.10,  71.90),
-  ('Omar', 'Ali',          'omar.ali@example.com','hash_omar_369',  '2025-10-05 20:20:00', 'OmarA',      '1989-08-09', 'male',      179.60,  84.30),
-  ('Taylor', 'Brooks',     'taylor.b@example.com','hash_taylor_951','2025-10-06 10:25:00', 'TBrooks',    '1994-12-15', 'other',     172.75,  78.40);
+  ('Shaun', 'Clarke', 'shaun@example.com',    'hash_shaun_123', '2025-10-01 07:30:00', 'ShaunC',     '1983-04-12', 'male',      185.42, 107.50),
+  ('Alicia', 'Brown', 'alicia.b@example.com','hash_alicia_456','2025-10-02 08:15:00', 'AliciaB',    '1990-09-05', 'female',    168.20,  68.30),
+  ('Marcus', 'Lee', 'marcus.lee@example.com','hash_marcus_789','2025-10-02 19:45:00','MarcusL',   '1988-01-23', 'male',      178.90,  82.10),
+  ('Priya', 'Singh', 'priya.s@example.com', 'hash_priya_321', '2025-10-03 06:50:00', 'PriyaS',     '1993-07-18', 'female',    162.00,  59.80),
+  ('Jordan', 'Taylor', 'jordan.t@example.com','hash_jordan_654','2025-10-03 21:10:00', 'JordT',      '1995-11-30', 'nonbinary', 175.30,  75.40),
+  ('Elena', 'Martinez', 'elena.m@example.com', 'hash_elena_987', '2025-10-04 09:05:00', 'ElenaM',     '1986-02-10', 'female',    160.55,  62.20),
+  ('David', 'Chen', 'david.c@example.com', 'hash_david_147', '2025-10-04 18:35:00', 'DaveC',      '1991-06-02', 'male',      181.00,  88.70),
+  ('Samantha', 'Johnson', 'sam.j@example.com',   'hash_sam_258',   '2025-10-05 07:40:00', 'SamJ',       '1998-03-27', 'female',    170.10,  71.90),
+  ('Omar', 'Ali', 'omar.ali@example.com','hash_omar_369',  '2025-10-05 20:20:00', 'OmarA',      '1989-08-09', 'male',      179.60,  84.30),
+  ('Taylor', 'Brooks', 'taylor.b@example.com','hash_taylor_951','2025-10-06 10:25:00', 'TBrooks',    '1994-12-15', 'other',     172.75,  78.40);
 
 
 /* ---------- EXERCISES (10 rows) ---------- */
 INSERT INTO exercises
   (exercise_name, exercise_category, muscle_group)
 VALUES
-  ('Back Squat',              'strength',    'Quads & Glutes'),
-  ('Bench Press',             'strength',    'Chest & Triceps'),
-  ('Deadlift',                'strength',    'Posterior Chain'),
-  ('Pull-up',                 'strength',    'Back & Biceps'),
-  ('Push-up',                 'strength',    'Chest & Core'),
-  ('Plank',                   'core',        'Abdominals'),
-  ('Jogging (Treadmill)',     'cardio',      'Full Body'),
+  ('Back Squat', 'strength', 'Quads & Glutes'),
+  ('Bench Press', 'strength','Chest & Triceps'),
+  ('Deadlift', 'strength', 'Posterior Chain'),
+  ('Pull-up', 'strength',    'Back & Biceps'),
+  ('Push-up', 'strength',    'Chest & Core'),
+  ('Plank', 'core',        'Abdominals'),
+  ('Jogging (Treadmill)', 'cardio',      'Full Body'),
   ('Cycling (Stationary)',    'cardio',      'Legs & Cardio'),
-  ('Yoga Flow',               'mobility',    'Full Body'),
+  ('Yoga Flow', 'mobility',    'Full Body'),
   ('Box Breathing Meditation','mindfulness', 'Nervous System');
 
 
@@ -190,8 +190,8 @@ VALUES
   ('Brown Rice (cooked)',     'Generic',  195.00,  'g (1 cup)',   215,  5.00, 45.00, 2.00),
   ('Chickpea Salad',          'Homemade', 150.00,  'g',           260, 12.00, 30.00, 9.00),
   ('Almond Butter',           'MaraNatha', 16.00,  'g (1 tbsp)',   98,  3.40,  3.40, 8.90),
-  ('Black Bean Taco Filling', 'Homemade', 130.00,  'g',           190, 10.00, 26.00, 4.50);
-
+  ('Black Bean Taco Filling', 'Homemade', 130.00,  'g',           190, 10.00, 26.00, 4.50),
+  ('Spinach', 'Farm Fresh', 5.00,  'g', 10, 1.00, 1.00, 0.50);
 
 /* ---------- MEAL_ITEMS (20 rows) ---------- */
 -- Menatl note: meals 1–3 are Shaun’s full day of eating, with realistic servings
@@ -351,37 +351,7 @@ VALUES
 
 -- DATABASE ACTIONS
 
--- Functions
-
-
-DROP FUNCTION IF EXISTS getUserID;
--- Changing delimiter to $$ so it runs everthing within the delimiter block as one.
-DELIMITER $$
-
--- This function gets the user ID if it exists
-CREATE FUNCTION getUserID(fName VARCHAR(50), lName VARCHAR(50), myEmail VARCHAR(100), myDOB DATE)
-RETURNS INT DETERMINISTIC
-BEGIN
-	-- Declaring the variable that will hold the output to be returned
-	DECLARE foundUserID INT;
-		-- Checking if users exists and loading output into  declard variable
-		SELECT user_id INTO foundUserID
-        FROM users
-        WHERE fName = first_name AND lName = last_name AND myEmail = email AND myDOB = date_of_birth;
-        
-        -- Logic to determine output if user exists or not
-        IF foundUserID is NULL
-        THEN SET foundUserID = -1;
-        END IF;
-        
-        RETURN foundUserID;
-END$$
-
--- Changing delimiter back to ;
-DELIMITER ;
-        
-        
--- Views To Create
+/*----------Views To Create---------------*/ 
 /*View dailyMoodTrends: summary of the user's mood and feeds the user's mood chart*/
 CREATE VIEW dailyMoodTrends AS
 	SELECT
@@ -440,46 +410,176 @@ CREATE VIEW dailyWeightSummary AS
 	GROUP BY
 		user_id, date, user_weight;
         
+        
+/*----------Functions---------------*/ 
+DROP FUNCTION IF EXISTS getUserID;
+-- Changing delimiter to $$ so it runs everthing within the delimiter block as one.
+DELIMITER $$
 
--- Procedures to be created
+/*---------This function gets the user ID if it exists------*/
+CREATE FUNCTION getUserID(myUsername VARCHAR(100))
+RETURNS INT DETERMINISTIC
+BEGIN
+	-- Declaring the variable that will hold the output to be returned
+	DECLARE foundUserID INT;
+		-- Checking if users exists and loading output into  declard variable
+		SELECT user_id INTO foundUserID
+        FROM users
+        WHERE username = myUsername;
+        
+        -- Logic to determine output if user exists or not
+        IF foundUserID is NULL
+        THEN SET foundUserID = -1;
+        END IF;
+        
+        RETURN foundUserID;
+END$$
 
--- createUser
+-- Changing delimiter back to ;
+DELIMITER ;
+
+select getUserID('ShaunC') AS foundUserID;
+
+DROP FUNCTION IF EXISTS getUserName;
+
+DELIMITER $$
+/*---------This function gets the username if it exists------*/
+CREATE FUNCTION getUserName(myUsername VARCHAR(100))
+RETURNS VARCHAR(100) DETERMINISTIC
+BEGIN
+	DECLARE foundUserName VARCHAR(100);
+    SELECT username INTO foundUserName
+    FROM users
+    WHERE username = myUsername;
+    
+    IF foundUserName IS NULL
+    THEN SET foundUserName = -1;
+    END IF;
+    
+    RETURN foundUserName;
+END$$
+
+DELIMITER ;
+
+select getUserName('ShaunC') AS foundUserName;
+
+DROP FUNCTION IF EXISTS getUserEmail;
+
+DELIMITER $$
+
+/*-------This function checks if and email adreess exists------*/
+CREATE FUNCTION getUserEmail(myEmail VARCHAR(100))
+RETURNS  VARCHAR(150) DETERMINISTIC
+BEGIN
+	DECLARE foundUserEmail VARCHAR(150);
+    SELECT email INTO foundUserEmail
+    FROM users
+    WHERE email = myEmail;
+    
+    IF foundUserEmail IS NULL
+    THEN SET foundUserEmail = -1;
+    END IF;
+    
+    RETURN foundUserEmail;
+END$$
+
+DELIMITER ;
+
+select getUserEmail('shaun@example.com') AS foundUserEmail;
+
+DROP FUNCTION IF EXISTS getExerciseID;
+
+DELIMITER $$
+/*---------This function gets the ExerciseID if it exists------*/
+CREATE FUNCTION getExerciseID(myExerciseName VARCHAR(100))
+RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE foundExerciseID INT;
+    SELECT exercise_id INTO foundExerciseID
+    FROM exercises
+    WHERE exercise_name = myExerciseName;
+    
+    IF foundExerciseID IS NULL
+    THEN SET foundExerciseID = -1;
+    END IF;
+    
+    RETURN foundExerciseID;
+END$$
+
+DELIMITER ;
+
+select getExerciseID('Back Squat') AS ExerciseID;
+
+DROP FUNCTION IF EXISTS getFoodID;
+
+DELIMITER $$
+/*---------This function gets the food id if it exists------*/
+CREATE FUNCTION getFoodID(myFoodName VARCHAR(100))
+RETURNS INT DETERMINISTIC
+BEGIN
+	DECLARE foundFoodID INT;
+    SELECT food_id INTO foundFoodID
+    FROM food
+    WHERE food_name = myFoodName;
+    
+    IF foundFoodID IS NULL
+    THEN SET foundFoodID = -1;
+    END IF;
+    
+    RETURN foundFoodID;
+END$$
+
+DELIMITER ;
+
+select getFoodID('Overnight Oats Base') AS foodID;
+
+/*----------Procedures to be created---------------*/  
+
+
 DROP PROCEDURE IF EXISTS createUser;
 
 -- Changing delimiter to $$ so it runs everthing within the delimiter block as one.
 DELIMITER $$
 
+/*-----------This procedure creates a user-----------*/
 CREATE PROCEDURE createUser(
 	IN ufirst_name VARCHAR(50), ulast_name VARCHAR(50), uemail VARCHAR(150),
-    upassword_hash VARCHAR(255), ucreated_at DATETIME, udisplay_name VARCHAR(100),
+    upassword_hash VARCHAR(255), ucreated_at DATETIME, uusername VARCHAR(100),
     udate_of_birth DATE, ugender ENUM('male','female','nonbinary','other'),
     uheight DECIMAL(5,2), uweight DECIMAL(5,2)
 )
 
 BEGIN
-	-- declaring return variable for the getuserID function
-	DECLARE foundUserID INT;
-    -- calling get user id function to verify user does not exist
-    SELECT getUserID(ufirst_name, ulast_name, uemail, udate_of_birth) INTO foundUserID;
+	-- declaring return variableS
+    DECLARE foundUserName VARCHAR(100);
+    DECLARE foundUserEmail VARCHAR(150);
     
-    IF
-		foundUserID = -1 
-    THEN
+    -- calling get username to handle if uename already exists and handle errors
+    SELECT getUserName(uusername) INTO foundUserName;
+    -- calling get user email to make sure email does not exist and handle errors
+    SELECT getUserEmail(uemail) INTO foundUserEmail;
+    
+    -- Logic to handle if username or email already used in DB before creating user
+	IF foundUserName != -1
+	THEN SELECT -1 AS userNameExists;
+	ELSEIF foundUserEmail != -1
+	THEN SELECT -2 AS userEmailExists;
+    ELSE
 		-- if the user does not exist create it
 		INSERT INTO users (
 			first_name, last_name, email,
-            password_hash, created_at, display_name,
+            password_hash, created_at, username,
             date_of_birth, gender, height, weight
         )
         VALUES (
 			ufirst_name, ulast_name, uemail,
-            upassword_hash, ucreated_at, udisplay_name,
+            upassword_hash, ucreated_at, uusername,
             udate_of_birth, ugender, uheight, uweight
         );
 	END IF;
     
     -- return the user ID of the user that was just created, thi sshould return the ID or 0
-    SELECT getUserID(ufirst_name, ulast_name, uemail, udate_of_birth) AS userID;
+    SELECT getUserID(uusername) AS userID;
     
 -- signaling where the code block ends
 END$$
@@ -487,17 +587,213 @@ END$$
 -- setting the delimiter back to what it was
 DELIMITER ;
     
-CALL createUser('Michael', 'Jordan', 'michael@example.com', 'hash_shaun_123', '2025-10-01 07:30:00',	'Michaelj', '1983-04-12',	'male',	185.42,	107.50);
+CALL createUser('Michael', 'Jordan', 'michael@example.com', 'hash_michael_123', '2025-10-01 07:30:00',	'MichaelJ', '1983-04-12',	'male',	185.42,	107.50);
+
+
+/*-----------This procedure log's the users's mood-----------*/
+DROP PROCEDURE IF EXISTS logMood;
+
+DELIMITER $$
+
+CREATE PROCEDURE logMood(
+	myUserName VARCHAR(100),
+	myEntryDatetime DATETIME,
+	myMoodScore TINYINT,
+	myEnergyLevel TINYINT,
+	myStressLevel TINYINT,
+	myNote TEXT
+)
+
+BEGIN
+	-- Declaring variable to hold returned user ID
+	DECLARE foundUserID INT;
+    -- Getting the user ID if it exists and storing in variable
+    SELECT getUserID(myUserName) INTO foundUserID;
+    
+    -- If the user does not exist then return not found
+    IF foundUserID = -1
+    THEN SELECT -2 AS notFound;
+    ELSE
+		INSERT INTO mood_entries (
+			user_id, entry_datetime,
+            mood_score, energy_level,
+            stress_level, note
+        )
+		VALUES(
+			foundUserID, myEntryDatetime,
+			myMoodScore, myEnergyLevel,
+			myStressLevel, myNote
+        );
+        
+	-- returning 0 if mood logged successfully
+    SELECT 0 AS success;
+	END IF;
+    
+END$$
+
+DELIMITER ;
+
+CALL logMood('MichaelJ', '2025-10-10 07:15:00', 10, 10, 6, 'Morning hoops, knee feels strong');
+
+
+/*-----------This procedure log's the users's workout-----------*/
+DROP PROCEDURE IF EXISTS logWorkout;
+
+DELIMITER $$
+
+CREATE PROCEDURE logWorkout(
+	myUserName VARCHAR(100),
+	myExerciseName VARCHAR(100),
+	mySessionDatetime DATETIME,
+	myDurationMinutes INT,
+	myNotes TEXT,
+	mySets INT,
+	myReps INT,
+	myWeight DECIMAL(6,2)
+)
+
+BEGIN
+	-- Declaring variable to hold returned user ID
+	DECLARE foundUserID INT;
+    DECLARE foundExerciseID INT;
+    
+    -- Getting the user ID if it exists and storing in variable
+    SELECT getUserID(myUserName) INTO foundUserID;
+    -- Getting exercise ID as well
+    SELECT getExerciseID(myExerciseName) INTO foundExerciseID;
+    
+    -- If the user or exercise does not exist then return not found
+    IF foundUserID = -1 AND foundExerciseID = -1
+    THEN SELECT -3 AS UserAndExerciseNotFound;
+    ELSEIF foundUserID = -1
+    THEN SELECT -2 AS userNotFound;
+    ELSEIF foundExerciseID = -1
+    THEN SELECT -1 AS exerciseNotFound;
+    ELSE
+		INSERT INTO workout_sessions (
+			user_id, exercise_id,
+            session_datetime, duration_minutes,
+            notes, sets, reps, weight
+        )
+		VALUES(
+			foundUserID, foundExerciseID,
+			mySessionDatetime, myDurationMinutes,
+			myNotes, mySets,
+			myReps, myWeight
+        );
+        
+	-- returning 0 if workout session logged successfully
+    SELECT 0 AS success;
+	END IF;
+    
+END$$
+
+DELIMITER ;
+
+CALL logWorkout('MichaelJ', 'Back Squat', '2025-10-10 05:45:00', 90, 'Back squat, focused on form', 4, 5,  80.00);
+
+
+/*-----------This procedure log's the users's meal-----------*/
+DROP PROCEDURE IF EXISTS addMeal;
+
+DELIMITER $$
+
+-- The add meal item procedure will be used inside this add meal prcedure
+CREATE PROCEDURE addMeal(
+	myUserName VARCHAR(100), mymealDatetime DATETIME,
+    myMealTypes ENUM('breakfast','lunch','dinner','snack'), myNotes TEXT,
+    OUT mymealID INT
+)
+
+BEGIN
+	-- Declaring variable to hold returned user ID
+	DECLARE foundUserID INT;
+    
+    -- Getting the food ID if it exists and storing in variable
+    SELECT getUserID(myUserName) INTO foundUserID;
+  
+    -- If the user ID does not exist then return not found
+    IF foundUserID = -1 
+    THEN SELECT -1 AS foundUserID;
+    ELSE
+		INSERT INTO meals (
+			user_id, meal_datetime, meal_type, notes
+        )
+		VALUES(
+			foundUserID, mymealDatetime, myMealTypes, myNotes
+        );
+        
+	-- Getting the ID for the meal that was just created
+    SET myMealID = LAST_INSERT_ID();
+
+	END IF;
+    
+END$$
+
+DELIMITER ;
+
+
+/*-----------This procedure log's the users's meal items-----------*/
+DROP PROCEDURE IF EXISTS addMealItem;
+
+DELIMITER $$
+
+CREATE PROCEDURE addMealItem(
+	myMealID INT, myFoodName VARCHAR(100), myServings DECIMAL(5,2)
+)
+
+BEGIN
+	DECLARE foundFoodID INT;
+    
+    SELECT getFoodID(myFoodName) INTO foundFoodID;
+  
+    -- If the Meal ID does not exist then return not found
+    IF myMealID IS NULL AND foundFoodID = -1
+    THEN SELECT -3 AS mealfoodNotFound;
+    ELSEIF myMealID IS NULL
+    THEN SELECT -2 AS mealIDNotFound;
+    ELSEIF foundFoodID = -1
+    THEN SELECT -1 AS foodIDNotFound;
+    ELSE
+		INSERT INTO meal_items (
+			meal_id, food_id, servings
+        )
+		VALUES(
+			myMealID, foundFoodID, myServings
+        );
+        
+		-- returning 0 if meal item logged successfully
+		SELECT 0 AS success;
+	END IF;
+    
+END$$
+
+DELIMITER ;
+
+-- Creating an empty variable to hold the meal ID output from the addmeal procedure
+SET @meal_id = NULL;
+
+-- Calling create meal procedure
+CALL addMeal('MichaelJ', '2025-10-15 13:00:00', 'lunch', 'Tofu scramble and spinach', @meal_id);
+
+select @meal_id as mealID;
+
+-- Calling addMealItem procedure
+
+CALL addMealItem(@meal_id, 'Firm Tofu', 4);
     
 /*Notes for me
-Need to make sure display name and email don't already exist they cannot be duplicated
+
+
 */
 
--- logMood
--- logWorkout
--- createMeal
--- addMealItem
+-- logMood*******Done
+-- logWorkout********Done
+-- createMeal*******Done
+-- addMealItem*******Done
 -- logWeight
+-- update mood
+-- delete weight
 
 USE `mbd`;
 
@@ -531,6 +827,8 @@ select * from workoutSummaries;
 select * from caloriesPerDaySummaries;
 
 select * from dailyWeightSummary;
+
+-- select username from users where username = 'ShaunC';
 
 
 
