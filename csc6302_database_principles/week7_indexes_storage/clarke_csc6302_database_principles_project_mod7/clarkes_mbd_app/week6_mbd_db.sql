@@ -438,7 +438,7 @@ END$$
 -- Changing delimiter back to ;
 DELIMITER ;
 
-select getUserID('ShaunC') AS foundUserID;
+-- select getUserID('ShaunC') AS foundUserID;
 
 DROP FUNCTION IF EXISTS getUserName;
 
@@ -461,7 +461,7 @@ END$$
 
 DELIMITER ;
 
-select getUserName('ShaunC') AS foundUserName;
+-- select getUserName('ShaunC') AS foundUserName;
 
 DROP FUNCTION IF EXISTS getUserEmail;
 
@@ -485,7 +485,7 @@ END$$
 
 DELIMITER ;
 
-select getUserEmail('shaun@example.com') AS foundUserEmail;
+-- select getUserEmail('shaun@example.com') AS foundUserEmail;
 
 DROP FUNCTION IF EXISTS getExerciseID;
 
@@ -508,7 +508,7 @@ END$$
 
 DELIMITER ;
 
-select getExerciseID('Back Squat') AS ExerciseID;
+-- select getExerciseID('Back Squat') AS ExerciseID;
 
 DROP FUNCTION IF EXISTS getFoodID;
 
@@ -531,7 +531,7 @@ END$$
 
 DELIMITER ;
 
-select getFoodID('Overnight Oats Base') AS foodID;
+-- select getFoodID('Overnight Oats Base') AS foodID;
 
 /*----------Procedures to be created---------------*/  
 
@@ -587,7 +587,7 @@ END$$
 -- setting the delimiter back to what it was
 DELIMITER ;
     
-CALL createUser('Michael', 'Jordan', 'michael@example.com', 'hash_michael_123', '2025-10-01 07:30:00',	'MichaelJ', '1983-04-12',	'male',	185.42,	107.50);
+-- CALL createUser('Michael', 'Jordan', 'michael@example.com', 'hash_michael_123', '2025-10-01 07:30:00',	'MichaelJ', '1983-04-12',	'male',	185.42,	107.50);
 
 
 /*-----------This procedure log's the users's mood-----------*/
@@ -633,7 +633,7 @@ END$$
 
 DELIMITER ;
 
-CALL logMood('MichaelJ', '2025-10-10 07:15:00', 10, 10, 6, 'Morning hoops, knee feels strong');
+-- CALL logMood('MichaelJ', '2025-10-10 07:15:00', 10, 10, 6, 'Morning hoops, knee feels strong');
 
 
 /*-----------This procedure log's the users's workout-----------*/
@@ -690,7 +690,7 @@ END$$
 
 DELIMITER ;
 
-CALL logWorkout('MichaelJ', 'Back Squat', '2025-10-10 05:45:00', 90, 'Back squat, focused on form', 4, 5,  80.00);
+-- CALL logWorkout('MichaelJ', 'Back Squat', '2025-10-10 05:45:00', 90, 'Back squat, focused on form', 4, 5,  80.00);
 
 
 /*-----------This procedure log's the users's meal-----------*/
@@ -698,7 +698,6 @@ DROP PROCEDURE IF EXISTS addMeal;
 
 DELIMITER $$
 
--- The add meal item procedure will be used inside this add meal prcedure
 CREATE PROCEDURE addMeal(
 	myUserName VARCHAR(100), mymealDatetime DATETIME,
     myMealTypes ENUM('breakfast','lunch','dinner','snack'), myNotes TEXT,
@@ -709,7 +708,6 @@ BEGIN
 	-- Declaring variable to hold returned user ID
 	DECLARE foundUserID INT;
     
-    -- Getting the food ID if it exists and storing in variable
     SELECT getUserID(myUserName) INTO foundUserID;
   
     -- If the user ID does not exist then return not found
@@ -783,7 +781,7 @@ select @meal_id as mealID;
 
 -- Calling addMealItem procedure
 
-CALL addMealItem(@meal_id, 'Firm Tofu', 4);
+-- CALL addMealItem(@meal_id, 'Firm Tofu', 4);
 
 
 /*-----------This procedure log's the users's weight-----------*/
@@ -791,7 +789,6 @@ DROP PROCEDURE IF EXISTS logWeight;
 
 DELIMITER $$
 
--- The add meal item procedure will be used inside this add meal prcedure
 CREATE PROCEDURE logWeight(
 	myUserName VARCHAR(100),
 	myWeight DECIMAL(5,2),
@@ -802,7 +799,6 @@ BEGIN
 	-- Declaring variable to hold returned user ID
 	DECLARE foundUserID INT;
     
-    -- Getting the food ID if it exists and storing in variable
     SELECT getUserID(myUserName) INTO foundUserID;
   
     -- If the user ID does not exist then return not found
@@ -825,7 +821,7 @@ END$$
 
 DELIMITER ;
 
-CALL logWeight('MichaelJ', 107.20, '2025-10-11 07:00:00');
+-- CALL logWeight('MichaelJ', 107.20, '2025-10-11 07:00:00');
 
 
 /*-----------This procedure update's the users's password-----------*/
@@ -833,7 +829,6 @@ DROP PROCEDURE IF EXISTS resetPassword;
 
 DELIMITER $$
 
--- The add meal item procedure will be used inside this add meal prcedure
 CREATE PROCEDURE resetPassword(
 	myNewPassowrd VARCHAR(255),
 	myUserName VARCHAR(100),
@@ -846,8 +841,6 @@ BEGIN
     DECLARE foundEmail VARCHAR(150);
     DECLARE emailLookUp VARCHAR(150);
     
-    
-    -- Getting the food ID if it exists and storing in variable
     SELECT getUserID(myUserName) INTO foundUserID;
     SELECT getUserEmail(myEmail) INTO foundEmail;
     
@@ -857,10 +850,6 @@ BEGIN
 		WHERE user_id = foundUserID
         INTO emailLookUp;
         
-
-    
-    
-  
     -- If the user ID does not exist then return -1 not found
     IF emailLookUp != foundEmail
     THEN SELECT -3 AS emailNotound;
@@ -882,55 +871,92 @@ END$$
 
 DELIMITER ;
 
-CALL resetPassword('hash_michael_2333', 'MichaelJ', 'michael@example.com');
+-- CALL resetPassword('hash_michael_2333', 'MichaelJ', 'michael@example.com');
+
+/*-----------This procedure delete's the users's account-----------*/
+DROP PROCEDURE IF EXISTS deleteAccount;
+
+DELIMITER $$
+
+CREATE PROCEDURE deleteAccount(
+	myUserName VARCHAR(100)
+)
+
+BEGIN
+	-- Declaring variable to hold returned user ID
+	DECLARE foundUserID INT;
+    
+    
+    -- Getting the user ID if it exists and storing in variable
+    SELECT getUserID(myUserName) INTO foundUserID;
+    
+    IF foundUserID = -1
+    THEN SELECT -1 AS userNotFound;
+    ELSE
+		-- Deleting user account
+		DELETE FROM users
+		WHERE user_id = foundUserID;
+	
+        -- returning 0 if item deleted successfully
+		SELECT 0 AS accountDeleted;
+
+	END IF;
+    
+END$$
+
+DELIMITER ;
+
+-- CALL deleteAccount('ShaunC'); 
     
 /*Notes for me
-
+Procedures to create
+logMood*******Done
+logWorkout********Done
+createMeal*******Done
+addMealItem*******Done
+logWeight*******Done
+update password *** Done
+delete account *** Done
 
 */
 
--- logMood*******Done
--- logWorkout********Done
--- createMeal*******Done
--- addMealItem*******Done
--- logWeight*******Done
--- update password *** Done
--- delete weight
 
-USE `mbd`;
 
-select *  FROM users;
 
-SELECT *
-FROM mood_entries;
+-- USE `mbd`;
 
-SELECT *
-FROM meals;
+-- select *  FROM users;
 
-SELECT *
-FROM meal_items;
+-- SELECT *
+-- FROM mood_entries;
 
-SELECT *
-FROM food;
+-- SELECT *
+-- FROM meals;
 
-SELECT *
-FROM workout_sessions;
+-- SELECT *
+-- FROM meal_items;
 
-SELECT *
-FROM exercises;
+-- SELECT *
+-- FROM food;
 
-SELECT *
-FROM weight_logs;
+-- SELECT *
+-- FROM workout_sessions;
 
-select * FROM dailyMoodTrends;
+-- SELECT *
+-- FROM exercises;
 
-select * from workoutSummaries;
+-- SELECT *
+-- FROM weight_logs;
 
-select * from caloriesPerDaySummaries;
+-- select * FROM dailyMoodTrends;
 
-select * from dailyWeightSummary;
+-- select * from workoutSummaries;
 
--- select username from users where username = 'ShaunC';
+-- select * from caloriesPerDaySummaries;
+
+-- select * from dailyWeightSummary;
+
+
 
 
 
