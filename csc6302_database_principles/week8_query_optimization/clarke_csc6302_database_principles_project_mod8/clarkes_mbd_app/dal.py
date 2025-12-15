@@ -484,7 +484,7 @@ class WeightLogsDal:
         return query_output
 
     # This method adds the user's weight to the weight_logs table
-    def log_user_weight_proc(self, username: str, weight: int, created_at_date: str) -> Tuple[List[Tuple], List[str]]:
+    def log_user_weight_proc(self, username: str, weight: int) -> Tuple[List[Tuple], List[str]]:
         """
         Docstring for log_user_weight_proc
         
@@ -498,7 +498,13 @@ class WeightLogsDal:
         :return: Description
         :rtype: Tuple[List[Tuple], List[str]]
         """
-        proc_params = ( username, weight, created_at_date)
+        # Geting the current date and time
+        now = datetime.now()
+
+        # Formatting the datetime object into the desired string format that the created at column expects
+        created_at_date = now.strftime("%Y-%m-%d %H:%M:%S")
+
+        proc_params = (username, weight, created_at_date)
         # calling the logWeight procedure
         rows, column_names = self._db_actions.procedure_calls(
             "logWeight", proc_params)
@@ -526,7 +532,9 @@ class WorkoutSessionsDal:
         return query_output
 
     # This method adds the user's workouts to the workout_sessions table
-    def log_user_workout_proc(self, username: str, exercise: str, date_time: str, duration_in_minutes: int, notes: str, sets: int, reps: int, weight: int) -> Tuple[List[Tuple], List[str]]:
+    def log_user_workout_proc(
+            self, username: str, exercise: str, date_time: str,
+            duration_in_minutes: int, notes: str, sets: int, reps: int, weight: int) -> Tuple[List[Tuple], List[str]]:
         """
         Docstring for log_user_workout_proc
         
