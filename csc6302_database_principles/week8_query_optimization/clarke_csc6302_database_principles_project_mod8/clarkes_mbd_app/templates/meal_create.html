@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Create Meal – MBD Wellness{% endblock %}
+
+{% block breadcrumb %}
+<section class="page-header-title py-5 bg-dark text-white">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 my-2"><h1 class="h2 mb-0">Create Meal</h1></div>
+      <div class="col-md-6 my-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-md-end mb-0">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create Meal</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section py-5">
+  <div class="container">
+
+    {% if message %}<div class="alert alert-info">{{ message }}</div>{% endif %}
+    {% if error %}<div class="alert alert-danger">{{ error }}</div>{% endif %}
+
+    <form method="post" action="{{ url_for('meal_create') }}">
+      <div class="form-group">
+        <label for="meal_datetime">Date & Time</label>
+        <input type="datetime-local" class="form-control" id="meal_datetime" name="meal_datetime" required>
+      </div>
+
+      <div class="form-group">
+        <label for="meal_type">Meal Type</label>
+        <select class="form-control" id="meal_type" name="meal_type" required>
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snack">Snack</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save & Add Foods</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

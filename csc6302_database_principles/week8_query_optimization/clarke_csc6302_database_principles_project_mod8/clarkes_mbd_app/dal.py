@@ -6,6 +6,7 @@ Module 08: Final Oroject
 
 import mysql.connector
 from typing import List, Tuple
+from datetime import datetime
 
 
 # This class manages the database connection
@@ -144,8 +145,425 @@ class DatabaseActions:
 
     def commit(self):
         self._db.commit()
+        
+
+# This class handles the database interactions for user charts in their dashboard.
+class UserChartsDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    
+    # This method returns data from the workoutsummariees view
+    def workout_saummarry_view(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for workout_saummarry_view
+        
+        :param self: Description
+        :return: raw data, rows and column names
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        
+        # Getting all rows from the workoutsummaries view
+        query_output = self._db_actions.select_query("SELECT * FROM workoutSummaries")
+        return query_output
+    
+    # This method returns data from the dailyMoodTrends view
+    def daily_mood_trends_view(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for daily_mood_trends_view
+        
+        :param self: Description
+        :return: raw data, rows and column names
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        
+        # Getting all rows from the dailyMoodTrends view
+        query_output = self._db_actions.select_query("SELECT * FROM dailyMoodTrends")
+        return query_output
+    
+    # This method returns data from the caloriesPerDaySummaries view
+    def calories_perday_saummary_view(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for calories_perday_saummary_view
+        
+        :param self: Description
+        :return: raw data, rows and column names
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        
+        # Getting all rows from the caloriesPerDaySummaries view
+        query_output = self._db_actions.select_query("SELECT * FROM caloriesPerDaySummaries")
+        return query_output
+    
+    # This method returns data from the dailyWeightSummary view
+    def daily_weight_summary_view(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for daily_weight_summary_view
+        
+        :param self: Description
+        :return: raw data, rows and column names
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        
+        # Getting all rows from the dailyWeightSummary view
+        query_output = self._db_actions.select_query("SELECT * FROM dailyWeightSummary")
+        return query_output
+    
 
 
+# This class handles interaction with the exercise table
+class ExerciseDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from exercise table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # getting all rows from the exercises table
+        query_output = self._db_actions.select_query("SELECT * FROM exercises")
+        return query_output
+    
+
+# This class handles interaction with the food table
+class FoodDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from food table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # getting all rows from the exercises table
+        query_output = self._db_actions.select_query("SELECT * FROM food")
+        return query_output
+
+    
+
+# This class handles interaction with the vessels table
+class MealItemsDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from meal_items table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # getting all rows from the meal_items table
+        query_output = self._db_actions.select_query("SELECT * FROM meal_items")
+        return query_output
+
+
+    # This method adds items to meal items table
+    def add_meal_item_proc(self, meal_id: int,  food_name: str, servings: int) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for add_meal_item_proc procedure
+        
+        :param self: Description
+        :param meal_id: Description
+        :type meal_id: int
+        :param food_name: Description
+        :type food_name: str
+        :param servings: Description
+        :type servings: int
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+
+        proc_params = (meal_id, food_name, servings)
+        # calling the addmealitems procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "addMealItem", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+
+
+# This class handles interaction with the meals table
+class MealsDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from meals table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # getting all rows from the meals table
+        query_output = self._db_actions.select_query("SELECT * FROM meals")
+        return query_output
+
+
+    # This method adds a meal to the meals table
+    def add_meal_proc(self, username: str, meal_date_time: str, meal_type: str, notes: str, meal_id_output=None) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for add_meal_proc
+        
+        :param self: Description
+        :param username: Description
+        :type username: str
+        :param meal_date_time: Description
+        :type meal_date_time: str
+        :param meal_type: Description
+        :type meal_type: str
+        :param notes: Description
+        :type notes: str
+        :param meal_id_output: Description
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        proc_params = (username, meal_date_time, meal_type, notes, meal_id_output)
+        # calling the add meal procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "addMeal", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+    
+
+# This class handles interaction with the mood_entries table
+class MoodEntriesDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from mood_entries table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # getting all rows from the mood_entries table
+        query_output = self._db_actions.select_query("SELECT * FROM mood_entries")
+        return query_output
+
+    # This method adds a mmod log to the logMood table
+    def log_mood_proc(self, username: str, date_time: str, mood_score: int, energy_level: int, stress_level: int, note: str) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for add_vessel_proc
+        
+        :param self: Description
+        :param username: Description
+        :type username: str
+        :param date_time: Description
+        :type date_time: str
+        :param mood_score: Description
+        :type mood_score: int
+        :param energy_level: Description
+        :type energy_level: int
+        :param stress_level: Description
+        :type stress_level: int
+        :param note: Description
+        :type note: str
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        proc_params = (username, date_time, mood_score, energy_level, stress_level, note)
+        # calling the add logMood procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "logMood", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+
+
+# This class handles interaction with the users table
+class UsersDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from users table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # getting logged in user details from the users table
+        query_output = self._db_actions.select_query(f"SELECT * FROM users")
+        return query_output
+    
+    # This method returns all rows for a specific user from users table
+    def get_user_details(self, logged_in_user) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # Query params
+        params = (logged_in_user,)
+        # Query
+        query = "SELECT first_name, last_name, email, username, date_of_birth, gender, height, weight FROM users WHERE username = %s"
+        # getting logged in user details from the users table
+        query_output = self._db_actions.select_query(query, params)
+        return query_output
+
+    # This method adds a user to the user's table
+    def create_user_proc(self, first_name: str, last_name: str, email: str, password: str, username: str, dob: str, gender: str, height: int, weight: int) -> Tuple[List[Tuple], List[str]]:
+
+        # Geting the current date and time
+        now = datetime.now()
+
+        # Formatting the datetime object into the desired string format that the created at column expects
+        created_at_date = now.strftime("%Y-%m-%d %H:%M:%S")
+        
+        proc_params = (first_name, last_name, email, password, created_at_date, username, dob, gender, height, weight)
+        # calling the createUser procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "createUser", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+
+    # This method delete's a user account
+    def delete_account_proc(self, username: str) -> Tuple[List[Tuple], List[str]]:
+        
+        proc_params = (username,)
+        # calling the deleteAccount procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "deleteAccount", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+    
+
+    # This method allows a user to reset their password
+    def reset_passwordr_proc(self, email: str, password: str, username: str) -> Tuple[List[Tuple], List[str]]:
+        
+        proc_params = (email, password, username)
+        # calling the resetPassword procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "resetPassword", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+    
+
+# This class handles interaction with the weight_logs table
+class WeightLogsDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from weight_logs table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # getting all rows from the weight_logs table
+        query_output = self._db_actions.select_query("SELECT * FROM weight_logs")
+        return query_output
+
+    # This method adds the user's weight to the weight_logs table
+    def log_user_weight_proc(self, username: str, weight: int, created_at_date: str) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for log_user_weight_proc
+        
+        :param self: Description
+        :param username: Description
+        :type username: str
+        :param weight: Description
+        :type weight: int
+        :param created_at_date: Description
+        :type created_at_date: str
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        proc_params = ( username, weight, created_at_date)
+        # calling the logWeight procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "logWeight", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+    
+
+# This class handles interaction with the workout_sessions table
+class WorkoutSessionsDal:
+    def __init__(self, database_action_object: DatabaseActions):
+        self._db_actions = database_action_object
+
+    # This method returns all rows from workout_sessions table
+    def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # getting all rows from the workout_sessions table
+        query_output = self._db_actions.select_query("SELECT * FROM workout_sessions")
+        return query_output
+
+    # This method adds the user's workouts to the workout_sessions table
+    def log_user_workout_proc(self, username: str, exercise: str, date_time: str, duration_in_minutes: int, notes: str, sets: int, reps: int, weight: int) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for log_user_workout_proc
+        
+        :param self: Description
+        :param username: Description
+        :type username: str
+        :param exercise: Description
+        :type exercise: str
+        :param date_time: Description
+        :type date_time: str
+        :param duration_in_minutes: Description
+        :type duration_in_minutes: int
+        :param notes: Description
+        :type notes: str
+        :param sets: Description
+        :type sets: int
+        :param reps: Description
+        :type reps: int
+        :param weight: Description
+        :type weight: int
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        proc_params = (username, exercise, date_time, duration_in_minutes, notes, sets, reps, weight)
+        # calling the logWorkout procedure
+        rows, column_names = self._db_actions.procedure_calls(
+            "logWorkout", proc_params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
+
+
+
+
+
+
+
+###################################
 # This class handles interaction with the vessels table
 class VesselsDal:
     def __init__(self, database_action_object: DatabaseActions):
@@ -154,8 +572,11 @@ class VesselsDal:
     # This method returns all rows from vessles table
     def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
         """
-
-        - Returns raw data, rows and column names.
+        Docstring for get_all_rows
+        
+        :param self: Description
+        :return: raw data, rows and column names.
+        :rtype: Tuple[list[tuple], List[str]]
         """
         # getting all rows from the vessel table
         query_output = self._db_actions.select_query("SELECT * FROM vessels")

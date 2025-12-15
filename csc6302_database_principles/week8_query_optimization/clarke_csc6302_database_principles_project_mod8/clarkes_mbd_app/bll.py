@@ -8,6 +8,76 @@ from typing import List, Tuple
 import dal
 
 
+
+# This class manages UserCHartsDal interactions
+class UserChartsService:
+    def __init__(self, user_charts_table_actions: dal.UserChartsDal):
+        self.user_charts_table_actions = user_charts_table_actions
+
+    # This method gets all vessels from the vessel db table
+    def get_all_vessels(self) -> Tuple[List[Tuple], List[str]]:
+        # Getting all rows from vessel table
+        rows, column_names = self.vessels_table_actions.get_all_rows()
+        return rows, column_names
+
+    # This method gets the vessel id from the vessel db table
+    def get_vessel_id(self, vessel_name: str) -> Tuple[List[Tuple], List[str]]:
+        # Removing any leading or trailing white space
+        vessel_name = vessel_name.strip()
+        # Validating inputs
+        if not vessel_name or not vessel_name.strip():
+            raise ValueError(f"Vessel name cannot be empty")
+
+        # Getting row id from vessel table
+        rows, column_names = self.vessels_table_actions.get_vessel_id(
+            vessel_name)
+        # Getting row value from list of tuple
+        vessel_id = rows[0][0]
+
+        # If we found a vessel ID
+        if vessel_id != -1:
+            return rows, column_names
+
+        # If no vessel ID found -1 will be the row value
+        return rows, column_names
+
+    # This method adds a vessel to the vessel table
+    def add_vessel(self, vessel_name: str, cost_per_hr: int) -> Tuple[List[Tuple], List[str]]:
+        # Removing any leading or trailing white space
+        vessel_name = vessel_name.strip()
+        # validating inputs
+        if not isinstance(cost_per_hr, int):
+            raise ValueError(
+                f"Cost_per_hr must be a number e.g. 100 or 100.10")
+        if not vessel_name or not vessel_name.strip():
+            raise ValueError(f"Vessel name cannot be empty")
+        if cost_per_hr < 1:
+            raise ValueError(f"Cost_per_hr must be >= 1")
+
+        # adding vessel to vessel table
+        rows, column_names = self.vessels_table_actions.add_vessel_proc(
+            vessel_name, cost_per_hr)
+        # Getting the vessel id for the newly added vessel
+        vessel_id = rows[0][0]
+
+        # If the newly created vessel exists
+        if vessel_id is not None:
+            return rows, column_names
+
+        return rows, column_names
+
+    # This method displays all rows from the total revenue view.
+    def get_total_rev_view(self) -> Tuple[List[Tuple], List[str]]:
+        # Getting all rows from toal rev view
+        rows, column_names = self.vessels_table_actions.get_total_rev_view()
+        return rows, column_names
+
+
+
+
+
+
+######################################
 # This class manages VesselDal interactions
 class VesselService:
     def __init__(self, vessels_table_actions: dal.VesselsDal):
