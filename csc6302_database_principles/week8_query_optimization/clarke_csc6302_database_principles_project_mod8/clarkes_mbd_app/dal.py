@@ -9,6 +9,7 @@ from typing import List, Tuple
 from datetime import datetime
 
 
+
 # This class manages the database connection
 class ManageDbConnection:
     def __init__(self, host: str, user: str, port: int, database: str, password: str):

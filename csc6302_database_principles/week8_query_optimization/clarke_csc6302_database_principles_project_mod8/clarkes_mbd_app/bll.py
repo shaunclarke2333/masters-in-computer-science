@@ -14,63 +14,138 @@ class UserChartsService:
     def __init__(self, user_charts_table_actions: dal.UserChartsDal):
         self.user_charts_table_actions = user_charts_table_actions
 
-    # This method gets all vessels from the vessel db table
-    def get_all_vessels(self) -> Tuple[List[Tuple], List[str]]:
-        # Getting all rows from vessel table
-        rows, column_names = self.vessels_table_actions.get_all_rows()
+    # This method gets the workout_saummarry from the workout_saummarry view
+    def get_workout_saummarry(self) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for get_workout_saummarry
+        
+        :param self: Description
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        # Getting all rows from the workout_saummarry view
+        rows, column_names = self.user_charts_table_actions.workout_saummarry_view()
+        return rows, column_names
+    
+    # This method gets the daily_mood_trends from the daily_mood_trends view
+    def get_daily_mood_trends(self) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for get_daily_mood_trends
+        
+        :param self: Description
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        # Getting all rows from the daily_mood_trends view
+        rows, column_names = self.user_charts_table_actions.daily_mood_trends_view()
+        return rows, column_names
+    
+    # This method gets the calories_perday_saummary from the calories_perday_saummary view
+    def get_calories_perday_saummary(self) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for get_calories_perday_saummary
+        
+        :param self: Description
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        # Getting all rows from the calories_perday_saummaryview
+        rows, column_names = self.user_charts_table_actions.calories_perday_saummary_view()
+        return rows, column_names
+    
+    # This method gets the daily_weight_summary from the daily_weight_summary view
+    def get_workout_saummarry(self) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for get_workout_saummarry
+        
+        :param self: Description
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        # Getting all rows from the daily_weight_summary view
+        rows, column_names = self.user_charts_table_actions.daily_weight_summary_view()
         return rows, column_names
 
-    # This method gets the vessel id from the vessel db table
-    def get_vessel_id(self, vessel_name: str) -> Tuple[List[Tuple], List[str]]:
-        # Removing any leading or trailing white space
-        vessel_name = vessel_name.strip()
-        # Validating inputs
-        if not vessel_name or not vessel_name.strip():
-            raise ValueError(f"Vessel name cannot be empty")
 
-        # Getting row id from vessel table
-        rows, column_names = self.vessels_table_actions.get_vessel_id(
-            vessel_name)
-        # Getting row value from list of tuple
-        vessel_id = rows[0][0]
+# This class manages ExerciseDal interactions
+class ExerciseService:
+    def __init__(self, exercise_table_actions: dal.ExerciseDal):
+        self.exercise_table_actions = exercise_table_actions
 
-        # If we found a vessel ID
-        if vessel_id != -1:
-            return rows, column_names
-
-        # If no vessel ID found -1 will be the row value
+    # This method gets all the exercises from the exercise db table
+    def get_all_exercises(self) -> Tuple[List[Tuple], List[str]]:
+        # Getting all rows from exercise table
+        rows, column_names = self.exercise_table_actions.get_all_rows()
         return rows, column_names
 
-    # This method adds a vessel to the vessel table
-    def add_vessel(self, vessel_name: str, cost_per_hr: int) -> Tuple[List[Tuple], List[str]]:
-        # Removing any leading or trailing white space
-        vessel_name = vessel_name.strip()
+
+# This class manages FoodDal interactions
+class FoodService:
+    def __init__(self, food_table_actions: dal.FoodDal):
+        self.food_table_actions = food_table_actions
+
+    # This method gets all the food from the food db table
+    def get_all_foods(self) -> Tuple[List[Tuple], List[str]]:
+        # Getting all rows from food table
+        rows, column_names = self.food_table_actions.get_all_rows()
+        return rows, column_names
+    
+
+# This class manages MealItemsDal interactions
+class MealItemsService:
+    def __init__(self, meal_items_table_actions: dal.MealItemsDal):
+        self.meal_items_table_actions = meal_items_table_actions
+
+    # This method gets all meal_items from the meal_items db table
+    def get_all_meal_items(self) -> Tuple[List[Tuple], List[str]]:
+        # Getting all rows from meal_items table
+        rows, column_names = self.meal_items_table_actions.get_all_rows()
+        return rows, column_names
+
+    # This method adds a meal item to the meal_items table
+    def add_meal_item(self, meal_id: int,  food_name: str, servings: int) -> Tuple[List[Tuple], List[str]]:
+        
         # validating inputs
-        if not isinstance(cost_per_hr, int):
+        if not isinstance(servings, int):
             raise ValueError(
-                f"Cost_per_hr must be a number e.g. 100 or 100.10")
-        if not vessel_name or not vessel_name.strip():
-            raise ValueError(f"Vessel name cannot be empty")
-        if cost_per_hr < 1:
-            raise ValueError(f"Cost_per_hr must be >= 1")
-
+                f"Servings must be a number")
+        
         # adding vessel to vessel table
-        rows, column_names = self.vessels_table_actions.add_vessel_proc(
-            vessel_name, cost_per_hr)
-        # Getting the vessel id for the newly added vessel
-        vessel_id = rows[0][0]
+        rows, column_names = self.meal_items_table_actions.add_meal_item_proc(meal_id, food_name, servings)
+        return rows, column_names
 
-        # If the newly created vessel exists
-        if vessel_id is not None:
+
+# This class manages MealItemsDal interactions
+class MealsService:
+    def __init__(self, meals_table_actions: dal.MealsDal):
+        self.meals_table_actions = meals_table_actions
+
+    # This method gets all meals from the meals db table
+    def get_all_meal(self) -> Tuple[List[Tuple], List[str]]:
+        # Getting all rows from meal_items table
+        rows, column_names = self.meals_table_actions.get_all_rows()
+        return rows, column_names
+
+    # This method adds a meal item to the meal_items table
+    def add_meal(self, username: str, meal_date_time: str, meal_type: str, notes: str, meal_id_output=None) -> Tuple[List[Tuple], List[str]]:
+        
+        # Validating inputs
+        # if not vessel_name or not vessel_name.strip():
+        #     raise ValueError(f"Vessel name cannot be empty")
+
+        # Adding meal to table
+        rows, column_names = self.meals_table_actions.add_meal_proc(
+            username, meal_date_time, meal_type, notes, meal_id_output)
+        # Getting meal ID row value from list of tuple
+        meal_id = rows[0][0]
+
+        # If we found a Meal ID
+        if meal_id != -1:
             return rows, column_names
 
+        # If no Meal ID found -1 will be the row value
         return rows, column_names
 
-    # This method displays all rows from the total revenue view.
-    def get_total_rev_view(self) -> Tuple[List[Tuple], List[str]]:
-        # Getting all rows from toal rev view
-        rows, column_names = self.vessels_table_actions.get_total_rev_view()
-        return rows, column_names
 
 
 
