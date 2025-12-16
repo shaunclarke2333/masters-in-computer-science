@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import render_template, request, redirect, url_for, flash, session
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 # import time
 import pandas as pd
 import mysql.connector
@@ -124,3 +124,103 @@ workout_sessions = dal.WorkoutSessionsDal(db_actions)
 
 # rows, column_names = workout_sessions.get_all_rows()
 # make_dataframe(rows, column_names)
+
+############### BLL TESTING #######################
+#________________ User Charts_______________________
+# user_analytics = bll.UserChartsService(user_charts)
+
+# rows, column_names = user_analytics.get_calories_perday_saummary()
+# make_dataframe(rows, column_names)
+# rows, column_names = user_analytics.get_daily_mood_trends()
+# make_dataframe(rows, column_names)
+# rows, column_names = user_analytics.get_daily_weight_summary()
+# make_dataframe(rows, column_names)
+# rows, column_names = user_analytics.get_workout_saummary()
+# make_dataframe(rows, column_names)
+
+# #________________ exercise_______________________
+# exercise_body = bll.ExerciseService(exercise)
+# rows, column_names = exercise_body.get_all_exercises()
+# make_dataframe(rows, column_names)
+
+
+# #________________ food______________________
+
+# food_diet = bll.FoodService(food)
+# rows, column_names = food_diet.get_all_foods()
+# make_dataframe(rows, column_names)
+
+# #________________meal_______________________
+# # adding a meal
+# meal_diet = bll.MealsService(meal)
+# rows, column_names = meal_diet.add_meal('ShaunC', '2025-11-15 12:00:00', 'breakfast', 'Tofu scramble and spinach')
+# meal_id = rows[0][0]
+# make_dataframe(rows, column_names)
+
+# # getting all meals
+# rows, column_names = meal_diet.get_all_meal()
+# make_dataframe(rows, column_names)
+
+
+# #________________meal_items__________________
+# # adding a meal_items
+# meal_item_diet = bll.MealItemsService(meal_items)
+# rows, column_names = meal_item_diet.add_meal_item(meal_id, 'Firm Tofu', 9)
+# make_dataframe(rows, column_names)
+
+# # getting all meal_items
+# rows, column_names = meal_item_diet.get_all_meal_items()
+# make_dataframe(rows, column_names)
+
+
+
+#________________users_______________________
+# adding a user
+user_account = bll.UserService(users)
+rows, column_names = user_account.add_user('Scottie', 'Pippen', 'scottie@example.com', 'hash_scottie_133','ScottieP', '1983-04-12','male',185.42,107.50)
+make_dataframe(rows, column_names)
+
+# # getting all users
+# rows, column_names = user_account.get_all_users()
+# make_dataframe(rows, column_names)
+
+# # getting specific user details.
+# rows, column_names = user_account.get_a_user_details("ScottieP")
+# make_dataframe(rows, column_names)
+
+# # resetting user password.
+# rows, column_names = user_account.reset_user_password("hash_scottie_3333", 'ScottieP', 'scottie@example.com')
+# make_dataframe(rows, column_names)
+
+# rows, column_names = user_account.get_all_users()
+# make_dataframe(rows, column_names)
+
+# # resetting user password.
+# rows, column_names = user_account.delete_user_account('ScottieP')
+# make_dataframe(rows, column_names)
+
+# rows, column_names = user_account.get_all_users()
+# make_dataframe(rows, column_names)
+
+
+
+#________________weight_logs__________________
+# adding a weight entry
+log_weight_body = bll.WeightLogService(weight_logs)
+rows, column_names = log_weight_body.log_user_weight('ScottieP', 107.20, '2025-10-11 07:00:00')
+make_dataframe(rows, column_names)
+
+# getting all weight entries
+rows, column_names = log_weight_body.get_all_weight_logs()
+make_dataframe(rows, column_names)
+
+
+#________________workout_sessions______________
+# adding a meal_items
+workout_sessions_body = bll.WorkoutSessionService(workout_sessions)
+rows, column_names = workout_sessions_body.add_workout_session('ScottieP','Back Squat', '2025-11-10 05:45:00', 90, 4, 5,  80.00, 'Back squat, focused on form')
+make_dataframe(rows, column_names)
+
+# getting all meal_items
+rows, column_names = workout_sessions_body.get_all_workout_sessions()
+make_dataframe(rows, column_names)
