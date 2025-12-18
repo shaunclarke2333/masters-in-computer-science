@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – MBD Wellness{% endblock %}
+
+{% block breadcrumb %}
+<section class="page-header-title py-5 bg-dark text-white">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 my-2"><h1 class="h2 mb-0">Dashboard</h1></div>
+      <div class="col-md-6 my-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-md-end mb-0">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section py-5">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Mood & Stress Trends</h5>
+            <div id="mood_chart"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Workout Summary</h5>
+            <div id="workout_chart"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Calories & Macros</h5>
+            <div id="nutrition_chart"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Weight Trend</h5>
+            <div id="weight_chart"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

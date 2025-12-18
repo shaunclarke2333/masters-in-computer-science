@@ -14,20 +14,25 @@ class UserChartsService:
         self.user_charts_table_actions = user_charts_table_actions
 
     # This method gets the workout_saummarry from the workout_saummarry view
-    def get_workout_saummary(self) -> Tuple[List[Tuple], List[str]]:
+    def get_user_workout_saummary(self, logged_in_user) -> Tuple[List[Tuple], List[str]]:
         """
-        Docstring for get_workout_saummary
-
+        Docstring for get_user_workout_saummary
+        
         :param self: Description
+        :param logged_in_user: Description
         :return: Description
         :rtype: Tuple[List[Tuple], List[str]]
         """
-        # Getting all rows from the workout_saummarry view
-        rows, column_names = self.user_charts_table_actions.workout_saummarry_view()
+
+        rows, column_names = self.user_charts_table_actions.user_workout_saummarry(logged_in_user)
         return rows, column_names
 
+        # # Getting all rows from the workout_saummarry view
+        # rows, column_names = self.user_charts_table_actions.workout_saummarry()
+        # return rows, column_names
+
     # This method gets the daily_mood_trends from the daily_mood_trends view
-    def get_daily_mood_trends(self) -> Tuple[List[Tuple], List[str]]:
+    def get_user_daily_mood_trends(self, logged_in_user) -> Tuple[List[Tuple], List[str]]:
         """
         Docstring for get_daily_mood_trends
 
@@ -36,11 +41,11 @@ class UserChartsService:
         :rtype: Tuple[List[Tuple], List[str]]
         """
         # Getting all rows from the daily_mood_trends view
-        rows, column_names = self.user_charts_table_actions.daily_mood_trends_view()
+        rows, column_names = self.user_charts_table_actions.user_daily_mood_trends(logged_in_user)
         return rows, column_names
 
     # This method gets the calories_perday_saummary from the calories_perday_saummary view
-    def get_calories_perday_saummary(self) -> Tuple[List[Tuple], List[str]]:
+    def get_user_calories_perday_saummary(self, logged_in_user) -> Tuple[List[Tuple], List[str]]:
         """
         Docstring for get_calories_perday_saummary
 
@@ -49,11 +54,11 @@ class UserChartsService:
         :rtype: Tuple[List[Tuple], List[str]]
         """
         # Getting all rows from the calories_perday_saummaryview
-        rows, column_names = self.user_charts_table_actions.calories_perday_saummary_view()
+        rows, column_names = self.user_charts_table_actions.user_calories_perday_saummary(logged_in_user)
         return rows, column_names
 
     # This method gets the daily_weight_summary from the daily_weight_summary view
-    def get_daily_weight_summary(self) -> Tuple[List[Tuple], List[str]]:
+    def get_user_daily_weight_summary(self, logged_in_user) -> Tuple[List[Tuple], List[str]]:
         """
         Docstring for get_daily_weight_summary
 
@@ -62,7 +67,7 @@ class UserChartsService:
         :rtype: Tuple[List[Tuple], List[str]]
         """
         # Getting all rows from the daily_weight_summary view
-        rows, column_names = self.user_charts_table_actions.daily_weight_summary_view()
+        rows, column_names = self.user_charts_table_actions.user_daily_weight_summary(logged_in_user)
         return rows, column_names
 
 
@@ -221,7 +226,7 @@ class MoodEntriesService:
     def add_mood_entries(
             self, username: str, date_time: str, mood_score: int, energy_level: int,
             stress_level: int, note: Optional[int] = None) -> Tuple[List[Tuple], List[str]]:
-
+        
         # validating inputs
         if not isinstance(mood_score, int) or mood_score > 10 or mood_score < 1:
             raise ValueError(
@@ -243,6 +248,22 @@ class MoodEntriesService:
 class UserService:
     def __init__(self, users_table_actions: dal.UsersDal):
         self.users_table_actions = users_table_actions
+
+    # This method gets a specific user's details from the users db table
+    def get_a_user_creds(self, username, passwords) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for get_a_user_creds
+        
+        :param self: Description
+        :param username: Description
+        :param passwords: Description
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        # Getting specific user creds from users table
+        rows, column_names = self.users_table_actions.get_user_creds(
+            username, passwords)
+        return rows, column_names
 
     # This method gets all rows from the users db table
     def get_all_users(self) -> Tuple[List[Tuple], List[str]]:
@@ -271,7 +292,40 @@ class UserService:
         rows, column_names = self.users_table_actions.get_user_details(
             logged_in_user)
         return rows, column_names
+    
+    # This method validates a specific user's creds in the users db table
+    def get_user_account(self, username: str, password: str) -> Tuple[List[Tuple], List[str]]:
+        """
+        Docstring for get_user_account
+        -1 user not found
+        -2 password not found
+        0 user account exists
+        
+        :param self: Description
+        :param username: Description
+        :type username: str
+        :param password: Description
+        :type password: str
+        :return: Description
+        :rtype: Tuple[List[Tuple], List[str]]
+        """
+        # Getting specific user details from users table
+        rows, column_names = self.users_table_actions.validate_user_creds(
+            username, password)
+        row_value = rows[0][0]
 
+        if row_value == -1:
+            raise Exception(f"User account not found")
+        
+        if row_value == -2:
+            raise Exception(f"User password not found")
+
+        # If account exists
+        if row_value == 0:
+            return rows, column_names
+        
+        return rows, column_names
+    
     # This method adds a user to the users table
     def add_user(
             self, first_name: str, last_name: str, email: str, password: str,
@@ -445,3 +499,5 @@ class WorkoutSessionService:
         rows, column_names = self.workout_sessions_table_actions.log_user_workout_proc(
             username, exercise, date_time, duration_in_minutes, notes, sets, reps, weight)
         return rows, column_names
+
+

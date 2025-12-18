@@ -36,17 +36,65 @@ connection = dal.ManageDbConnection(
 # Connecting to DB
 connection.connect_to_db()
 
-# Passing connection to DatabaseActions
-db_actions: dal.DatabaseActions = dal.DatabaseActions(connection)
+def get_dal_actions(
+    connection,
+    DatabaseActions=dal.DatabaseActions,
+    UserChartsDal=dal.UserChartsDal,
+    ExerciseDal=dal.ExerciseDal,
+    FoodDal=dal.FoodDal,
+    MealsDal=dal.MealsDal,
+    MealItemsDal=dal.MealItemsDal,
+    UsersDal=dal.UsersDal,
+    WeightLogsDal=dal.WeightLogsDal,
+    WorkoutSessionsDal=dal.WorkoutSessionsDal,
+):
+    
+    # Creating shared DB actions object
+    db_actions = DatabaseActions(connection)
 
-user_charts = dal.UserChartsDal(db_actions)
-exercise = dal.ExerciseDal(db_actions)
-food = dal.FoodDal(db_actions)
-meal = dal.MealsDal(db_actions)
-meal_items = dal.MealItemsDal(db_actions)
-users = dal.UsersDal(db_actions)
-weight_logs = dal.WeightLogsDal(db_actions)
-workout_sessions = dal.WorkoutSessionsDal(db_actions)
+    # Instantiate DALs
+    return {
+        "user_charts": UserChartsDal(db_actions),
+        "exercise": ExerciseDal(db_actions),
+        "food": FoodDal(db_actions),
+        "meal": MealsDal(db_actions),
+        "meal_items": MealItemsDal(db_actions),
+        "users": UsersDal(db_actions),
+        "weight_logs": WeightLogsDal(db_actions),
+        "workout_sessions": WorkoutSessionsDal(db_actions),
+    }
+
+
+dal_actions = get_dal_actions(connection)
+
+# user_charts = bll.UserChartsService(dal_actions.get("user_charts"))
+# rows, column_names = user_charts.get_user_calories_perday_saummary("ShaunC")
+# make_dataframe(rows, column_names)
+
+users = bll.UserService(dal_actions.get("users"))
+rows, column_names = users.get_user_account("ShaunC", "hash_shaun_123")
+if rows[0][0] == 0:
+    print("success")
+
+if rows[0][0] == -1:
+    print("No User")
+if rows[0][0] == -2:
+    print("no password")
+    
+    
+
+
+# Passing connection to DatabaseActions
+# db_actions: dal.DatabaseActions = dal.DatabaseActions(connection)
+
+# user_charts = dal.UserChartsDal(db_actions)
+# exercise = dal.ExerciseDal(db_actions)
+# food = dal.FoodDal(db_actions)
+# meal = dal.MealsDal(db_actions)
+# meal_items = dal.MealItemsDal(db_actions)
+# users = dal.UsersDal(db_actions)
+# weight_logs = dal.WeightLogsDal(db_actions)
+# workout_sessions = dal.WorkoutSessionsDal(db_actions)
 
 
 # # Testing user charts views
@@ -174,11 +222,11 @@ workout_sessions = dal.WorkoutSessionsDal(db_actions)
 
 
 
-#________________users_______________________
-# adding a user
-user_account = bll.UserService(users)
-rows, column_names = user_account.add_user('Scottie', 'Pippen', 'scottie@example.com', 'hash_scottie_133','ScottieP', '1983-04-12','male',185.42,107.50)
-make_dataframe(rows, column_names)
+# #________________users_______________________
+# # adding a user
+# user_account = bll.UserService(users)
+# rows, column_names = user_account.add_user('Scottie', 'Pippen', 'scottie@example.com', 'hash_scottie_133','ScottieP', '1983-04-12','male',185.42,107.50)
+# make_dataframe(rows, column_names)
 
 # # getting all users
 # rows, column_names = user_account.get_all_users()
@@ -204,23 +252,23 @@ make_dataframe(rows, column_names)
 
 
 
-#________________weight_logs__________________
-# adding a weight entry
-log_weight_body = bll.WeightLogService(weight_logs)
-rows, column_names = log_weight_body.log_user_weight('ScottieP', 107.20, '2025-10-11 07:00:00')
-make_dataframe(rows, column_names)
+# #________________weight_logs__________________
+# # adding a weight entry
+# log_weight_body = bll.WeightLogService(weight_logs)
+# rows, column_names = log_weight_body.log_user_weight('ScottieP', 107.20, '2025-10-11 07:00:00')
+# make_dataframe(rows, column_names)
 
-# getting all weight entries
-rows, column_names = log_weight_body.get_all_weight_logs()
-make_dataframe(rows, column_names)
+# # getting all weight entries
+# rows, column_names = log_weight_body.get_all_weight_logs()
+# make_dataframe(rows, column_names)
 
 
-#________________workout_sessions______________
-# adding a meal_items
-workout_sessions_body = bll.WorkoutSessionService(workout_sessions)
-rows, column_names = workout_sessions_body.add_workout_session('ScottieP','Back Squat', '2025-11-10 05:45:00', 90, 4, 5,  80.00, 'Back squat, focused on form')
-make_dataframe(rows, column_names)
+# #________________workout_sessions______________
+# # adding a meal_items
+# workout_sessions_body = bll.WorkoutSessionService(workout_sessions)
+# rows, column_names = workout_sessions_body.add_workout_session('ScottieP','Back Squat', '2025-11-10 05:45:00', 90, 4, 5,  80.00, 'Back squat, focused on form')
+# make_dataframe(rows, column_names)
 
-# getting all meal_items
-rows, column_names = workout_sessions_body.get_all_workout_sessions()
-make_dataframe(rows, column_names)
+# # getting all meal_items
+# rows, column_names = workout_sessions_body.get_all_workout_sessions()
+# make_dataframe(rows, column_names)

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Mood History – MBD Wellness{% endblock %}
+
+{% block breadcrumb %}
+<section class="page-header-title py-5 bg-dark text-white">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 my-2"><h1 class="h2 mb-0">Mood History</h1></div>
+      <div class="col-md-6 my-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-md-end mb-0">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Mood History</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section py-5">
+  <div class="container">
+    <div class="mb-4">
+      <div id="mood_history_chart"></div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Mood</th>
+            <th>Energy</th>
+            <th>Stress</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in mood_entries %}
+          <tr>
+            <td>{{ entry.entry_datetime }}</td>
+            <td>{{ entry.mood_score }}</td>
+            <td>{{ entry.energy_level }}</td>
+            <td>{{ entry.stress_level }}</td>
+            <td>{{ entry.note }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

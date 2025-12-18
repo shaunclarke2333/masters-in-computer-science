@@ -155,7 +155,7 @@ class UserChartsDal:
 
     
     # This method returns data from the workoutsummariees view
-    def workout_saummarry_view(self) -> Tuple[list[tuple], List[str]]:
+    def user_workout_saummarry(self, logged_in_user) -> Tuple[list[tuple], List[str]]:
         """
         Docstring for workout_saummarry_view
         
@@ -163,13 +163,20 @@ class UserChartsDal:
         :return: raw data, rows and column names
         :rtype: Tuple[list[tuple], List[str]]
         """
-        
-        # Getting all rows from the workoutsummaries view
-        query_output = self._db_actions.select_query("SELECT * FROM workoutSummaries")
+        # Query params
+        params = (logged_in_user,)
+        # Query
+        query = "SELECT * FROM workoutSummaries WHERE username = %s"
+        # getting logged in user details 
+        query_output = self._db_actions.select_query(query, params)
         return query_output
     
+        # # Getting all rows from the workoutsummaries view
+        # query_output = self._db_actions.select_query("SELECT * FROM workoutSummaries")
+        # return query_output
+    
     # This method returns data from the dailyMoodTrends view
-    def daily_mood_trends_view(self) -> Tuple[list[tuple], List[str]]:
+    def user_daily_mood_trends(self, logged_in_user) -> Tuple[list[tuple], List[str]]:
         """
         Docstring for daily_mood_trends_view
         
@@ -177,13 +184,20 @@ class UserChartsDal:
         :return: raw data, rows and column names
         :rtype: Tuple[list[tuple], List[str]]
         """
-        
-        # Getting all rows from the dailyMoodTrends view
-        query_output = self._db_actions.select_query("SELECT * FROM dailyMoodTrends")
+        # Query params
+        params = (logged_in_user,)
+        # Query
+        query = "SELECT * FROM dailyMoodTrends WHERE username = %s"
+        # getting logged in user details 
+        query_output = self._db_actions.select_query(query, params)
         return query_output
     
+        # # Getting all rows from the dailyMoodTrends view
+        # query_output = self._db_actions.select_query("SELECT * FROM dailyMoodTrends")
+        # return query_output
+    
     # This method returns data from the caloriesPerDaySummaries view
-    def calories_perday_saummary_view(self) -> Tuple[list[tuple], List[str]]:
+    def user_calories_perday_saummary(self, logged_in_user) -> Tuple[list[tuple], List[str]]:
         """
         Docstring for calories_perday_saummary_view
         
@@ -191,13 +205,20 @@ class UserChartsDal:
         :return: raw data, rows and column names
         :rtype: Tuple[list[tuple], List[str]]
         """
-        
-        # Getting all rows from the caloriesPerDaySummaries view
-        query_output = self._db_actions.select_query("SELECT * FROM caloriesPerDaySummaries")
+        # Query params
+        params = (logged_in_user,)
+        # Query
+        query = "SELECT * FROM caloriesPerDaySummaries WHERE username = %s"
+        # getting logged in user details 
+        query_output = self._db_actions.select_query(query, params)
         return query_output
     
+        # # Getting all rows from the caloriesPerDaySummaries view
+        # query_output = self._db_actions.select_query("SELECT * FROM caloriesPerDaySummaries")
+        # return query_output
+    
     # This method returns data from the dailyWeightSummary view
-    def daily_weight_summary_view(self) -> Tuple[list[tuple], List[str]]:
+    def user_daily_weight_summary(self, logged_in_user) -> Tuple[list[tuple], List[str]]:
         """
         Docstring for daily_weight_summary_view
         
@@ -206,9 +227,17 @@ class UserChartsDal:
         :rtype: Tuple[list[tuple], List[str]]
         """
         
-        # Getting all rows from the dailyWeightSummary view
-        query_output = self._db_actions.select_query("SELECT * FROM dailyWeightSummary")
+        # Query params
+        params = (logged_in_user,)
+        # Query
+        query = "SELECT * FROM dailyWeightSummary WHERE username = %s"
+        # getting logged in user details 
+        query_output = self._db_actions.select_query(query, params)
         return query_output
+    
+        # # Getting all rows from the dailyWeightSummary view
+        # query_output = self._db_actions.select_query("SELECT * FROM dailyWeightSummary")
+        # return query_output
     
 
 
@@ -394,6 +423,7 @@ class UsersDal:
     def __init__(self, database_action_object: DatabaseActions):
         self._db_actions = database_action_object
 
+
     # This method returns all rows from users table
     def get_all_rows(self) -> Tuple[list[tuple], List[str]]:
         """
@@ -423,6 +453,31 @@ class UsersDal:
         # getting logged in user details from the users table
         query_output = self._db_actions.select_query(query, params)
         return query_output
+    
+    # This method validates username and password for specific user from users table
+    def validate_user_creds(self, username: str, password: str) -> Tuple[list[tuple], List[str]]:
+        """
+        Docstring for validate_user_creds
+
+        -1 user not found
+        -2 password not found
+        0 user account exists
+        
+        :param self: Description
+        :param username: Description
+        :type username: str
+        :param password: Description
+        :type password: str
+        :return: Description
+        :rtype: Tuple[list[tuple], List[str]]
+        """
+        # Query params
+        params = (username, password,)
+        rows, column_names = self._db_actions.procedure_calls(
+            "validateUser", params)
+        # Commiting chnages to DB
+        self._db_actions.commit()
+        return rows, column_names
 
     # This method adds a user to the user's table
     def create_user_proc(self, first_name: str, last_name: str, email: str, password: str, username: str, dob: str, gender: str, height: int, weight: int) -> Tuple[List[Tuple], List[str]]:

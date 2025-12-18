@@ -1,66 +1,75 @@
 {% extends "base.html" %}
 {% block title %}Dashboard – MBD Wellness{% endblock %}
 
-{% block breadcrumb %}
-<section class="page-header-title py-5 bg-dark text-white">
+{% block hero %}
+<section class="section py-3 bg-dark text-white">
   <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-6 my-2"><h1 class="h2 mb-0">Dashboard</h1></div>
-      <div class="col-md-6 my-2">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb justify-content-md-end mb-0">
-            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-          </ol>
-        </nav>
-      </div>
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+      <h1 class="h3 text-uppercase font-weight-bold mb-0">Dashboard</h1>
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+        <li class="breadcrumb-item active">Dashboard</li>
+      </ol>
     </div>
   </div>
 </section>
 {% endblock %}
 
 {% block content %}
-<section class="section py-5">
+<section class="section">
   <div class="container">
+
+    <!-- CHARTS TOP -->
     <div class="row">
-
-      <div class="col-lg-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Mood & Stress Trends</h5>
-            <div id="mood_chart"></div>
-          </div>
+      <div class="col-lg-6 my-3">
+        <div class="bg-white p-4 shadow-lg">
+          <h6 class="text-uppercase font-weight-bold mb-3">Workout Summary (Week)</h6>
+          <div id="chart_workouts" class="bg-light p-4">Plotly chart placeholder</div>
         </div>
       </div>
 
-      <div class="col-lg-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Workout Summary</h5>
-            <div id="workout_chart"></div>
-          </div>
+      <div class="col-lg-6 my-3">
+        <div class="bg-white p-4 shadow-lg">
+          <h6 class="text-uppercase font-weight-bold mb-3">Daily Mood Trends</h6>
+          <div id="chart_mood" class="bg-light p-4">Plotly chart placeholder</div>
         </div>
       </div>
 
-      <div class="col-lg-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Calories & Macros</h5>
-            <div id="nutrition_chart"></div>
-          </div>
+      <div class="col-lg-6 my-3">
+        <div class="bg-white p-4 shadow-lg">
+          <h6 class="text-uppercase font-weight-bold mb-3">Calories Per Day Summary</h6>
+          <div id="chart_calories" class="bg-light p-4">Plotly chart placeholder</div>
         </div>
       </div>
 
-      <div class="col-lg-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Weight Trend</h5>
-            <div id="weight_chart"></div>
-          </div>
+      <div class="col-lg-6 my-3">
+        <div class="bg-white p-4 shadow-lg">
+          <h6 class="text-uppercase font-weight-bold mb-3">Daily Weight Summary</h6>
+          <div id="chart_weight" class="bg-light p-4">Plotly chart placeholder</div>
         </div>
       </div>
-
     </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="row mt-3">
+      <div class="col-12 my-3">
+        <div class="bg-white p-4 shadow-lg">
+          <h5 class="text-uppercase font-weight-bold mb-3">Actions</h5>
+          <div class="row">
+            <div class="col-md-3 my-2"><a class="btn btn-primary btn-block" href="{{ url_for('meal_create') }}">Log Meal</a></div>
+            <div class="col-md-3 my-2"><a class="btn btn-dark btn-block" href="{{ url_for('workout_log') }}">Log Workout</a></div>
+            <div class="col-md-3 my-2"><a class="btn btn-outline-dark btn-block" href="{{ url_for('weight_log') }}">Log Weight</a></div>
+            <div class="col-md-3 my-2"><a class="btn btn-outline-dark btn-block" href="{{ url_for('mood_log') }}">Log Mood</a></div>
+
+            <div class="col-md-3 my-2"><a class="btn btn-outline-dark btn-block" href="{{ url_for('meals_today') }}">Today’s Meals</a></div>
+            <div class="col-md-3 my-2"><a class="btn btn-outline-dark btn-block" href="{{ url_for('workout_history') }}">Workout History</a></div>
+            <div class="col-md-3 my-2"><a class="btn btn-outline-dark btn-block" href="{{ url_for('weight_history') }}">Weight History</a></div>
+            <div class="col-md-3 my-2"><a class="btn btn-outline-dark btn-block" href="{{ url_for('mood_history') }}">Mood History</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 {% endblock %}

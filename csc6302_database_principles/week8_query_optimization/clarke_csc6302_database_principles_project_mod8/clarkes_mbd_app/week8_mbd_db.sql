@@ -357,66 +357,7 @@ VALUES
 
 -- DATABASE ACTIONS
 
-/*----------Views To Create---------------*/ 
-/*View dailyMoodTrends: summary of the user's mood and feeds the user's mood chart*/
-CREATE VIEW dailyMoodTrends AS
-	SELECT
-		user_id,
-        DATE(entry_datetime) AS mood_date,
-        ROUND(AVG(mood_score), 0) AS avg_mood_score,
-        ROUND(AVG(stress_level), 0) AS avg_stress_level
-	FROM
-		mood_entries
-	GROUP BY
-		user_id, mood_date;
-		
-/*View workoutSummaries: summary of the user's workouts and feeds the user's workout consistency chart*/ 
-CREATE VIEW workoutSummaries AS
-	SELECT 
-		user_id,
-        DATE(session_datetime) as workout_date,
-        COUNT(session_id) AS total_sessions,
-        SUM(duration_minutes) AS total_duration
-	FROM
-		workout_sessions
-	GROUP BY
-		user_id, workout_date;
-        
-        
-/*View caloriesPerDaySummaries: summary of the user's meals, calories. This feeds the users macro chart */
-CREATE VIEW caloriesPerDaySummaries AS
-	SELECT
-		m.user_id,
-		m.meal_id,
-        COUNT(m.meal_id) AS total_meals,
-        DATE (m.meal_datetime) as date,
-        -- to get the complete calories for a food item, we have to multiply the item by the number of servings then add i all up to get total calories
-        -- similar apprach for protein, carbs and fats
-        ROUND(SUM((mi.servings * f.calories_per_serving)), 2) AS total_calories,
-        ROUND(SUM((mi.servings * f.protein)), 2) AS total_protein,
-        ROUND(SUM((mi.servings * f.carbs)), 2) AS total_carbs,
-        ROUND(SUM((mi.servings * f.fat)), 2) AS total_fats
-        
-	FROM
-		meal_items mi
-	LEFT JOIN meals m ON m.meal_id = mi.meal_id
-	LEFT JOIN food f ON f.food_id = mi.food_id
-    GROUP BY
-		m.user_id, m.meal_id, date;
 
-			
-/*View dailyWeightSummary: summary of the user's weight each day. This feeds the users weight trend chart */
-CREATE VIEW dailyWeightSummary AS
-	SELECT
-		user_id,
-        DATE(weight_datetime) as date,
-        ROUND(weight, 2) AS user_weight
-	FROM
-		weight_logs
-	GROUP BY
-		user_id, date, user_weight;
-        
-        
 /*----------Functions---------------*/ 
 DROP FUNCTION IF EXISTS getUserID;
 -- Changing delimiter to $$ so it runs everthing within the delimiter block as one.
@@ -491,7 +432,30 @@ END$$
 
 DELIMITER ;
 
--- select getUserEmail('shaun@example.com') AS foundUserEmail;
+
+DROP FUNCTION IF EXISTS getUserPassword;
+
+DELIMITER $$
+
+/*-------This function checks if and email adreess exists------*/
+CREATE FUNCTION getUserPassword(mypassword VARCHAR(100))
+RETURNS  VARCHAR(255) DETERMINISTIC
+BEGIN
+	DECLARE foundUserPassword VARCHAR(150);
+    SELECT email INTO foundUserPassword
+    FROM users
+    WHERE password_hash = mypassword;
+    
+    IF foundUserPassword IS NULL
+    THEN SET foundUserPassword = -1;
+    END IF;
+    
+    RETURN foundUserPassword;
+END$$
+
+DELIMITER ;
+
+select getUserPassword('"hash_shaun_123"') AS foundPassword;
 
 DROP FUNCTION IF EXISTS getExerciseID;
 
@@ -539,8 +503,116 @@ DELIMITER ;
 
 -- select getFoodID('Overnight Oats Base') AS foodID;
 
-/*----------Procedures to be created---------------*/  
 
+
+/*----------Views To Create---------------*/ 
+/*View dailyMoodTrends: summary of the user's mood and feeds the user's mood chart*/
+CREATE VIEW dailyMoodTrends AS
+	SELECT
+		m.user_id, u.username,
+        DATE(m.entry_datetime) AS mood_date,
+        ROUND(AVG(m.mood_score), 0) AS avg_mood_score,
+        ROUND(AVG(m.stress_level), 0) AS avg_stress_level
+	FROM
+		mood_entries m
+	LEFT JOIN users u ON u.user_id = m.user_id
+	GROUP BY
+		m.user_id, mood_date;
+		
+/*View workoutSummaries: summary of the user's workouts and feeds the user's workout consistency chart*/ 
+CREATE VIEW workoutSummaries AS
+	SELECT 
+		w.user_id, u.username,
+        DATE(w.session_datetime) as workout_date,
+        COUNT(w.session_id) AS total_sessions,
+        SUM(w.duration_minutes) AS total_duration
+	FROM
+		workout_sessions w
+	LEFT JOIN users u ON u.user_id = w.user_id
+	GROUP BY
+		user_id, workout_date;
+        
+        
+/*View caloriesPerDaySummaries: summary of the user's meals, calories. This feeds the users macro chart */
+CREATE VIEW caloriesPerDaySummaries AS
+	SELECT
+		m.user_id,
+		m.meal_id, u.username,
+        COUNT(m.meal_id) AS total_meals,
+        DATE (m.meal_datetime) as date,
+        -- to get the complete calories for a food item, we have to multiply the item by the number of servings then add i all up to get total calories
+        -- similar apprach for protein, carbs and fats
+        ROUND(SUM((mi.servings * f.calories_per_serving)), 2) AS total_calories,
+        ROUND(SUM((mi.servings * f.protein)), 2) AS total_protein,
+        ROUND(SUM((mi.servings * f.carbs)), 2) AS total_carbs,
+        ROUND(SUM((mi.servings * f.fat)), 2) AS total_fats
+        
+	FROM
+		meal_items mi
+	LEFT JOIN meals m ON m.meal_id = mi.meal_id
+	LEFT JOIN food f ON f.food_id = mi.food_id
+    LEFT JOIN users u ON u.user_id = m.user_id
+    GROUP BY
+		m.user_id, m.meal_id, date;
+
+			
+/*View dailyWeightSummary: summary of the user's weight each day. This feeds the users weight trend chart */
+CREATE VIEW dailyWeightSummary AS
+	SELECT
+		wl.user_id, u.username,
+        DATE(wl.weight_datetime) as date,
+        ROUND(wl.weight, 2) AS user_weight
+	FROM
+		weight_logs wl
+	LEFT JOIN users u ON u.user_id = wl.user_id
+	GROUP BY
+		user_id, date, user_weight;
+        
+
+/*----------Procedures to be created---------------*/ 
+
+
+
+
+DROP PROCEDURE IF EXISTS validateUser;
+
+DELIMITER $$
+
+/*-----------This procedure creates a user-----------*/
+CREATE PROCEDURE validateUser(
+	
+    uusername VARCHAR(100), upassword_hash VARCHAR(255)
+)
+
+BEGIN
+	-- declaring return variableS
+    DECLARE foundUserName VARCHAR(100);
+    DECLARE foundUserpassword VARCHAR(255);
+    
+    SELECT getUserName(uusername) INTO foundUserName;
+    
+    SELECT getUserPassword(upassword_hash) INTO foundUserpassword;
+    
+    -- Logic to handle if username or email already used in DB before creating user
+	IF foundUserName = -1
+	THEN SELECT -1 AS usernotFound;
+	ELSEIF foundUserpassword = -1
+	THEN SELECT -2 AS passwordNotFound;
+    ELSE
+		-- if the user does not exist create it
+		SELECT username, password_hash FROM users WHERE username = uusername and password_hash = upassword_hash ;
+        
+        SELECT 0 AS accountExist;
+	END IF;
+-- signaling where the code block ends
+END$$
+    
+-- setting the delimiter back to what it was
+DELIMITER ;
+
+CALL validateuser("ShaunC", "hash_shadun_123");
+
+-- ###
 
 DROP PROCEDURE IF EXISTS createUser;
 
@@ -954,7 +1026,7 @@ FROM meals;
 -- SELECT *
 -- FROM weight_logs;
 
--- select * FROM dailyMoodTrends;
+select * FROM dailyMoodTrends;
 
 -- select * from workoutSummaries;
 
