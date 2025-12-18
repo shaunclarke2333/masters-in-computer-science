@@ -67,22 +67,61 @@ def get_dal_actions(
 
 dal_actions = get_dal_actions(connection)
 
+meal = bll.MealsService(dal_actions.get("meal"))
+rows, column_names = meal.get_all_meal()
+make_dataframe(rows, column_names)
+
+meal_items = bll.MealItemsService(dal_actions.get("meal_items"))
+rows, column_names = meal_items.get_all_meal_items()
+make_dataframe(rows, column_names)
+
+# print("get_user_calories_perday_saummary")
 # user_charts = bll.UserChartsService(dal_actions.get("user_charts"))
 # rows, column_names = user_charts.get_user_calories_perday_saummary("ShaunC")
 # make_dataframe(rows, column_names)
 
-users = bll.UserService(dal_actions.get("users"))
-rows, column_names = users.get_user_account("ShaunC", "hash_shaun_123")
-if rows[0][0] == 0:
-    print("success")
 
-if rows[0][0] == -1:
-    print("No User")
-if rows[0][0] == -2:
-    print("no password")
+# print("get_user_daily_mood_trends")
+# user_charts = bll.UserChartsService(dal_actions.get("user_charts"))
+# rows, column_names = user_charts.get_user_daily_mood_trends("ShaunC")
+# make_dataframe(rows, column_names)
+
+# print("get_user_daily_weight_summary")
+# user_charts = bll.UserChartsService(dal_actions.get("user_charts"))
+# rows, column_names = user_charts.get_user_daily_weight_summary("ShaunC")
+# make_dataframe(rows, column_names)
+
+# print("get_user_workout_saummary")
+# user_charts = bll.UserChartsService(dal_actions.get("user_charts"))
+# rows, column_names = user_charts.get_user_workout_saummary("ShaunC")
+# make_dataframe(rows, column_names)
+
+# users = bll.UserService(dal_actions.get("users"))
+# rows, column_names = users.get_user_account("ShaunC", "hash_shaun_123")
+# if rows[0][0] == 0:
+#     print("success")
+
+# if rows[0][0] == -1:
+#     print("No User")
+# if rows[0][0] == -2:
+#     print("no password")
     
     
+# # Creating datafram for plotly
+# df = pd.DataFrame(rows, columns=column_names)
 
+# # converting date in the dataframe to datetime
+# df["date"] = pd.to_datetime(df["date"])
+
+# calories_fig = px.line(
+#     df,
+#     x="date",
+#     y="total_calories",
+#     title="calories per day",
+#     markers=True
+# )
+
+# calories_fig.show()
 
 # Passing connection to DatabaseActions
 # db_actions: dal.DatabaseActions = dal.DatabaseActions(connection)

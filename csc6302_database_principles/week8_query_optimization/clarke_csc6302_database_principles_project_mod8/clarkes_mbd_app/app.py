@@ -11,8 +11,8 @@ from datetime import datetime
 from typing import List, Tuple
 # import time
 import pandas as pd
+import plotly.express as px
 import mysql.connector
-import configparser
 import dal
 import bll
 
@@ -215,7 +215,154 @@ def contact():
 # Alerts the user if they try to do anything befor connecting the DB.
 @deb_required
 def dashboard():
-    return render_template("dashboard.html")
+
+    # Connecting databse
+    connection = get_db_connection()
+    # creating database actions object
+    dal_actions = get_dal_actions(connection)
+
+    # Instantiating user chart service
+    user_charts = bll.UserChartsService(dal_actions.get("user_charts"))
+    username = session.get("username")
+
+    # -----------------------------
+    # 2) Calories + Macros (daily)
+    #    Your query returns multiple rows per day (meal_id),
+    #    so we aggregate to one row per date before charting.
+    # -----------------------------
+    rows, column_names = user_charts.get_user_calories_perday_saummary(username)
+    macro_df = pd.DataFrame(rows, columns=column_names)
+
+    # Convert to datetime so axis can be formatted and sorted properly
+    macro_df["date"] = pd.to_datetime(macro_df["date"])
+
+    # Aggregate to daily totals (1 row per date)
+    daily_macros = (
+        macro_df
+        .groupby(["user_id", "username", "date"], as_index=False)
+        .agg(
+            total_calories=("total_calories", "sum"),
+            total_protein=("total_protein", "sum"),
+            total_carbs=("total_carbs", "sum"),
+            total_fats=("total_fats", "sum"),
+            total_meals=("total_meals", "sum"),
+        )
+        .sort_values("date")
+    )
+
+    # (A) Calories line chart
+    cal_fig = px.line(
+        daily_macros,
+        x="date",
+        y="total_calories",
+        title="Total Calories per Day",
+        markers=True,
+        hover_data=["total_meals", "total_protein", "total_carbs", "total_fats"],
+    )
+    cal_fig.update_layout(title_x=0.5, margin=dict(l=20, r=20, t=60, b=20))
+    calories_chart = cal_fig.to_html(full_html=False)
+
+    # (B) Macros pie chart (Protein/Carbs/Fats)
+    # Choose the latest available date for the pie breakdown
+    latest_date = daily_macros["date"].max()
+    latest_row = daily_macros.loc[daily_macros["date"] == latest_date].iloc[0]
+
+    pie_df = pd.DataFrame({
+        "macro": ["Protein", "Carbs", "Fats"],
+        "grams": [
+            float(latest_row["total_protein"]),
+            float(latest_row["total_carbs"]),
+            float(latest_row["total_fats"]),
+        ],
+    })
+
+    macro_pie_fig = px.pie(
+        pie_df,
+        names="macro",
+        values="grams",
+        title=f"Macros (grams) — {latest_date.date()}",
+    )
+    macro_pie_fig.update_layout(title_x=0.5, margin=dict(l=20, r=20, t=60, b=20))
+    macros_pie_chart = macro_pie_fig.to_html(full_html=False)
+
+    # -----------------------------
+    # 3) Mood trends (mood + stress)
+    # -----------------------------
+    rows, column_names = user_charts.get_user_daily_mood_trends(username)
+    mood_df = pd.DataFrame(rows, columns=column_names)
+
+    mood_df["mood_date"] = pd.to_datetime(mood_df["mood_date"])
+    mood_df = mood_df.sort_values("mood_date")
+
+    # Reshape into long format so we can plot 2 lines (mood + stress)
+    mood_long = mood_df.melt(
+        id_vars=["mood_date", "user_id", "username"],
+        value_vars=["avg_mood_score", "avg_stress_level"],
+        var_name="metric",
+        value_name="value",
+    )
+
+    mood_fig = px.line(
+        mood_long,
+        x="mood_date",
+        y="value",
+        color="metric",
+        title="Mood and Stress (Daily Averages)",
+        markers=True,
+    )
+    mood_fig.update_layout(title_x=0.5, margin=dict(l=20, r=20, t=60, b=20))
+    mood_chart = mood_fig.to_html(full_html=False)
+
+    # -----------------------------
+    # 4) Weight trend
+    # -----------------------------
+    rows, column_names = user_charts.get_user_daily_weight_summary(username)
+    weight_df = pd.DataFrame(rows, columns=column_names)
+
+    weight_df["date"] = pd.to_datetime(weight_df["date"])
+    weight_df = weight_df.sort_values("date")
+
+    weight_fig = px.line(
+        weight_df,
+        x="date",
+        y="user_weight",
+        title="Weight Trend",
+        markers=True,
+    )
+    weight_fig.update_layout(title_x=0.5, margin=dict(l=20, r=20, t=60, b=20))
+    weight_chart = weight_fig.to_html(full_html=False)
+
+    # -----------------------------
+    # 5) Workout summary
+    # -----------------------------
+    rows, column_names = user_charts.get_user_workout_saummary(username)
+    workout_df = pd.DataFrame(rows, columns=column_names)
+
+    workout_df["workout_date"] = pd.to_datetime(workout_df["workout_date"])
+    workout_df = workout_df.sort_values("workout_date")
+
+    workout_fig = px.bar(
+        workout_df,
+        x="workout_date",
+        y="total_sessions",
+        title="Workout Sessions per Day",
+        hover_data=["total_duration"],
+    )
+    workout_fig.update_layout(title_x=0.5, margin=dict(l=20, r=20, t=60, b=20))
+    workout_chart = workout_fig.to_html(full_html=False)
+
+    # -----------------------------
+    # 6) Render dashboard with all charts
+    # -----------------------------
+    return render_template(
+        "dashboard.html",
+        workout_chart=workout_chart,
+        mood_chart=mood_chart,
+        calories_chart=calories_chart,
+        macros_pie_chart=macros_pie_chart,
+        weight_chart=weight_chart,
+    )
+
 
 
 @app.route("/forgot-password", methods=["GET", "POST"])

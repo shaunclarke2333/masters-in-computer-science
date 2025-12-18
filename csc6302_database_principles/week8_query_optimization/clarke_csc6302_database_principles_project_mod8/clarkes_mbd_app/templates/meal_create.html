@@ -50,14 +50,7 @@
 
           <hr>
 
-          <h6 class="text-uppercase font-weight-bold mb-2">Today’s Totals</h6>
-          <ul class="list-unstyled mb-0">
-            <li class="d-flex justify-content-between"><span>Calories</span><strong>{{ today_totals.calories|default(0) }}</strong></li>
-            <li class="d-flex justify-content-between"><span>Protein</span><strong>{{ today_totals.protein|default(0) }}</strong></li>
-            <li class="d-flex justify-content-between"><span>Carbs</span><strong>{{ today_totals.carbs|default(0) }}</strong></li>
-            <li class="d-flex justify-content-between"><span>Fats</span><strong>{{ today_totals.fats|default(0) }}</strong></li>
-          </ul>
-
+          
           <a class="btn btn-outline-dark btn-block mt-3" href="{{ url_for('meals_today') }}">View Today’s Meals</a>
         </div>
       </div>

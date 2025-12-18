@@ -24,28 +24,28 @@
       <div class="col-lg-6 my-3">
         <div class="bg-white p-4 shadow-lg">
           <h6 class="text-uppercase font-weight-bold mb-3">Workout Summary (Week)</h6>
-          <div id="chart_workouts" class="bg-light p-4">Plotly chart placeholder</div>
+          <div id="chart_workouts" class="bg-light p-4">{{ workout_chart | safe }}</div>
         </div>
       </div>
 
       <div class="col-lg-6 my-3">
         <div class="bg-white p-4 shadow-lg">
           <h6 class="text-uppercase font-weight-bold mb-3">Daily Mood Trends</h6>
-          <div id="chart_mood" class="bg-light p-4">Plotly chart placeholder</div>
+          <div id="chart_mood" class="bg-light p-4">{{ mood_chart | safe }}</div>
         </div>
       </div>
 
       <div class="col-lg-6 my-3">
         <div class="bg-white p-4 shadow-lg">
-          <h6 class="text-uppercase font-weight-bold mb-3">Calories Per Day Summary</h6>
-          <div id="chart_calories" class="bg-light p-4">Plotly chart placeholder</div>
+          <h6 class="text-uppercase font-weight-bold mb-3">Macros</h6>
+          <div id="chart_calories" class="bg-light p-4">{{ macros_pie_chart | safe }}</div>
         </div>
       </div>
 
       <div class="col-lg-6 my-3">
         <div class="bg-white p-4 shadow-lg">
           <h6 class="text-uppercase font-weight-bold mb-3">Daily Weight Summary</h6>
-          <div id="chart_weight" class="bg-light p-4">Plotly chart placeholder</div>
+          <div id="chart_weight" class="bg-light p-4">{{ weight_chart | safe }}</div>
         </div>
       </div>
     </div>
